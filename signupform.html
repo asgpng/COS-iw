@@ -17,9 +17,10 @@
       <form action="/forms/signupform", method="post">
         <h2>Signup Form</h2>
         <label>Student Name:</label>
-        <input type="text" name="studentName"/><br>
-        <label>Student Year</label><input type="text" name="class"/><br>
+        <input type="text" name="student_name"/><br>
+        <label>Student Year:</label><input type="text" name="class_year"/><br>
         <label>Course:</label><br>
+        <div class="radio">
           <input type="radio" name="coursework" value="397">397<br>
           <input type="radio" name="coursework" value="398">398<br>
           <input type="radio" name="coursework" value="497">497<br>
@@ -27,12 +28,15 @@
           <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
           <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
           <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
+        </div>
         
-        <div>Title of Project:<textarea name="title" rows="2" cols="20"></textarea></div>
-        <div>Description:<textarea name="description" rows="3" cols="20"></textarea></div>
-        <div>Faculty Approval:<input type="checkbox" name="facultySignature" value="facultySignature">Faculty Approval<br></div>
-        <div>Faculty Name:<textarea name="facultyName" rows="1" cols="20"></textarea></div>
-        <div>Faculty Department:<textarea name="facultyDepartment" rows="1" cols="20"></textarea></div>
+        <label>Title of Project:</label><input type="text" name="title"/>
+        <label>Description:</label><input type="text" name="description"/>
+        <label>Faculty Approval:</label><input type="checkbox" name="faculty_signature" value="facultySignature"/>Faculty Approval<br>
+        <label>Faculty Name:</label><input type="text" name="faculty_name"/>
+        <label>Faculty Department:</label><input type="text" name="faculty_department" />
+
+        <input type="submit" value="Submit">
       </form>
     </div>
 

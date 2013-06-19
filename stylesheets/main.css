@@ -2,15 +2,24 @@ body {
     font-family: Verdana, Helvetica, sans-serif;
     background-color: #DDDDDD;
 }
-.myform {
-    margin:0 auto;
-    width:400px;
-    padding:14px;
-}
+/* .myform { */
+/*     margin:0 auto; */
+/*     /\* width:400px; *\/ */
+/*     padding:14px; */
+/* } */
 .myform input {
     float:left;
-    padding: 4px 2px;
-    border:solid 1px #aacfe4;
-    width:200px;
-    margin:2px 0 20px 10px;
+    /* padding: 4px 2px; */
+    /* border:solid 1px #aacfe4; */
+    /* width:200px; */
+    /* margin:2px 0 20px 10px; */
+}
+.myform {
+    float:left;
+    /* width:25%; */
+    text-align:right;
+    margin-right:5px;
+}
+.myform radio {
+    text-align:left;
 }
