@@ -75,11 +75,20 @@ class SignupFormPage(webapp2.RequestHandler):
 
         sf.put()
 
-        self.redirect('/forms/signupform/view')
+        query_params = {'student_name':sf.student_name}
+        self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
 
 class SignupFormPageView(webapp2.RequestHandler):
         
     def get(self):
+
+        # query = SignupForm.gql("where student_name = 'test' ")
+        # sf = query.fetch(1)
+        query = SignupForm.query(SignupForm.class_year==1999)
+#        q.filter('student_name =', 'test')
+        sf = query.fetch(1)
+#        self.response.write(sf[0].class_year)
+
         if users.get_current_user():
             url = users.create_logout_url(self.request.uri)
             url_linktext = 'Logout'
@@ -87,7 +96,9 @@ class SignupFormPageView(webapp2.RequestHandler):
             url = users.create_login_url(self.request.uri)
             url_linktext = 'Login'
 
+
         template_values = {
+            'sf': sf,
             'url': url,
             'url_linktext': url_linktext,
         }
