@@ -16,9 +16,10 @@
     <div class="myform">
       <form action="/forms/signupform", method="post">
         <h2>Signup Form</h2>
-        Student Name:<input type="text" name="studentName"/><br>
-        Student Year:<input type="text" name="class"/><br>
-        <div>Course:<br>
+        <label>Student Name:</label>
+        <input type="text" name="studentName"/><br>
+        <label>Student Year</label><input type="text" name="class"/><br>
+        <label>Course:</label><br>
           <input type="radio" name="coursework" value="397">397<br>
           <input type="radio" name="coursework" value="398">398<br>
           <input type="radio" name="coursework" value="497">497<br>
@@ -26,7 +27,6 @@
           <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
           <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
           <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
-        </div>
         
         <div>Title of Project:<textarea name="title" rows="2" cols="20"></textarea></div>
         <div>Description:<textarea name="description" rows="3" cols="20"></textarea></div>
@@ -35,15 +35,11 @@
         <div>Faculty Department:<textarea name="facultyDepartment" rows="1" cols="20"></textarea></div>
       </form>
     </div>
+
     <hr>
 
-    <!-- <form action="/signupform" method="post"> -->
-    <!--   <div><textarea name="content" rows="3" cols="60"></textarea></div> -->
-    <!--   <div><input type="submit" value="Sign Guestbook"></div> -->
-    <!-- </form> -->
-
-
     <!-- links: -->
+    <a href="/">Home</a>
 
   </body>
 </html>
