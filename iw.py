@@ -26,6 +26,17 @@ class SignupForm(ndb.Model):
     submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
+class CheckpointForm(ndb.Model):
+    student_name = ndb.StringProperty()
+    title_topic = ndb.StringProperty()
+    advisor = ndb.StringProperty()
+    meetings_w_advisor = ndb.IntegerProperty()
+    self_assessment = ndb.StringProperty()
+    advisor_read_summary = ndb.StringProperty(choices=set(["yes", "no"]))
+    meet_more_often = ndb.StringProperty(choices=set(["yes", "no"]))
+    student_progress = ndb.StringProperty(choices=set["4", "3", "2", "1"]))
+    comments = ndb.StringProperty()
+
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
@@ -77,6 +88,40 @@ class SignupFormPage(webapp2.RequestHandler):
 
         query_params = {'student_name':sf.student_name}
         self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
+
+class CheckPointFormPage(webapp2.RequestHandler):
+
+    def get(self):
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+
+        cpf = CheckpointForm(student_name=self.request.get('student_name'),
+                        topic_title = self.request.get('topic_title'),
+                        advisor = self.request.get('advisor'),
+                        meetings_w_advisor = self.request.get('meetings_w_advisor'),
+                        self_assesment = self.request.get('self_assessment'),
+                        advisor_read_summary = self.request.get('advisor_read_summary'),
+                        meet_more_often = self.request.get('meet_more_often'),
+                        student_progress = int(self.request.get('student_progress'))
+                        comments = self.request.get('comments'))
+        cpf.put()
+
+        query_params = {'student_name':cp.student_name}
+        self.redirect('/forms/checkpointform/view?' + urllib.urlencode(query_params))
+
 
 class SignupFormPageView(webapp2.RequestHandler):
         
