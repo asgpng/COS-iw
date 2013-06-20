@@ -1,0 +1,81 @@
+<!-- could also attempt to make list -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <title>Checkpoint Formm</title>
+  </head>
+
+  <body>
+
+    <h1>Princeton CS IW Checkpoint Form</h1>
+
+    <p> blah blah - checkpointfrom
+    </p>
+    <h3>STUDENT SECTION:</h3>
+    <div class="container">
+      <form action="/forms/checkpointform", method="post">
+        <div>
+          <label>Student Name:</label>
+          <input type="text" name="student_name"/>
+        </div>
+        <div>
+          <label>Title/Topic:</label>
+          <input type="text" name="title_topic"/>
+        </div>
+        <div>
+          <label>Advisor:</label>
+          <input type="text" name="advisor"/>
+        </div>
+        <div>
+          <label>Approx. Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
+          <input type="text" name="meetings_w_advisor"/>
+        </div>
+        <div>
+          <label>Student Self Assessment:</label>
+          <textarea name="self_assessment" rows="5" cols="60"></textarea>
+        </div>
+	</div>
+    <h3>ADVISOR SECTION:</h3>
+    <div class="container" >
+      <div>
+	<label>I read the student's 1-page progress summary report</label>
+	<div class="radio">
+	<input type="radio" name="advisor_read_summary" value="yes"/>yes<br>
+	<input type="radio" name="advisor_read_summary" value="no"/>no<br>
+	</div>
+      </div>
+      <div>
+	<label>Would you like your student to meet with you more often?</label>
+	<div class="radio">
+	<input type="radio" name="meet_more_often" value="yes"/>yes<br>
+	<input type="radio" name="meet_more_often" value="no"/>no<br>
+	</div>
+      </div>
+      <div>
+	<label>Student Progress:</label>
+	<div class="radio">
+	<input type="radio" name="student_progress" value="4"/>4 - Exceptional<br>
+	<input type="radio" name="student_progress" value="3"/>3 - Very Good<br>
+	<input type="radio" name="student_progress" value="2"/>2 - Good<br>
+	<input type="radio" name="student_progress" value="1"/>1 - Unsatisfactory<br>
+	</div>
+      </div>
+      <div>
+	<label>Comments: <br> [If student progress is unsatisfactory, explain what steps they need to take to get on track.]</label>
+	<textarea name="comments" rows="4" cols="60"></textarea>
+	</div>
+        <div id="submit">
+          <input type="submit" value="Submit">
+        </div>
+      </form>
+    </div>
+
+    <hr>
+
+    <!-- links: -->
+    <a href="/">Home</a>
+
+  </body>
+</html>
