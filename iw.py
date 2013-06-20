@@ -61,6 +61,19 @@ class FebruaryForm(ndb.Model):
     submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
+class SecondReaderForm(ndb.Model):
+    form_type = ndb.StringProperty("second")
+    student_netID = ndb.StringProperty()
+    student_name = ndb.StringProperty()
+    class_year = ndb.IntegerProperty()
+    title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    sr_name = ndb.StringProperty()
+    sr_netID = ndb.StringProperty()
+    sr_department = ndb.StringProperty()
+    sr_agreement = ndb.BooleanProperty()
+    sr_signature = ndb.StringProperty()
+    
 
 class MainPage(webapp2.RequestHandler):
 
@@ -171,6 +184,27 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
         self.response.write(template.render(template_values))
+
+
+    def post(self):
+        srf = SecondReaderForm(student_name=self.request.get('student_name'), 
+                               class_year =int(self.request.get('class_year')),
+                               title = self.request.get('title'),
+                               description = self.request.get('description'),
+                               sr_name = self.request.get('sr_name'),
+                               sr_netID = self.request.get('sr_netID'),
+                               sr_department = self.request.get('sr_department'),
+                               sr_agreement =bool(self.request.get('sr_agreement')),
+                               sr_signature = self.request.get('sr_signature'),
+                               form_type = "second_reader",
+                               student_netID = "hello"
+                               )
+
+        srf.put()
+
+        query_params = {'student_netID':srf.student_netID, 'form_type':srf.form_type}
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
+
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
