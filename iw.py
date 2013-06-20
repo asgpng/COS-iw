@@ -14,6 +14,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'])
 
 class SignupForm(ndb.Model):
+    form_type = ndb.StringProperty("signup")
     student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
@@ -29,6 +30,7 @@ class SignupForm(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class CheckpointForm(ndb.Model):
+    form_type = ndb.StringProperty("checkpoint")
     student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
     title_topic = ndb.StringProperty()
@@ -41,6 +43,23 @@ class CheckpointForm(ndb.Model):
     student_progress = ndb.StringProperty(choices=set(["4", "3", "2", "1"]))
     comments = ndb.StringProperty()
 
+class FebruaryForm(ndb.Model):
+    form_type = ndb.StringProperty("february")
+    student_netID = ndb.StringProperty()
+    student_name = ndb.StringProperty()
+    title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    advisor_name = ndb.StringProperty()
+    number_of_meetings = ndb.IntegerProperty()
+    student_comments = ndb.StringProperty()
+    faculty_netID = ndb.StringProperty()
+    faculty_signature = ndb.BooleanProperty()
+    faculty_read = ndb.BooleanProperty()
+    faculty_more_meetings = ndb.BooleanProperty()
+    student_progress_eval = ndb.IntegerProperty(choices=set([1,2,3]))
+    faculty_comments = ndb.StringProperty()
+    submitted = ndb.BooleanProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
 
 
 class MainPage(webapp2.RequestHandler):
