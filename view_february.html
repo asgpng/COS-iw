@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+</head>
+{% autoescape true %}
+<html>
+  <body>
+
+    <h1>Checkpoint Form</h1>
+
+    <p> blah blah - checkpoint
+    </p>
+    
+    <h1>Form View</h1>
+    
+    <p>this is the submitted form page</p>
+
+    We should be seeing results here!!!    <br>
+    <br>
+    {{form}}
+    <p>{{ form.student_name }}</p>
+    <p>{{ form.form_type }}</p>
+    <p>{{ form.date }}</p>
+
+    <hr>
+
+    <!-- links: -->
+    <a href="/">Home</a>
+
+  </body>
+</html>
+{% endautoescape %}

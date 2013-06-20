@@ -31,16 +31,16 @@ class SignupForm(ndb.Model):
 
 class CheckpointForm(ndb.Model):
     form_type = ndb.StringProperty("checkpoint")
-    student_netID = ndb.StringProperty("test")
+    student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
     topic_title = ndb.StringProperty()
     advisor = ndb.StringProperty()
     meetings_w_advisor = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
     advisor_netID = ndb.StringProperty()
-    advisor_read_summary = ndb.StringProperty(choices=set(["yes", "no"]))
-    meet_more_often = ndb.StringProperty(choices=set(["yes", "no"]))
-    student_progress = ndb.StringProperty(choices=set(["4", "3", "2", "1"]))
+    advisor_read_summary = ndb.BooleanProperty()
+    meet_more_often = ndb.BooleanProperty()
+    student_progress = ndb.IntegerProperty(choices=set([4, 3, 2, 1]))
     comments = ndb.StringProperty()
 
 class FebruaryForm(ndb.Model):
@@ -52,12 +52,12 @@ class FebruaryForm(ndb.Model):
     advisor_name = ndb.StringProperty()
     number_of_meetings = ndb.IntegerProperty()
     student_comments = ndb.StringProperty()
-    faculty_netID = ndb.StringProperty()
-    faculty_signature = ndb.BooleanProperty()
-    faculty_read = ndb.BooleanProperty()
-    faculty_more_meetings = ndb.BooleanProperty()
+    advisor_netID = ndb.StringProperty()
+    advisor_signature = ndb.BooleanProperty()
+    advisor_read = ndb.BooleanProperty()
+    advisor_more_meetings = ndb.BooleanProperty()
     student_progress_eval = ndb.IntegerProperty(choices=set([1,2,3]))
-    faculty_comments = ndb.StringProperty()
+    advisor_comments = ndb.StringProperty()
     submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -140,12 +140,14 @@ class CheckPointFormPage(webapp2.RequestHandler):
         cpf = CheckpointForm(student_name=self.request.get('student_name'),
                              topic_title = self.request.get('topic_title'),
                              advisor = self.request.get('advisor'),
-                             meetings_w_advisor = self.request.get('meetings_w_advisor'),
+                             meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                              self_assessment = self.request.get('self_assessment'),
-                             advisor_read_summary = self.request.get('advisor_read_summary'),
-                             meet_more_often = self.request.get('meet_more_often'),
+                             advisor_read_summary = bool(self.request.get('advisor_read_summary')),
+                             meet_more_often = bool(self.request.get('meet_more_often')),
                              student_progress = int(self.request.get('student_progress')),
-                             comments = self.request.get('comments_1')
+                             comments = self.request.get('comments'),
+                             form_type = "checkpoint",
+                             student_netID = "test"
                              )
         cpf.put()
 
@@ -192,19 +194,21 @@ class FebruaryFormPage(webapp2.RequestHandler):
         ff = FebruaryForm(student_name = self.request.get('student_name'),
                           title = self.request.get('title'),
                           description = self.request.get('description'),
-                          advisor_signature = self.request.get('advisor_signature'),
                           advisor_name = self.request.get('advisor_name'),
-                          number_of_meetings = self.request.get('number_of_meetings'),
+                          number_of_meetings = int(self.request.get('number_of_meetings')),
                           student_comments = self.request.get('student_comments'),
-                          advisor_read = self.request.get('advisor_read'),
-                          advisor_more_meetings = self.request.get('advisor_more_meetings'),
-                          student_progress_eval = self.request.get('student_progress_eval'),
+                          advisor_read = bool(self.request.get('advisor_read')),
+                          advisor_more_meetings = bool(self.request.get('advisor_more_meetings')),
+                          student_progress_eval = int(self.request.get('student_progress_eval')),
                           advisor_comments = self.request.get('advisor_comments'),
+                          form_type = "february",
+                          student_netID = "test"
                       )
         ff.put()
 
-        query_params = {'student_name':sf.student_name}
-        self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
+        query_params = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
+
 
 class FormView(webapp2.RequestHandler):
     
@@ -213,14 +217,14 @@ class FormView(webapp2.RequestHandler):
         student_netID = self.request.get('student_netID')        
         if form_type == 'signup':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
+            form = query.fetch(1)
         elif form_type == 'february':
             query = FebruaryForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
+            form = query.fetch(1)
         # update these:
         elif form_type == 'checkpoint':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
+            form = query.fetch(1)
         else: # form_type == 'second_reader':
             query = FebruaryForm.query(SignupForm.student_netID==student_netID)
             form = query.fetch(1)
