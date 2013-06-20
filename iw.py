@@ -105,10 +105,31 @@ class SignupFormPageView(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('signup_form_view.html')
         self.response.write(template.render(template_values))
 
+
+class SecondReaderFormPage(webapp2.RequestHandler):
+
+    def get(self):
+
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
+        self.response.write(template.render(template_values))
+
+
     
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
     ('/forms/signupform/view', SignupFormPageView),
+    ('/forms/secondreaderform', SecondReaderFormPage)
 ], debug=True)
