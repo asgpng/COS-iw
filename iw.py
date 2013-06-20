@@ -13,6 +13,15 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'])
 
+def getLoginStatus(uri):
+    if users.get_current_user():
+        url = users.create_logout_url(uri)
+        url_linktext = 'Logout'
+    else:
+        url = users.create_login_url(uri)
+        url_linktext = 'Login'
+    return (url, url_linktext)
+
 class SignupForm(ndb.Model):
     form_type = ndb.StringProperty()
     student_netID = ndb.StringProperty()
@@ -78,36 +87,20 @@ class SecondReaderForm(ndb.Model):
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
         template_values = {
-            'url': url,
-            'url_linktext': url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
-
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
 
 class SignupFormPage(webapp2.RequestHandler):
 
     def get(self):
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
         template_values = {
-            'url': url,
-            'url_linktext': url_linktext,
-        }
-        template = JINJA_ENVIRONMENT.get_template('signupform.html')
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+        }        template = JINJA_ENVIRONMENT.get_template('signupform.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -134,16 +127,9 @@ class SignupFormPage(webapp2.RequestHandler):
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
         template_values = {
-            'url': url,
-            'url_linktext': url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
@@ -170,17 +156,9 @@ class CheckPointFormPage(webapp2.RequestHandler):
 class SecondReaderFormPage(webapp2.RequestHandler):
 
     def get(self):
-
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
         template_values = {
-            'url': url,
-            'url_linktext': url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
         template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
         self.response.write(template.render(template_values))
@@ -209,16 +187,9 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 class FebruaryFormPage(webapp2.RequestHandler):
 
     def get(self):
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
         template_values = {
-            'url': url,
-            'url_linktext': url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
         template = JINJA_ENVIRONMENT.get_template('february_form.html')
         self.response.write(template.render(template_values))
@@ -263,22 +234,13 @@ class FormView(webapp2.RequestHandler):
             query = FebruaryForm.query(SignupForm.student_netID==student_netID)
             form = query.fetch(1)
 
-        if users.get_current_user():
-            url = users.create_logout_url(self.request.uri)
-            url_linktext = 'Logout'
-        else:
-            url = users.create_login_url(self.request.uri)
-            url_linktext = 'Login'
-
         template_values = {
             'form': form,
-            'url': url,
-            'url_linktext': url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form_type)
         self.response.write(template.render(template_values))
-
-
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
