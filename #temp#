@@ -1,0 +1,34 @@
+# goal - create a robust formview method which can view any type of form.
+class FormView(webapp2.RequestHandler):
+    
+    def get(self):
+        form_type = self.request.get('form_type')
+        student_netID = self.request.get('student_netID')        
+        if form_type == 'signup':
+            query = SignupForm.query(SignupForm.student_netID=student_netID)
+            form = query.fetch(1)[0]
+        elif form_type == 'february':
+            query = FebruaryForm.query(SignupForm.student_netID=student_netID)
+            form = query.fetch(1)[0]
+        # update these:
+        elif form_type == 'checkpoint':
+            query = SignupForm.query(SignupForm.student_netID=student_netID)
+            form = query.fetch(1)[0]
+        elif form_type == 'second_reader':
+            query = FebruaryForm.query(SignupForm.student_netID=student_netID)
+            form = query.fetch(1)[0]
+
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'form': form,
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('signupform.html')
+        self.response.write(template.render(template_values))

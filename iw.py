@@ -15,7 +15,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class SignupForm(ndb.Model):
     form_type = ndb.StringProperty("signup")
-    student_netID = ndb.StringProperty()
+    student_netID = ndb.StringProperty("test")
     student_name = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
     coursework = ndb.StringProperty(choices=set(["397", "398", "497", "498", "AB JIW", "AB Senior Thesis", "BSE Senior Thesis"]))
@@ -31,9 +31,9 @@ class SignupForm(ndb.Model):
 
 class CheckpointForm(ndb.Model):
     form_type = ndb.StringProperty("checkpoint")
-    student_netID = ndb.StringProperty()
+    student_netID = ndb.StringProperty("test")
     student_name = ndb.StringProperty()
-    title_topic = ndb.StringProperty()
+    topic_title = ndb.StringProperty()
     advisor = ndb.StringProperty()
     meetings_w_advisor = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
@@ -107,12 +107,14 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_signature = bool(self.request.get('advisor_signature')),
                         advisor_name = self.request.get('advisor_name'),
                         advisor_department = self.request.get('advisor_department'),
-                        student_signature = bool(self.request.get('student_signature')))
+                        student_signature = bool(self.request.get('student_signature'))
+                        )
 
         sf.put()
 
-        query_params = {'student_name':sf.student_name}
-        self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
+        query_params = {'student_netID':sf.student_netID,'form_type':sf.form_type}
+        # self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -134,18 +136,19 @@ class CheckPointFormPage(webapp2.RequestHandler):
     def post(self):
 
         cpf = CheckpointForm(student_name=self.request.get('student_name'),
-                        topic_title = self.request.get('topic_title'),
-                        advisor = self.request.get('advisor'),
-                        meetings_w_advisor = self.request.get('meetings_w_advisor'),
-                        self_assesment = self.request.get('self_assessment'),
-                        advisor_read_summary = self.request.get('advisor_read_summary'),
-                        meet_more_often = self.request.get('meet_more_often'),
-                        student_progress = int(self.request.get('student_progress')),
-                        comments = self.request.get('comments'))
+                             topic_title = self.request.get('topic_title'),
+                             advisor = self.request.get('advisor'),
+                             meetings_w_advisor = self.request.get('meetings_w_advisor'),
+                             self_assessment = self.request.get('self_assessment'),
+                             advisor_read_summary = self.request.get('advisor_read_summary'),
+                             meet_more_often = self.request.get('meet_more_often'),
+                             student_progress = int(self.request.get('student_progress')),
+                             comments = self.request.get('comments_1')
+                             )
         cpf.put()
 
-        query_params = {'student_name':cp.student_name}
-        self.redirect('/forms/checkpointform/view?' + urllib.urlencode(query_params))
+        query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
 
 class SignupFormPageView(webapp2.RequestHandler):
@@ -252,13 +255,48 @@ class FebruaryFormPageView(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('signup_form_view.html')
         self.response.write(template.render(template_values))
 
+# goal - create a robust formview method which can view any type of form.
+class FormView(webapp2.RequestHandler):
+    
+    def get(self):
+        form_type = self.request.get('form_type')
+        student_netID = self.request.get('student_netID')        
+        if form_type == 'signup':
+            query = SignupForm.query(SignupForm.student_netID==student_netID)
+            form = query.fetch(1)[0]
+        elif form_type == 'february':
+            query = FebruaryForm.query(SignupForm.student_netID==student_netID)
+            form = query.fetch(1)[0]
+        # update these:
+        elif form_type == 'checkpoint':
+            query = SignupForm.query(SignupForm.student_netID==student_netID)
+            form = query.fetch(1)[0]
+        else: # form_type == 'second_reader':
+            query = FebruaryForm.query(SignupForm.student_netID==student_netID)
+            form = query.fetch(1)
+
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'form': form,
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('view_%s.html',form_type)
+        self.response.write(template.render(template_values))
+
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
-    ('/forms/signupform/view', SignupFormPageView),
     ('/forms/secondreaderform', SecondReaderFormPage),
     ('/forms/checkpointform', CheckPointFormPage),
     ('/forms/februaryform', FebruaryFormPage),
-    ('/forms/februaryform/view', FebruaryFormPageView),
+    ('/forms/view', FormView),
 ], debug=True)
