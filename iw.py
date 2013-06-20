@@ -34,7 +34,7 @@ class CheckpointForm(ndb.Model):
     self_assessment = ndb.StringProperty()
     advisor_read_summary = ndb.StringProperty(choices=set(["yes", "no"]))
     meet_more_often = ndb.StringProperty(choices=set(["yes", "no"]))
-    student_progress = ndb.StringProperty(choices=set["4", "3", "2", "1"]))
+    student_progress = ndb.StringProperty(choices=set(["4", "3", "2", "1"]))
     comments = ndb.StringProperty()
 
 class MainPage(webapp2.RequestHandler):
@@ -115,7 +115,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                         self_assesment = self.request.get('self_assessment'),
                         advisor_read_summary = self.request.get('advisor_read_summary'),
                         meet_more_often = self.request.get('meet_more_often'),
-                        student_progress = int(self.request.get('student_progress'))
+                        student_progress = int(self.request.get('student_progress')),
                         comments = self.request.get('comments'))
         cpf.put()
 
@@ -176,5 +176,6 @@ application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
     ('/forms/signupform/view', SignupFormPageView),
-    ('/forms/secondreaderform', SecondReaderFormPage)
+    ('/forms/secondreaderform', SecondReaderFormPage),
+    ('/forms/checkpointform', CheckPointFormPage),
 ], debug=True)
