@@ -169,8 +169,64 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
         self.response.write(template.render(template_values))
 
+class FebruaryFormPage(webapp2.RequestHandler):
 
-    
+    def get(self):
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('february_form.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        
+        ff = FebruaryForm(student_name = self.request.get('student_name'),
+                          title = self.request.get('title'),
+                          description = self.request.get('description'),
+                          faculty_signature = self.request.get('faculty_signature'),
+                          advisor_name = self.request.get('advisor_name'),
+                          number_of_meetings = self.request.get('number_of_meetings'),
+                          student_comments = self.request.get('student_comments'),
+                          faculty_read = self.request.get('faculty_read'),
+                          faculty_more_meetings = self.request.get('faculty_more_meetings'),
+                          student_progress_eval = self.request.get('student_progress_eval'),
+                          faculty_comments = self.request.get('faculty_comments'),
+                      )
+        ff.put()
+
+        query_params = {'student_name':sf.student_name}
+        self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
+
+class FebruaryFormPageView(webapp2.RequestHandler):
+        
+    def get(self):
+
+        query = FebruaryForm.query(SignupForm.class_year==1999)
+        ff = query.fetch(1)
+
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+            'ff': ff,
+            'url': url,
+            'url_linktext': url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('signup_form_view.html')
+        self.response.write(template.render(template_values))
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -178,4 +234,6 @@ application = webapp2.WSGIApplication([
     ('/forms/signupform/view', SignupFormPageView),
     ('/forms/secondreaderform', SecondReaderFormPage),
     ('/forms/checkpointform', CheckPointFormPage),
+    ('/forms/februaryform', FebruaryFormPage),
+    ('/forms/februaryform/view', FebruaryFormPageView),
 ], debug=True)
