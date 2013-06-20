@@ -14,28 +14,34 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'])
 
 class SignupForm(ndb.Model):
+    student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
     coursework = ndb.StringProperty(choices=set(["397", "398", "497", "498", "AB JIW", "AB Senior Thesis", "BSE Senior Thesis"]))
     title = ndb.StringProperty()
     description = ndb.StringProperty()
-    faculty_signature = ndb.BooleanProperty()
-    faculty_name = ndb.StringProperty()
-    faculty_department = ndb.StringProperty()
+    advisor_netID = ndb.StringProperty()
+    advisor_signature = ndb.BooleanProperty()
+    advisor_name = ndb.StringProperty()
+    advisor_department = ndb.StringProperty()
     student_signature = ndb.BooleanProperty()
     submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class CheckpointForm(ndb.Model):
+    student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
     title_topic = ndb.StringProperty()
     advisor = ndb.StringProperty()
     meetings_w_advisor = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
+    advisor_netID = ndb.StringProperty()
     advisor_read_summary = ndb.StringProperty(choices=set(["yes", "no"]))
     meet_more_often = ndb.StringProperty(choices=set(["yes", "no"]))
     student_progress = ndb.StringProperty(choices=set(["4", "3", "2", "1"]))
     comments = ndb.StringProperty()
+
+
 
 class MainPage(webapp2.RequestHandler):
 
@@ -79,9 +85,9 @@ class SignupFormPage(webapp2.RequestHandler):
                         coursework = self.request.get('coursework'),
                         title = self.request.get('titles'),
                         description = self.request.get('description'),
-                        faculty_signature = bool(self.request.get('faculty_signature')),
-                        faculty_name = self.request.get('faculty_name'),
-                        faculty_department = self.request.get('faculty_department'),
+                        advisor_signature = bool(self.request.get('advisor_signature')),
+                        advisor_name = self.request.get('advisor_name'),
+                        advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')))
 
         sf.put()
@@ -191,14 +197,14 @@ class FebruaryFormPage(webapp2.RequestHandler):
         ff = FebruaryForm(student_name = self.request.get('student_name'),
                           title = self.request.get('title'),
                           description = self.request.get('description'),
-                          faculty_signature = self.request.get('faculty_signature'),
+                          advisor_signature = self.request.get('advisor_signature'),
                           advisor_name = self.request.get('advisor_name'),
                           number_of_meetings = self.request.get('number_of_meetings'),
                           student_comments = self.request.get('student_comments'),
-                          faculty_read = self.request.get('faculty_read'),
-                          faculty_more_meetings = self.request.get('faculty_more_meetings'),
+                          advisor_read = self.request.get('advisor_read'),
+                          advisor_more_meetings = self.request.get('advisor_more_meetings'),
                           student_progress_eval = self.request.get('student_progress_eval'),
-                          faculty_comments = self.request.get('faculty_comments'),
+                          advisor_comments = self.request.get('advisor_comments'),
                       )
         ff.put()
 
