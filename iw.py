@@ -145,7 +145,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                              meet_more_often = bool(self.request.get('meet_more_often')),
                              student_progress = int(self.request.get('student_progress')),
                              comments = self.request.get('comments'),
-                             student_netid = "test"
+                             student_netID = "test"
                              )
         cpf.put()
 
