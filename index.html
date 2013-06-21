@@ -6,25 +6,21 @@
 {% autoescape true %}
 <html>
   <body>
-
-    <h1>COS Independent Work</h1>
-
-    <p> blah blah - introduction
-    </p>
-    
-    <h1>Forms</h1>
-
-    <a href="forms/signupform">Signup Form</a><br>
-    <a href="forms/checkpointform">Checkpoint Form</a><br>    
-    <a href="forms/februaryform">February Progress Form</a><br>
-    <a href="forms/secondreaderform">Second Reader Form</a><br>
-
-    <h1>Links</h1>
-    <a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a><br>
-
-    <hr>
-
-
+      <h1>COS Independent Work</h1>
+      <p> blah blah - introduction </p>
+    <div id="wrapper">
+      <li class="first"><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
+      <div id="menucontainer">
+	<ul id="menulist">
+	  <h2>Forms</h2>	  
+	  <li class="forms"><a href="forms/signupform">Signup Form</a></li>
+	  <li class="forms"><a href="forms/checkpointform">Checkpoint Form</a></li>
+	  <li class="forms"><a href="forms/februaryform">February Progress Form</a></li>(for all 2-semester work)
+	  <li class="forms"><a href="forms/secondreaderform">Second Reader Form</a></li>(for all 2-semester work)
+	</ul>
+      </div>
+      <hr>
+    </div>
   </body>
 </html>
 {% endautoescape %}
