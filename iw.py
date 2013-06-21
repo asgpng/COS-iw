@@ -100,7 +100,8 @@ class SignupFormPage(webapp2.RequestHandler):
         template_values = {
             'url': getLoginStatus(self.request.uri)[0], #url,
             'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
-        }        template = JINJA_ENVIRONMENT.get_template('signupform.html')
+        }        
+        template = JINJA_ENVIRONMENT.get_template('signupform.html')
         self.response.write(template.render(template_values))
 
     def post(self):
