@@ -176,7 +176,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_agreement =bool(self.request.get('sr_agreement')),
                                sr_signature = self.request.get('sr_signature'),
                                form_type = "second_reader",
-                               student_netID = "hello"
+                               student_netID = "test"
                                )
 
         srf.put()
@@ -223,17 +223,17 @@ class FormView(webapp2.RequestHandler):
         student_netID = self.request.get('student_netID')        
         if form_type == 'signup':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)
+            form = query.fetch(1)[0]
         elif form_type == 'february':
             query = FebruaryForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)
+            form = query.fetch(1)[0]
         # update these:
         elif form_type == 'checkpoint':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)
-        else: # form_type == 'second_reader':
+            form = query.fetch(1)[0]
+        elif form_type == 'second_reader': # form_type == 'second_reader':
             query = FebruaryForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)
+            form = query.fetch(1)[0]
 
         template_values = {
             'form': form,
