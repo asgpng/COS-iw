@@ -5,7 +5,17 @@ body {
     padding:0;
     margin:20px;
     text-align:center;
+    font-family: Arial;
+    background-color:#fefefe;
 }
+h2 {
+color: #646464;
+font-size: 22px;
+}
+a {
+color:black;
+}
+a:hover {color:#fa7f00;}
 .container {
     margin:0 auto;
     padding:5px;
@@ -13,7 +23,7 @@ body {
     text-align:left;
 }
 .container div {
-    margin:10px;
+    margin:10px 0;
 }
 label {
     float:left;
@@ -24,10 +34,40 @@ label {
 .radio {
     padding-left:210px;
 }
+checkbox {
+    margin:10px 0;
+}
 textarea {
-    margin-left:10px;
+    margin:2px 0;
 }
 #submit {
     text-align:center;
     padding-left:70px
 }
+#wrapper {
+margin: 0;
+padding: 0;
+overflow: hidden;
+text-align:right;
+}
+#wrapper li.first {
+display:inline;
+}
+#wrapper li.first a {
+font-size: 14px;
+}
+#menucontainer {
+height:100%;
+width:100%;
+text-align: left;
+}
+#menucontainer ul {
+padding:0;
+color: black;
+width: 100%;
+line-height:22px;
+}
+#menucontainer ul li.forms a {
+color: #fa7f00;
+}
+#menucontainer ul li.forms a:hover{color:black;}
