@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
   <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  <title>Submitted Checkpoint Form</title>
 </head>
 {% autoescape true %}
 <html>
@@ -9,17 +10,61 @@
     <h1>Checkpoint Form</h1>
 
     
-    <h1>Form View</h1>
+    <h2>Your form has been sucessfully submitted.</h2>
 
-    
-    <p>this is the submitted form page</p>
-
-    We should be seeing results here!!!    <br>
-    {{ form }} 
     <br>
-    <p>{{ form.student_name }}</p>
-    <p>{{ form.form_type }}</p>
-    <p>{{ form.date }}</p>
+    <h3>Student Section:</h3>
+    <div class="container">
+      <div>
+	<label>Student Name: </label>
+	<input type="text" name="student_name" value="{{ form.student_name }}" disabled />
+      </div>
+      <div>
+	<label>Title/Topic: </label>
+	<input type="text" name="topic_title" value=" {{ form.topic_title }}" disabled />
+      </div>
+      <div>
+	<label>Advisor: </label>
+	<input type="text" name="advisor" value=" {{ form.advisor }}" disabled />
+      </div>
+      <div>
+	<label>Approx. Number of Meetings with Advisor (0, 1, 2, 3-5, etc.): </label>
+	<input type="text" name="advisor" value=" {{ form.meetings_w_advisor }}" disabled />
+      </div>
+      <br>
+      <div>
+	<label>Student Self Assessment: </label>
+	<textarea name="self_assessment" rows="5" cols="60" value=" {{ form.self_assessment }}" disabled></textarea>
+      </div>
+      <h3>Advisor Section:</h3>
+      <div>
+	<label>I read the student's 1-page summary report: {{ form.advisor_read_summary }}</label>
+	<div class="radio">
+	  <!-- LOOK INTO: javascript to make it so that the radio button is "checked" based on whichever value. -->
+          <input type="radio" name="advisor_read_summary" value="True"/>yes<br>
+          <input type="radio" name="advisor_read_summary" value="False"/>no<br>
+        </div>
+      </div>
+      <div>
+	<label>Would you like your student to meet with you more often? {{form.meet_more_often }}</label>
+	<div class="radio">
+          <input type="radio" name="meet_more_often" value="yes"/>yes<br>
+          <input type="radio" name="meet_more_often" value="no"/>no<br>
+        </div>
+      </div>
+      <br>
+      <div>
+	<label>Student progress:</label>
+	<div class="radio">
+              <input type="radio" name="student_progress" value="4"/>Exceptional<br>
+              <input type="radio" name="student_progress" value="3"/>Very Good<br>
+              <input type="radio" name="student_progress" value="2"/>Good<br>
+              <input type="radio" name="student_progress" value="1"/>Unsatisfactory<br>
+        </div>
+      </div>
+      <div>
+	<label>Comments: <br> [If student progress is  unsatisfactory, explain what steps they need to take to get on track.]</label>
+	<textarea name="comments" rows="4" cols="60" value=" {{ form.comments }}" disabled></textarea>
 
     <hr>
 
