@@ -243,6 +243,26 @@ class FormView(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form_type)
         self.response.write(template.render(template_values))
 
+class FormQuery(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('query.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID', 'form_type']
+        query_params = {}
+        for arg in args:
+            arg_get = self.request.get(arg)
+            if arg_get != 'Null':
+                query_params[arg] = arg_get
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
+
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
@@ -250,4 +270,5 @@ application = webapp2.WSGIApplication([
     ('/forms/checkpointform', CheckPointFormPage),
     ('/forms/februaryform', FebruaryFormPage),
     ('/forms/view', FormView),
+    ('/forms/query', FormQuery),
 ], debug=True)
