@@ -4,59 +4,59 @@
     <link type = "text/css" rel="stylesheet" href="/stylesheets/main.css" />
     <title>Second Reader Form</title>
   </head>
+  <body>
+    <h1>Department of Computer Science</h1>
+    <h2> Second Reader Form for IW</h2>
 
-  <h1> Second Reader Form for IW</h1>
-
-  <p>etc etc etc - approval form</p>
-
-  <div class="container">
-    <form action="/forms/secondreaderform", method="post">
-  <div>
-    <label>Student Name:</label>
-    <input type="text" name="student_name"/>
-  </div>
-  <div>
-    <label> Student netID</label>
-    <input type="text" name="student_id/">
-  </div>
-  <div>
-    <label>Class:</label>
-    <input type="text" name="class_year" />
-  </div>
-  <div>
-    <label>Title of Project:</label>
-    <textarea name="title" rows="2" cols="23"></textarea>
-  </div>
-  <div>
-    <label>Description:</label>
-    <textarea name="description" rows="10" cols="23"></textarea>
-  </div>
-  <div>
-    <label>Advisor Name</label>
-    <input type="text" name="advisor_name"/>
-    <div>
-      <label> Advisor netID</label>
-      <input type="text" name="advisor_id"/>
+    <div class="container">
+      <form action="/forms/secondreaderform", method="post">
+        <div>
+          <label>Student Name:</label>
+          <input type="text" name="student_name"/>
+        </div>
+        <div>
+          <label> Student netID</label>
+          <input type="text" name="student_id/">
+        </div>
+        <div>
+          <label>Class:</label>
+          <input type="text" name="class_year" />
+        </div>
+        <div>
+          <label>Title of Project:</label>
+          <textarea name="title" rows="2" cols="23"></textarea>
+        </div>
+        <div>
+          <label>Description:</label>
+          <textarea name="description" rows="10" cols="23"></textarea>
+        </div>
+        <div>
+          <label>Advisor Name</label>
+          <input type="text" name="advisor_name"/>
+          <div>
+            <label> Advisor netID</label>
+            <input type="text" name="advisor_id"/>
+          </div>
+          <div>
+            <label>Advisor Department</label>
+            <input type="text" name="advisor_department" />
+          </div>
+          <div>
+            <label>I agree to be a second reader</label>
+            <input type="checkbox" name="advisor_approval" value="advisor_approval"/>
+          </div>
+          <div>
+            <label>Electronic signature:(needed for senior thesis or two semester IW only):</label>
+            <input type="text" align="center" name="signature"/>
+          </div>
+          <br>
+          <div id="submit">
+            <input type="submit" value="Submit">
+          </div>
+          <br>
+          <a href="/">Home</a>
+        </div>
+      </form>
     </div>
-    <div>
-      <label>Advisor Department</label>
-      <input type="text" name="advisor_department" />
-    </div>
-    <div>
-      <label>I agree to be a second reader</label>
-      <input type="checkbox" name="advisor_approval" value="advisor_approval"/>
-    </div>
-    <div>
-      <label>Electronic signature:(needed for senior thesis or two semester IW only):</label>
-      <input type="text" align="center" name="signature"/>
-    </div>
-    <div id="submit">
-      <input type="submit" value="Submit">
-    </div>
-
-    <br>
-
-    <a href="/">Home</a>
-
-</body>
+  </body>
 </html>

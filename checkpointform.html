@@ -8,12 +8,10 @@
   </head>
 
   <body>
+    <h1>Department of Computer Science</h1>
+    <h2>Princeton CS IW Checkpoint Form</h2>
 
-    <h1>Princeton CS IW Checkpoint Form</h1>
-
-    <p> blah blah - checkpointfrom
-    </p>
-    <h3>STUDENT SECTION:</h3>
+    <h3>Student Section:</h3>
     <form action="/forms/checkpointform", method="post">
     <div class="container">
 
@@ -31,14 +29,16 @@
         </div>
         <div>
           <label>Approx. Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
+          <!-- consider making parenthetical info a sublabel -->
           <input type="text" name="meetings_w_advisor"/>
         </div>
+        <br>
         <div>
           <label>Student Self Assessment:</label>
           <textarea name="self_assessment" rows="5" cols="60"></textarea>
         </div>
 	</div>
-    <h3>ADVISOR SECTION:</h3>
+    <h3>Advisor Section:</h3>
     <div class="container" >
       <div>
 	    <label>I read the student's 1-page progress summary report</label>
@@ -54,13 +54,14 @@
 	      <input type="radio" name="meet_more_often" value="no"/>no<br>
 	    </div>
       </div>
+      <br>
       <div>
 	    <label>Student Progress:</label>
 	    <div class="radio">
-	      <input type="radio" name="student_progress" value="4"/>4 - Exceptional<br>
-	      <input type="radio" name="student_progress" value="3"/>3 - Very Good<br>
-	      <input type="radio" name="student_progress" value="2"/>2 - Good<br>
-	      <input type="radio" name="student_progress" value="1"/>1 - Unsatisfactory<br>
+	      <input type="radio" name="student_progress" value="4"/>Exceptional<br>
+	      <input type="radio" name="student_progress" value="3"/>Very Good<br>
+	      <input type="radio" name="student_progress" value="2"/>Good<br>
+	      <input type="radio" name="student_progress" value="1"/>Unsatisfactory<br>
 	    </div>
       </div>
       <div>
