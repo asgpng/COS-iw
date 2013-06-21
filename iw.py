@@ -249,14 +249,29 @@ class FormQuery(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        # form_type is required, so get it separately:
+        form_type = self.request.get('form_type')
+        # additional arguments:
+        args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
+        query_params = {}
+        query_params['form_type'] = form_type
+        for arg in args:
+            arg_get = self.request.get(arg)
+            if arg_get != '':
+                query_params[arg] = arg_get
+
+        self.redirect('/forms/view_query?' + urllib.urlencode(query_params))
+
+class ViewQuery(webapp2.RequestHandler):
+
+    def get(self):
+
         form_type = self.request.get('form_type')
         # additional arguments:
         args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
         query_params = {}
         for arg in args:
             arg_get = self.request.get(arg)
-            if arg_get != 'Null':
+            if arg_get != '':
                 query_params[arg] = arg_get
 
         # Is there a better way of doing this?
@@ -293,7 +308,7 @@ class FormQuery(webapp2.RequestHandler):
             if 'advisor_netID' in query_params:
                 query.filter(CheckpointForm.advisor_netID==query_params['advisor_netID'])
             forms = query.fetch(20)
-        elif form_type == 'second_reader': # form_type == 'second_reader':
+        else: # form_type == 'second_reader':
             query = SecondReaderForm.query()
             if 'student_name' in query_params:
                 query.filter(SecondReaderForm.student_name==query_params['student_name'])
@@ -305,13 +320,6 @@ class FormQuery(webapp2.RequestHandler):
                 query.filter(SecondReaderForm.advisor_netID==query_params['advisor_netID'])
             forms = query.fetch(20)
 
-        query_params = {'forms': forms}
-        self.redirect('/forms/view_query?' + urllib.urlencode(query_params))
-
-class ViewQuery(webapp2.RequestHandler):
-
-    def get(self):
-        forms = self.request.get('forms')
         template_values = {
             'forms':forms,
             'url': getLoginStatus(self.request.uri)[0], #url,
