@@ -11,10 +11,10 @@
       function proceed() {
       
       var proceed = year() && radio() && text();
-      if (!proceed) {
-      window.alert("Please check your fields");
+      if (!proceed) window.alert("Please check your fields");
+      return proceed;
+      
       }
-}
 
       function year() {
 
