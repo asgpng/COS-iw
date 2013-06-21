@@ -5,6 +5,52 @@
   <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
     <title>Signup Form</title>
+
+    <script type="text/javascript">
+
+      function proceed() {
+      
+      var proceed = year() && radio() && text();
+      if (!proceed) {
+      window.alert("Please check your fields");
+      }
+}
+
+      function year() {
+
+      var re = /^\d{4}$/;
+      var year = document.getElementById("class_year").value;
+      return (re.test(year)); 
+      }
+
+      function radio() {
+
+      var radios = document.getElementsByName("coursework");
+      var OK = false;
+
+      for (var i = 0; i < radios.length; i++) {
+			  if (radios[i].checked) {
+			  OK = true;
+			  break;
+			  }
+		}		  
+      return(OK);
+      }
+
+     function text() {
+     var re = /.+/;
+     var title = document.getElementById("title").value;
+     var description = document.getElementById("description").value;
+     var faculty_name = document.getElementById("faculty_name").value;
+     var faculty_department = document.getElementById("faculty_department").value;
+
+     var OK = re.test(title) && re.test(description) && re.test(faculty_name) && re.test(faculty_department);
+     return OK;
+     }
+
+
+    </script>
+
   </head>
 
   <body>
@@ -14,18 +60,18 @@
 
     
     <div class="container">
-      <form action="/forms/signupform", method="post">
+      <form action="/forms/signupform" method="post" onsubmit="return proceed();">
         <div>
           <label>Name:</label>
           <input type="text" name="student_name"/>
         </div>
         <div>
           <label>Class:</label>
-          <input type="text" name="class_year"/>
+          <input type="text" name="class_year" id="class_year"/>
         </div>
         <div>
-          <label>Please check one:</label><br>
-          <div class="radio">
+          <label>Please check one:</label>
+          <div class="radio" id="radio">
             <input type="radio" name="coursework" value="397">397<br>
             <input type="radio" name="coursework" value="398">398<br>
             <input type="radio" name="coursework" value="497">497<br>
@@ -37,22 +83,22 @@
         </div>
         <div>
           <label>Title of Project:</label>
-          <textarea name="title" rows="2" cols="23"></textarea>
+          <textarea name="title" id="title" rows="2" cols="23"></textarea>
         </div>
         <div>
           <label>Description:</label>
-          <textarea name="description" rows="10" cols="23"></textarea>
+          <textarea name="description" id="description" rows="10" cols="23"></textarea>
         <!-- <div> -->
         <!--   <label>Faculty Approval:</label> -->
         <!--   <input type="checkbox" name="faculty_signature" value="facultySignature"/>Faculty Approval -->
         <!-- </div> -->
         <div>
           <label>Faculty Name:</label>
-          <input type="text" name="faculty_name"/>
+          <input type="text" name="faculty_name" id="faculty_name"/>
         </div>
         <div>
           <label>Faculty Department:</label>
-          <input type="text" name="faculty_department" />
+          <input type="text" name="faculty_department" id="faculty_department" />
         </div>
         <div id="submit">
           <input type="submit" value="Submit">
