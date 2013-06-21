@@ -223,11 +223,10 @@ class FormView(webapp2.RequestHandler):
         student_netID = self.request.get('student_netID')        
         if form_type == 'signup':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
+            form = query.fetch(1)[0] # this might be buggy
         elif form_type == 'february':
             query = FebruaryForm.query(SignupForm.student_netID==student_netID)
             form = query.fetch(1)[0]
-        # update these:
         elif form_type == 'checkpoint':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
             form = query.fetch(1)[0]
