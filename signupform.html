@@ -20,7 +20,12 @@
 
       var re = /^\d{4}$/;
       var year = document.getElementById("class_year").value;
-      return (re.test(year)); 
+      
+      if (!re.test(year)) {
+      document.getElementById("class_year").style.backgroundColor='#ff0';
+      return false; }
+
+      else return true;
       }
 
       function radio() {
@@ -33,7 +38,9 @@
 			  OK = true;
 			  break;
 			  }
-		}		  
+		}	
+
+      if (!OK) document.getElementById("test").style.color='#ff0';
       return(OK);
       }
 
@@ -70,8 +77,9 @@
           <input type="text" name="class_year" id="class_year"/>
         </div>
         <div>
-          <label>Please check one:</label>
-          <div class="radio" id="radio">
+          <label id="test">Please check one:</label>
+	</div>
+          <div class = "radio">
             <input type="radio" name="coursework" value="397">397<br>
             <input type="radio" name="coursework" value="398">398<br>
             <input type="radio" name="coursework" value="497">497<br>
@@ -79,8 +87,7 @@
             <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
             <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
             <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
-          </div>
-        </div>
+	</div>         
         <div>
           <label>Title of Project:</label>
           <textarea name="title" id="title" rows="2" cols="23"></textarea>
