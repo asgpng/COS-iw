@@ -42,7 +42,7 @@
 		}	
 
       if (!OK) { document.getElementById("test").style.color='#ff0'; }
-      else { document.getElementById("test").style.color='#fff'; }
+      else { document.getElementById("test").style.color='#000'; }
       return(OK);
       }
 
@@ -51,7 +51,6 @@
      var title = document.getElementById("title").value;
      var description = document.getElementById("description").value;
      var faculty_name = document.getElementById("faculty_name").value;
-     var faculty_department = document.getElementById("faculty_department").value;
 			  
      if (!re.test(title)) { document.getElementById("title").style.backgroundColor='#ff0'; }
      else { document.getElementById("title").style.backgroundColor='#fff'; }
@@ -62,11 +61,7 @@
      if (!re.test(faculty_name)) { document.getElementById("faculty_name").style.backgroundColor='#ff0'; }
      else { document.getElementById("faculty_name").style.backgroundColor='#fff'; }
 
-     if (!re.test(faculty_department)) { document.getElementById("faculty_department").style.backgroundColor='#ff0'; }
-     else { document.getElementById("faculty_department").style.backgroundColor='#fff'; }
-
-
-     var OK = re.test(title) && re.test(description) && re.test(faculty_name) && re.test(faculty_department);
+     var OK = re.test(title) && re.test(description) && re.test(faculty_name)
      return OK;
      }
 
@@ -116,11 +111,11 @@
         <!-- </div> -->
         <div>
           <label>Advisor's Name:</label>
-          <input type="text" name="faculty_name" id="faculty_name"/>
+          <input type="text" name="advisor_name" id="advisor_name"/>
         </div>
         <div>
           <label>Advisor's Department:</label>
-	  <select name="faculty_department" id="faculty_department">
+	  <select name="advisor_department" id="advisor_department">
 	    <option value="ANT">Anthropology</option>
 	    <option value="ARC">Architecture</option>
 	    <option value="ART">Art and Archaeology</option>
