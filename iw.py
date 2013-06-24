@@ -48,15 +48,18 @@ def make_query(form_class, query_params):
 
 # outer level of query, for deciding which type of form to query
 def make_query_all(query_params):
-    if query_params['form_type'] == 'signup':
-        query = make_query(SignupForm, query_params)
-    elif query_params['form_type'] == 'february':
-        query = make_query(FebruaryForm, query_params)
-    elif query_params['form_type'] == 'checkpoint':
-        query = make_query(CheckpointForm, query_params)
-    else: # form_type == 'second_reader':
-        query = make_query(SecondReaderForm, query_params)
-    return query
+    try:
+        if query_params['form_type'] == 'signup':
+            query = make_query(SignupForm, query_params)
+        elif query_params['form_type'] == 'february':
+            query = make_query(FebruaryForm, query_params)
+        elif query_params['form_type'] == 'checkpoint':
+            query = make_query(CheckpointForm, query_params)
+        else: # form_type == 'second_reader':
+            query = make_query(SecondReaderForm, query_params)
+        return query
+    except KeyError:
+        print 'form_type is not in query_params'
 
 def build_query_params(self):
     args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID']
@@ -327,10 +330,10 @@ class FormDelete(webapp2.RequestHandler):
     
     def get(self):
         query_params = build_query_params(self)
-        query  = make_query_all(query_params)
-
-        form = query.fetch(1)[0]
-        form.key.delete()
+        if 'form_type' in query_params:
+            query  = make_query_all(query_params)
+            form = query.fetch(1)[0]
+            form.key.delete()
 
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
