@@ -13,6 +13,17 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'])
 
+# for encoding dictionary urls in jinja
+# note: Jinja 2.7 includes a urlencode filter by default, but GAE uses Jinja 2.6
+#       This hack seems to work for our small purposes, but it may not be as
+#       robust as the Jinja library filters.
+def do_urlencode(dict):
+    url = urllib.urlencode(dict)
+    return url
+
+# update jinja filter:
+JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
+
 def getLoginStatus(uri):
     if users.get_current_user():
         url = users.create_logout_url(uri)
@@ -21,6 +32,18 @@ def getLoginStatus(uri):
         url = users.create_login_url(uri)
         url_linktext = 'Login'
     return (url, url_linktext)
+
+def make_query(form_class, query_params):
+    query = form_class.query()
+    if 'student_name' in query_params:
+        query.filter(form_class.student_name==query_params['student_name'])
+    if 'student_netID' in query_params:
+        query.filter(form_class.student_netID==query_params['student_netID'])
+    if 'advisor_name' in query_params:
+        query.filter(form_class.advisor_name==query_params['advisor_name'])
+    if 'advisor_netID' in query_params:
+        query.filter(form_class.advisor_netID==query_params['advisor_netID'])
+    return query
 
 class SignupForm(ndb.Model):
     form_type = ndb.StringProperty(default="signup")
@@ -109,7 +132,7 @@ class SignupFormPage(webapp2.RequestHandler):
         sf = SignupForm(student_name=self.request.get('student_name'),
                         class_year = int(self.request.get('class_year')),
                         coursework = self.request.get('coursework'),
-                        title = self.request.get('titles'),
+                        title = self.request.get('title'),
                         description = self.request.get('description'),
                         advisor_signature = bool(self.request.get('advisor_signature')),
                         advisor_name = self.request.get('advisor_name'),
@@ -121,7 +144,6 @@ class SignupFormPage(webapp2.RequestHandler):
         sf.put()
 
         query_params = {'student_netID':sf.student_netID,'form_type':sf.form_type}
-        # self.redirect('/forms/signupform/view?' + urllib.urlencode(query_params))
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
 class CheckPointFormPage(webapp2.RequestHandler):
@@ -219,7 +241,7 @@ class FormView(webapp2.RequestHandler):
         student_netID = self.request.get('student_netID')        
         if form_type == 'signup':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            form = query.fetch(1)[0] # this might be buggy
+            forms = query.fetch(1) # this might be buggy
         elif form_type == 'february':
             query = FebruaryForm.query(FebruaryForm.student_netID==student_netID)
             form = query.fetch(1)[0]
@@ -228,7 +250,7 @@ class FormView(webapp2.RequestHandler):
             form = query.fetch(1)[0]
         else:# form_type == 'second_reader':
             query = SecondReaderForm.query(SecondReaderForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
+            forms = query.fetch(1)
 
         template_values = {
             'form': form,
@@ -249,22 +271,20 @@ class FormQuery(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        form_type = self.request.get('form_type')
-        # additional arguments:
-        args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
+        args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID', 'form_type']
         query_params = {}
-        query_params['form_type'] = form_type
         for arg in args:
             arg_get = self.request.get(arg)
             if arg_get != '':
                 query_params[arg] = arg_get
 
-        self.redirect('/forms/view_query?' + urllib.urlencode(query_params))
+        self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
-class ViewQuery(webapp2.RequestHandler):
+class QueryResults(webapp2.RequestHandler):
 
     def get(self):
-
+        # need to ensure form_type is accessible, even if it is '', so we can
+        # make the query accordingly
         form_type = self.request.get('form_type')
         # additional arguments:
         args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
@@ -274,52 +294,24 @@ class ViewQuery(webapp2.RequestHandler):
             if arg_get != '':
                 query_params[arg] = arg_get
 
-        # Is there a better way of doing this?
         if form_type == 'signup':
-            query = SignupForm.query()
-            if 'student_name' in query_params:
-                query.filter(SignupForm.student_name==query_params['student_name'])
-            if 'student_netID' in query_params:
-                query.filter(SignupForm.student_netID==query_params['student_netID'])
-            if 'advisor_name' in query_params:
-                query.filter(SignupForm.advisor_name==query_params['advisor_name'])
-            if 'advisor_netID' in query_params:
-                query.filter(SignupForm.advisor_netID==query_params['advisor_netID'])
-            forms = query.fetch(20) # this might be buggy
+            query = make_query(SignupForm, query_params)
+            forms = query.fetch(20)
         elif form_type == 'february':
-            query = FebruaryForm.query()
-            if 'student_name' in query_params:
-                query.filter(FebruaryForm.student_name==query_params['student_name'])
-            if 'student_netID' in query_params:
-                query.filter(FebruaryForm.student_netID==query_params['student_netID'])
-            if 'advisor_name' in query_params:
-                query.filter(FebruaryForm.advisor_name==query_params['advisor_name'])
-            if 'advisor_netID' in query_params:
-                query.filter(FebruaryForm.advisor_netID==query_params['advisor_netID'])
+            query = make_query(FebruaryForm, query_params)
             forms = query.fetch(20)
         elif form_type == 'checkpoint':
-            query = CheckpointForm.query()
-            if 'student_name' in query_params:
-                query.filter(CheckpointForm.student_name==query_params['student_name'])
-            if 'student_netID' in query_params:
-                query.filter(CheckpointForm.student_netID==query_params['student_netID'])
-            if 'advisor_name' in query_params:
-                query.filter(CheckpointForm.advisor_name==query_params['advisor_name'])
-            if 'advisor_netID' in query_params:
-                query.filter(CheckpointForm.advisor_netID==query_params['advisor_netID'])
+            query = make_query(CheckpointForm, query_params)
             forms = query.fetch(20)
-        else: # form_type == 'second_reader':
-            query = SecondReaderForm.query()
-            if 'student_name' in query_params:
-                query.filter(SecondReaderForm.student_name==query_params['student_name'])
-            if 'student_netID' in query_params:
-                query.filter(SecondReaderForm.student_netID==query_params['student_netID'])
-            if 'advisor_name' in query_params:
-                query.filter(SecondReaderForm.advisor_name==query_params['advisor_name'])
-            if 'advisor_netID' in query_params:
-                query.filter(SecondReaderForm.advisor_netID==query_params['advisor_netID'])
+        elif form_type == 'second_reader':
+            query = make_query(SecondReaderForm, query_params)
             forms = query.fetch(20)
-
+        else: # form_type has not been entered as a query criterion
+            forms = []
+            for form_type in [SignupForm, FebruaryForm, CheckpointForm, SecondReaderForm]:
+                for form in make_query(form_type, query_params).fetch(20):
+                    forms.append(form)
+            
         template_values = {
             'forms':forms,
             'url': getLoginStatus(self.request.uri)[0], #url,
@@ -327,6 +319,38 @@ class ViewQuery(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('view_query.html')
         self.response.write(template.render(template_values))
+
+class QueryView(webapp2.RequestHandler):
+
+    def get(self):
+        form_type = self.request.get('form_type')
+        args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
+        query_params = {}
+        for arg in args:
+            arg_get = self.request.get(arg)
+            if arg_get != '':
+                query_params[arg] = arg_get
+        if form_type == 'signup':
+            query = make_query(SignupForm, query_params)
+            form = query.fetch(1)
+        elif form_type == 'february':
+            query = make_query(FebruaryForm, query_params)
+            form = query.fetch(1)
+        elif form_type == 'checkpoint':
+            query = make_query(CheckpointForm, query_params)
+            form = query.fetch(1)
+        else: # form_type == 'second_reader':
+            query = make_query(SecondReaderForm, query_params)
+            form = query.fetch(1)
+
+        template_values = {
+            'form':form[0], # pass form as form object rather than list
+            'url': getLoginStatus(self.request.uri)[0], #url,
+            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+        }
+        template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form_type)
+        self.response.write(template.render(template_values))
+
 
 
 application = webapp2.WSGIApplication([
@@ -337,5 +361,6 @@ application = webapp2.WSGIApplication([
     ('/forms/februaryform', FebruaryFormPage),
     ('/forms/view', FormView),
     ('/forms/query', FormQuery),
-    ('/forms/view_query', ViewQuery),
+    ('/forms/query_results', QueryResults),
+    ('/forms/query_view', QueryView),
 ], debug=True)
