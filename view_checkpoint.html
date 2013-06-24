@@ -2,10 +2,21 @@
 <head>
   <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   <title>Submitted Checkpoint Form</title>
+
+  <script type = "text/javascript">
+
+    function check(id) {
+
+window.alert(id);
+document.getElementById(id).checked=true;
+
+}
+
+  </script>
 </head>
 {% autoescape true %}
 <html>
-  <body>
+  <body onload="check('one');">
 
     <h1>Checkpoint Form</h1>
 
@@ -44,12 +55,15 @@
       <div>
 	<label>I read the student's 1-page summary report:</label>
 	<div class="radio">
-       {% if form.advisor_read_summary == "yes": %}
-	        <input type="radio" name="advisor_read_summary" value="yes" checked disabled/>yes<br>
-		<input type="radio" name="advisor_read_summary" value="no" disabled/>no<br>
-	{% else: %}
-	        <input type="radio" name="advisor_read_summary" value="yes" disabled/>yes<br>
-		<input type="radio" name="advisor_read_summary" value="no" checked disabled/>no<br>
+      
+	        <input type="radio" name="advisor_read_summary" value="yes" id="one" disabled/>yes<br>
+		<input type="radio" name="advisor_read_summary" value="no" id="two" disabled/>no<br>
+{% if form.advisor_read_summary == "yes":   %}
+
+		<body onload="check('one');"></body>	
+<!--{% else: %}
+<body onload="check(two);"></body>-->	
+	
 	{% endif %}
         </div>
       </div>
