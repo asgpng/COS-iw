@@ -11,7 +11,7 @@
       function proceed() {
       
       var proceed = year() && radio() && text();
-      if (!proceed) window.alert("Please check your fields");
+      if (!proceed) { window.alert("Please check highlighted field(s)!"); }
       return proceed;
       
       }
@@ -21,11 +21,12 @@
       var re = /^\d{4}$/;
       var year = document.getElementById("class_year").value;
       
-      if (!re.test(year)) {
-      document.getElementById("class_year").style.backgroundColor='#ff0';
-      return false; }
+      if (!re.test(year))
+      { document.getElementById("class_year").style.backgroundColor='#ff0'; }
 
-      else return true;
+      else { document.getElementById("class_year").style.backgroundColor='#fff'; }
+
+      return re.test(year);
       }
 
       function radio() {
@@ -40,7 +41,8 @@
 			  }
 		}	
 
-      if (!OK) document.getElementById("test").style.color='#ff0';
+      if (!OK) { document.getElementById("test").style.color='#ff0'; }
+      else { document.getElementById("test").style.color='#fff'; }
       return(OK);
       }
 
@@ -50,6 +52,19 @@
      var description = document.getElementById("description").value;
      var faculty_name = document.getElementById("faculty_name").value;
      var faculty_department = document.getElementById("faculty_department").value;
+			  
+     if (!re.test(title)) { document.getElementById("title").style.backgroundColor='#ff0'; }
+     else { document.getElementById("title").style.backgroundColor='#fff'; }
+
+     if (!re.test(description)) { document.getElementById("description").style.backgroundColor='#ff0'; }
+     else { document.getElementById("description").style.backgroundColor='#fff'; }
+
+     if (!re.test(faculty_name)) { document.getElementById("faculty_name").style.backgroundColor='#ff0'; }
+     else { document.getElementById("faculty_name").style.backgroundColor='#fff'; }
+
+     if (!re.test(faculty_department)) { document.getElementById("faculty_department").style.backgroundColor='#ff0'; }
+     else { document.getElementById("faculty_department").style.backgroundColor='#fff'; }
+
 
      var OK = re.test(title) && re.test(description) && re.test(faculty_name) && re.test(faculty_department);
      return OK;
