@@ -9,16 +9,45 @@
     <h1>Signup Form</h1>
 
     
-    <h1>Form View</h1>
+    <h2>Your form has been successfully submitted.</h2>
     
-    <p>this is the submitted form page</p>
-
-    We should be seeing results here!!!    <br>
-    {{form}}
-    <br>
-    <p>{{ form.student_name }}</p>
-    <p>{{ form.title }}</p>
-    <p>{{ form.date }}</p>
+    <div class="containter">
+      <div>
+	<label>Name:</label>
+	<input type="text" name="student_name" value=" {{ form.student_name }}" disabled/>
+      </div>
+      <div>
+	<label>Class:</label>
+	<input type="text" name="class_year" value=" {{ form.class_year }}" disabled/>
+      </div>
+      <div>
+	<label id="test">Please check one:</label>
+      </div>
+      <div class="radio">
+	<input type="radio" name="coursework" value="397">397<br>
+        <input type="radio" name="coursework" value="398">398<br>
+        <input type="radio" name="coursework" value="497">497<br>
+        <input type="radio" name="coursework" value="498">498<br>
+        <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
+        <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
+        <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
+      </div>
+      <div>
+	<label>Title of Project:</label>
+	<textarea name="title" id="title" rows="2" cols="23" value=" {{ form.title }}" disabled></textarea>
+      </div>
+      <div>
+	<label>Description:</label>
+	<textarea name="description" id="description" rows="10" cols="23" value=" {{ form.description }}" disabled></textarea>
+      </div>
+      <div>
+	<label>Faculty Name:</label>
+        <input type="text" name="faculty_name" id="faculty_name" value=" {{ form.faculty_name }}" disabled/>
+        </div>
+        <div>
+          <label>Faculty Department:</label>
+          <input type="text" name="faculty_department" id="faculty_department" value=" {{ form.faculty_department }}" disabled />
+        </div>
 
     <hr>
 
