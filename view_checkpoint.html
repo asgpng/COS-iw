@@ -44,19 +44,19 @@
       <div>
 	<label>I read the student's 1-page summary report:</label>
 	<div class="radio">
-       {% if form.advisor_read_summary: %}
-	        <input type="radio" name="advisor_read_summary" value="True" checked disabled/>yes<br>
-		<input type="radio" name="advisor_read_summary" value="False" disabled/>no<br>
+       {% if form.advisor_read_summary == "yes": %}
+	        <input type="radio" name="advisor_read_summary" value="yes" checked disabled/>yes<br>
+		<input type="radio" name="advisor_read_summary" value="no" disabled/>no<br>
 	{% else: %}
-	        <input type="radio" name="advisor_read_summary" value="True" disabled/>yes<br>
-		<input type="radio" name="advisor_read_summary" value="False" checked disabled/>no<br>
+	        <input type="radio" name="advisor_read_summary" value="yes" disabled/>yes<br>
+		<input type="radio" name="advisor_read_summary" value="no" checked disabled/>no<br>
 	{% endif %}
         </div>
       </div>
       <div>
 	<label>Would you like your student to meet with you more often? {{form.meet_more_often }}</label>
 	<div class="radio">
-        {% if form.meet_more_often: %}
+        {% if form.meet_more_often == "yes": %}
 	  <input type="radio" name="meet_more_often" value="yes" checked disabled/>yes<br>
           <input type="radio" name="meet_more_often" value="no" disabled/>no<br>
 	{% else: %}
