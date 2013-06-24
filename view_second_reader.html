@@ -26,18 +26,18 @@
         </div>
         <div>
           <label>Title of Project:</label>
-          <textarea name="title" rows="2" cols="23" value=" {{ form.title }}" disabled></textarea>
+          <textarea name="title" rows="2" cols="23" disabled>{{ form.title }}</textarea>
         </div>
         <div>
           <label>Description:</label>
-          <textarea name="description" rows="10" cols="23" value=" {{ form.description }}" disabled></textarea>
+          <textarea name="description" rows="10" cols="23" disabled>{{ form.description }}</textarea>
         </div>
         <div>
           <label>Advisor Name</label>
           <input type="text" name="sr_name" value=" {{ form.sr_name }}" disabled/>
           <div>
             <label>Advisor NetID</label>
-            <input type="text" name="sr_id" value=" {{form.sr_id }}" disabled/>
+            <input type="text" name="sr_netID" value=" {{form.sr_netID }}" disabled/>
           </div>
           <div>
             <label>Advisor Department</label>
@@ -45,13 +45,13 @@
           </div>
           <div>
             <label>I agree to be a second reader</label><br>
-            <input type="checkbox" name="sr_agreement" value="advisor_approval"/>
+            <input type="checkbox" name="sr_agreement" value="{{ form.sr_agreement  }}"/>
           </div>
 	  <div>
             <label>Electronic signature: (needed for senior thesis or two semester IW only)</label>
-            <input type="text" align="center" name="sr_signature" value=" form.sr_signature" disabled/>
+            <input type="text" align="center" name="sr_signature" value="{{ form.sr_signature }}" disabled/>
           </div>
-
+	</div>
     <hr>
 
     <!-- links: -->
