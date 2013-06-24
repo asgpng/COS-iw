@@ -247,10 +247,12 @@ class FormView(webapp2.RequestHandler):
             form = query.fetch(1)[0]
         elif form_type == 'checkpoint':
             query = CheckpointForm.query(CheckpointForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
+            forms = query.fetch(1)
         else:# form_type == 'second_reader':
             query = SecondReaderForm.query(SecondReaderForm.student_netID==student_netID)
             forms = query.fetch(1)
+
+        form = forms[0]
 
         template_values = {
             'form': form,
@@ -317,7 +319,7 @@ class QueryResults(webapp2.RequestHandler):
             'url': getLoginStatus(self.request.uri)[0], #url,
             'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
-        template = JINJA_ENVIRONMENT.get_template('view_query.html')
+        template = JINJA_ENVIRONMENT.get_template('query_results.html')
         self.response.write(template.render(template_values))
 
 class QueryView(webapp2.RequestHandler):
@@ -332,16 +334,14 @@ class QueryView(webapp2.RequestHandler):
                 query_params[arg] = arg_get
         if form_type == 'signup':
             query = make_query(SignupForm, query_params)
-            form = query.fetch(1)
         elif form_type == 'february':
             query = make_query(FebruaryForm, query_params)
-            form = query.fetch(1)
         elif form_type == 'checkpoint':
             query = make_query(CheckpointForm, query_params)
-            form = query.fetch(1)
         else: # form_type == 'second_reader':
             query = make_query(SecondReaderForm, query_params)
-            form = query.fetch(1)
+
+        form = query.fetch(1)
 
         template_values = {
             'form':form[0], # pass form as form object rather than list

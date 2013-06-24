@@ -10,19 +10,33 @@
     
     <p>this is the submitted form page</p>
     <h2>Summary</h2>
-    <p>Your query matched {{ forms|length }} forms</p>
+    <p>Your query matched 
+      {% if forms|length != 1 %}
+        {{ forms|length }} forms.</p>
+      {% else %}
+        {{ forms|length }} form.</p>
+      {% endif %}
 
+    <table border="1">
+    <tr>
+      <th>Form Type:</th>
+      <th>Student netID:</th>
+      <th>Student Name:</th>
+      <th>Advisor netID:</th>
+      <th>Advisor Name:</th>
+      <th>Link:</th>
+    </tr>
     {% for form in forms %}
-    Form Type: {{ form.form_type }}<br>
-    Student netID: {{ form.student_netID }}<br>
-    Student Name: {{ form.student_name }}<br>
-    Advisor netID: {{ form.advisor_netID }}<br>
-    Advisor Name: {{ form.advisor_name }}<br>
-
-    <a href="query_view?{{ {'form_type':form.form_type, 'student_netID':form.student_netID} | urlencode}}">View complete result </a>
-      <br>
-      <br>
+    <tr>
+      <td>{{ form.form_type }}</td>
+      <td>{{ form.student_netID }}</td>
+      <td>{{ form.student_name }}</td>
+      <td>{{ form.advisor_netID }}</td>
+      <td>{{ form.advisor_name }}</td>
+      <td><a href="query_view?{{ {'form_type':form.form_type, 'student_netID':form.student_netID} | urlencode}}">View complete result </a></td>
+    </tr>
     {% endfor %}
+    </table>
     <br>
 
     <hr>
