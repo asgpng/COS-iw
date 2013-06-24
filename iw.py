@@ -241,17 +241,14 @@ class FormView(webapp2.RequestHandler):
         student_netID = self.request.get('student_netID')        
         if form_type == 'signup':
             query = SignupForm.query(SignupForm.student_netID==student_netID)
-            forms = query.fetch(1) # this might be buggy
         elif form_type == 'february':
             query = FebruaryForm.query(FebruaryForm.student_netID==student_netID)
-            form = query.fetch(1)[0]
         elif form_type == 'checkpoint':
             query = CheckpointForm.query(CheckpointForm.student_netID==student_netID)
-            forms = query.fetch(1)
         else:# form_type == 'second_reader':
             query = SecondReaderForm.query(SecondReaderForm.student_netID==student_netID)
-            forms = query.fetch(1)
 
+        forms = query.fetch(1)
         form = forms[0]
 
         template_values = {
