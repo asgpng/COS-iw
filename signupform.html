@@ -42,7 +42,7 @@
 		}	
 
       if (!OK) { document.getElementById("test").style.color='#ff0'; }
-      else { document.getElementById("test").style.color='#fff'; }
+      else { document.getElementById("test").style.color='#000'; }
       return(OK);
       }
 
@@ -51,7 +51,6 @@
      var title = document.getElementById("title").value;
      var description = document.getElementById("description").value;
      var faculty_name = document.getElementById("faculty_name").value;
-     var faculty_department = document.getElementById("faculty_department").value;
 			  
      if (!re.test(title)) { document.getElementById("title").style.backgroundColor='#ff0'; }
      else { document.getElementById("title").style.backgroundColor='#fff'; }
@@ -62,11 +61,7 @@
      if (!re.test(faculty_name)) { document.getElementById("faculty_name").style.backgroundColor='#ff0'; }
      else { document.getElementById("faculty_name").style.backgroundColor='#fff'; }
 
-     if (!re.test(faculty_department)) { document.getElementById("faculty_department").style.backgroundColor='#ff0'; }
-     else { document.getElementById("faculty_department").style.backgroundColor='#fff'; }
-
-
-     var OK = re.test(title) && re.test(description) && re.test(faculty_name) && re.test(faculty_department);
+     var OK = re.test(title) && re.test(description) && re.test(faculty_name)
      return OK;
      }
 
@@ -116,44 +111,45 @@
         <!-- </div> -->
         <div>
           <label>Advisor's Name:</label>
-          <input type="text" name="faculty_name" id="faculty_name"/>
+          <input type="text" name="advisor_name" id="advisor_name"/>
         </div>
         <div>
           <label>Advisor's Department:</label>
-	 <select name="faculty_department" id="faculty_department">
-	   <option value="ANT">Anthropology</option>
-	   <option value="ARC">Architecture</option>
-	   <option value="AST">Astrophysical Sciences</option>
-	   <option value="CBE">Chemical and Biological Engineering</option>
-	   <option value="CHE">Chemistry</option>
-	   <option value="CEE">Civil and Environmental Engineering</option>
-	   <option value="CLA">Classics</option>
-	   <option value="COM">Comparative Literature</option>
-	   <option value="COS" selected = "selected">Computer Science</option>
-	   <option value="EAS">East Asian Studies</option>
-	   <option value="EEB">Ecology and Evolutionary Biology</option>
-	   <option value="ECO">Economics</option>
-	   <option value="ELE">Electrical Engineering</option>
-	   <option value="ENG">English</option>
-	   <option value="FIT">French and Italian</option>
-	   <option value="GEO">Geosciences</option>
-	   <option value="GER">German</option>
-	   <option value="HIS">History</option>
-	   <option value="MAT">Mathematics</option>
-	   <option value="MAE">Mechanical and Aerospace Engineering</option>
-	   <option value="MOL">Molecular Biology</option>
-	   <option value="MUS">Music</option>
-	   <option value="NES">Near Eastern Studies</option>
-	   <option value="ORF">Operations Research and Financial Engineering</option>
-	   <option value="PHI">Philosophy</option>
-	   <option value="PHY">Physics</option>
-	   <option value="POL">Politics</option>
-	   <option value="PSY">Psychology</option>
-	   <option value="REL">Religion</option>
-	   <option value="SLA">Slavic Languages and Literatures</option>
-	   <option value="SOC">Sociology</option>
-	   <option value="SPO">Spanish and Portuguese</option>
-	   <option value="WWS">Woodrow Wilson School</option>
+	  <select name="advisor_department" id="advisor_department">
+	    <option value="ANT">Anthropology</option>
+	    <option value="ARC">Architecture</option>
+	    <option value="ART">Art and Archaeology</option>
+	    <option value="AST">Astrophysical Sciences</option>
+	    <option value="CBE">Chemical and Biological Engineering</option>
+	    <option value="CHE">Chemistry</option>
+	    <option value="CEE">Civil and Environmental Engineering</option>
+	    <option value="CLA">Classics</option>
+	    <option value="COM">Comparative Literature</option>
+	    <option value="COS" selected = "selected">Computer Science</option>
+	    <option value="EAS">East Asian Studies</option>
+	    <option value="EEB">Ecology and Evolutionary Biology</option>
+	    <option value="ECO">Economics</option>
+	    <option value="ELE">Electrical Engineering</option>
+	    <option value="ENG">English</option>
+	    <option value="FIT">French and Italian</option>
+	    <option value="GEO">Geosciences</option>
+	    <option value="GER">German</option>
+	    <option value="HIS">History</option>
+	    <option value="MAT">Mathematics</option>
+	    <option value="MAE">Mechanical and Aerospace Engineering</option>
+	    <option value="MOL">Molecular Biology</option>
+	    <option value="MUS">Music</option>
+	    <option value="NES">Near Eastern Studies</option>
+	    <option value="ORF">Operations Research and Financial Engineering</option>
+	    <option value="PHI">Philosophy</option>
+	    <option value="PHY">Physics</option>
+	    <option value="POL">Politics</option>
+	    <option value="PSY">Psychology</option>
+	    <option value="REL">Religion</option>
+	    <option value="SLA">Slavic Languages and Literatures</option>
+	    <option value="SOC">Sociology</option>
+	    <option value="SPO">Spanish and Portuguese</option>
+	    <option value="WWS">Woodrow Wilson School</option>
 	 </select>
         </div>
         <div id="submit">
