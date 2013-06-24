@@ -33,6 +33,7 @@ def getLoginStatus(uri):
         url_linktext = 'Login'
     return (url, url_linktext)
 
+# Queries a form_class based on given query parameters
 def make_query(form_class, query_params):
     query = form_class.query()
     if 'student_name' in query_params:
@@ -44,6 +45,27 @@ def make_query(form_class, query_params):
     if 'advisor_netID' in query_params:
         query.filter(form_class.advisor_netID==query_params['advisor_netID'])
     return query
+
+# outer level of query, for deciding which type of form to query
+def make_query_all(query_params):
+    if query_params['form_type'] == 'signup':
+        query = make_query(SignupForm, query_params)
+    elif query_params['form_type'] == 'february':
+        query = make_query(FebruaryForm, query_params)
+    elif query_params['form_type'] == 'checkpoint':
+        query = make_query(CheckpointForm, query_params)
+    else: # form_type == 'second_reader':
+        query = make_query(SecondReaderForm, query_params)
+    return query
+
+def build_query_params(self):
+    args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID']
+    query_params = {}
+    for arg in args:
+        arg_get = self.request.get(arg)
+        if arg_get != '':
+            query_params[arg] = arg_get
+    return query_params
 
 class SignupForm(ndb.Model):
     form_type = ndb.StringProperty(default="signup")
@@ -237,17 +259,8 @@ class FebruaryFormPage(webapp2.RequestHandler):
 class FormView(webapp2.RequestHandler):
     
     def get(self):
-        form_type = self.request.get('form_type')
-        student_netID = self.request.get('student_netID')        
-        if form_type == 'signup':
-            query = SignupForm.query(SignupForm.student_netID==student_netID)
-        elif form_type == 'february':
-            query = FebruaryForm.query(FebruaryForm.student_netID==student_netID)
-        elif form_type == 'checkpoint':
-            query = CheckpointForm.query(CheckpointForm.student_netID==student_netID)
-        else:# form_type == 'second_reader':
-            query = SecondReaderForm.query(SecondReaderForm.student_netID==student_netID)
-
+        query_params = build_query_params(self)
+        query = make_query_all(query_params)
         forms = query.fetch(1)
         form = forms[0]
 
@@ -270,40 +283,15 @@ class FormQuery(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID', 'form_type']
-        query_params = {}
-        for arg in args:
-            arg_get = self.request.get(arg)
-            if arg_get != '':
-                query_params[arg] = arg_get
-
+        query_params = build_query_params(self)
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
 class QueryResults(webapp2.RequestHandler):
 
     def get(self):
-        # need to ensure form_type is accessible, even if it is '', so we can
-        # make the query accordingly
-        form_type = self.request.get('form_type')
-        # additional arguments:
-        args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
-        query_params = {}
-        for arg in args:
-            arg_get = self.request.get(arg)
-            if arg_get != '':
-                query_params[arg] = arg_get
-
-        if form_type == 'signup':
-            query = make_query(SignupForm, query_params)
-            forms = query.fetch(20)
-        elif form_type == 'february':
-            query = make_query(FebruaryForm, query_params)
-            forms = query.fetch(20)
-        elif form_type == 'checkpoint':
-            query = make_query(CheckpointForm, query_params)
-            forms = query.fetch(20)
-        elif form_type == 'second_reader':
-            query = make_query(SecondReaderForm, query_params)
+        query_params = build_query_params(self)
+        if 'form_type' in query_params:
+            query = make_query_all(query_params)
             forms = query.fetch(20)
         else: # form_type has not been entered as a query criterion
             forms = []
@@ -322,21 +310,8 @@ class QueryResults(webapp2.RequestHandler):
 class QueryView(webapp2.RequestHandler):
 
     def get(self):
-        form_type = self.request.get('form_type')
-        args = ['student_name', 'student_netID', 'advisor_name', 'advisor_netID']
-        query_params = {}
-        for arg in args:
-            arg_get = self.request.get(arg)
-            if arg_get != '':
-                query_params[arg] = arg_get
-        if form_type == 'signup':
-            query = make_query(SignupForm, query_params)
-        elif form_type == 'february':
-            query = make_query(FebruaryForm, query_params)
-        elif form_type == 'checkpoint':
-            query = make_query(CheckpointForm, query_params)
-        else: # form_type == 'second_reader':
-            query = make_query(SecondReaderForm, query_params)
+        query_params = build_query_params(self)
+        query = make_query_all(query_params)
 
         form = query.fetch(1)
 
@@ -345,10 +320,19 @@ class QueryView(webapp2.RequestHandler):
             'url': getLoginStatus(self.request.uri)[0], #url,
             'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
         }
-        template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form_type)
+        template = JINJA_ENVIRONMENT.get_template('view_%s.html' % query_params['form_type'])
         self.response.write(template.render(template_values))
 
+class FormDelete(webapp2.RequestHandler):
+    
+    def get(self):
+        query_params = build_query_params(self)
+        query  = make_query_all(query_params)
 
+        form = query.fetch(1)[0]
+        form.key.delete()
+
+        self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -360,4 +344,6 @@ application = webapp2.WSGIApplication([
     ('/forms/query', FormQuery),
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
+    ('/forms/form_delete', FormDelete),
+
 ], debug=True)
