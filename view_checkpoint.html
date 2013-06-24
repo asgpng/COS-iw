@@ -38,28 +38,37 @@
       </div>
       <h3>Advisor Section:</h3>
       <div>
-	<label>I read the student's 1-page summary report: {{ form.advisor_read_summary }}</label>
+	<label>I read the student's 1-page summary report:</label>
 	<div class="radio">
-	  <!-- LOOK INTO: javascript to make it so that the radio button is "checked" based on whichever value. -->
-          <input type="radio" name="advisor_read_summary" value="True"/>yes<br>
-          <input type="radio" name="advisor_read_summary" value="False"/>no<br>
+       {% if form.advisor_read_summary: %}
+	        <input type="radio" name="advisor_read_summary" value="True" checked disabled/>yes<br>
+		<input type="radio" name="advisor_read_summary" value="False" disabled/>no<br>
+	{% else: %}
+	        <input type="radio" name="advisor_read_summary" value="True" disabled/>yes<br>
+		<input type="radio" name="advisor_read_summary" value="False" checked disabled/>no<br>
+	{% endif %}
         </div>
       </div>
       <div>
 	<label>Would you like your student to meet with you more often? {{form.meet_more_often }}</label>
 	<div class="radio">
-          <input type="radio" name="meet_more_often" value="yes"/>yes<br>
-          <input type="radio" name="meet_more_often" value="no"/>no<br>
+        {% if form.meet_more_often: %}
+	  <input type="radio" name="meet_more_often" value="yes" checked disabled/>yes<br>
+          <input type="radio" name="meet_more_often" value="no" disabled/>no<br>
+	{% else: %}
+	  <input type="radio" name="meet_more_often" value="yes" disabled/>yes<br>
+	  <input type="radio" name="meet_more_often" value="no" checked disabled/>no<br>
+	{% endif %}
         </div>
       </div>
       <br>
       <div>
 	<label>Student progress:</label>
 	<div class="radio">
-              <input type="radio" name="student_progress" value="4"/>Exceptional<br>
-              <input type="radio" name="student_progress" value="3"/>Very Good<br>
-              <input type="radio" name="student_progress" value="2"/>Good<br>
-              <input type="radio" name="student_progress" value="1"/>Unsatisfactory<br>
+              <input type="radio" name="student_progress" value="4" disabled/>Exceptional<br>
+              <input type="radio" name="student_progress" value="3" disabled/>Very Good<br>
+              <input type="radio" name="student_progress" value="2" disabled/>Good<br>
+              <input type="radio" name="student_progress" value="1" disabled/>Unsatisfactory<br>
         </div>
       </div>
       <div>
