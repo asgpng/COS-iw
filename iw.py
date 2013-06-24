@@ -138,7 +138,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_name = self.request.get('advisor_name'),
                         advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')),
-                        student_netID = "test"
+                        student_netID = self.request.get('student_netID')
                         )
 
         sf.put()
@@ -167,7 +167,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                              meet_more_often = bool(self.request.get('meet_more_often')),
                              student_progress = int(self.request.get('student_progress')),
                              comments = self.request.get('comments'),
-                             student_netID = "test"
+                             student_netID = self.request.get('student_netID')
                              )
         cpf.put()
 
@@ -195,7 +195,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_department = self.request.get('sr_department'),
                                sr_agreement =bool(self.request.get('sr_agreement')),
                                sr_signature = self.request.get('sr_signature'),
-                               student_netID = "test"
+                               student_netID = self.request.get('student_netID')
                                )
 
         srf.put()
@@ -226,7 +226,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
                           advisor_more_meetings = bool(self.request.get('advisor_more_meetings')),
                           student_progress_eval = int(self.request.get('student_progress_eval')),
                           advisor_comments = self.request.get('advisor_comments'),
-                          student_netID = "test"
+                          student_netID = self.request.get('student_netID')
                       )
         ff.put()
 
