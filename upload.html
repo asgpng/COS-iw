@@ -1,1 +1,12 @@
-hello
+{% extends "base.html" %}
+{% block title %} Upload New File{% endblock %}
+{% block khead %}{% endblock %}
+{% block content %}
+<h1> Upload New File</h1>
+
+<div class="container">
+<form name="upload" action="mailto:kkoutras@princeton.edu" method="post">
+<input type="file" name="uploadField"/>
+</form>
+</class>
+{% endblock %}
