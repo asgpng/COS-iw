@@ -196,7 +196,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
         cpf = CheckpointForm(student_name=self.request.get('student_name'),
                              topic_title = self.request.get('topic_title'),
                              advisor_name = self.request.get('advisor'),
-                             adviosr_netID = 'olivia',
+                             advisor_netID = 'olivia',
                              meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                              self_assessment = self.request.get('self_assessment'),
                              advisor_read_summary = bool(self.request.get('advisor_read_summary')),
@@ -279,7 +279,9 @@ class FormView(webapp2.RequestHandler):
     def get(self):
         # calls helper method
         query_params = build_query_params(self)
-        query = make_query_all(query_params)
+        self.response.write(query_params)
+        query = make_query(CheckpointForm, query_params)
+        self.response.write(query)
         forms = query.fetch(1)
         form = forms[0]
         
@@ -361,6 +363,17 @@ class FormDelete(webapp2.RequestHandler):
 
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
+
+class Upload(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('upload.html')
+        self.response.write(template.render(template_values))
+
+
+        
+        
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
@@ -372,5 +385,6 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
+    ('/files/upload', Upload),
 
 ], debug=True)
