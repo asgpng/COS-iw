@@ -365,12 +365,18 @@ class FormDelete(webapp2.RequestHandler):
 
 
 class Upload(webapp2.RequestHandler):
+
     def get(self):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('upload.html')
         self.response.write(template.render(template_values))
 
 
+    def post(self):
+        self.response.write("Uploading ")
+        content = self.request.get('uploadField')
+        self.response.out.write(content)
+        print content
         
         
 

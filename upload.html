@@ -1,12 +1,29 @@
 {% extends "base.html" %}
 {% block title %} Upload New File{% endblock %}
-{% block khead %}{% endblock %}
+{% block head %}
+<script type="text/javascript">
+    
+    function check() {
+    var check = document.getElementById("upload").value;
+    if (check == "") {
+	window.alert("You did not upload a file");
+	return false;
+    }
+    else
+	  return true;
+}
+</script>
+
+{% endblock %}
 {% block content %}
 <h1> Upload New File</h1>
 
 <div class="container">
-<form name="upload" action="mailto:kkoutras@princeton.edu" method="post">
-<input type="file" name="uploadField"/>
-</form>
-</class>
+  <form name="upload" method="post" onsubmit="return check();">
+    <input type="file" name="uploadField" id="upload"/>
+    <div id="submit">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
 {% endblock %}
