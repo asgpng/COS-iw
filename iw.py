@@ -36,33 +36,13 @@ def getLoginStatus(uri):
 # Queries a form_class based on given query parameters
 def make_query(form_class, query_params):
 
-#     if 'student_name' in query_params:
-#         query1 = form_class.query(form_class._properties['student_name'] == query_params['student_name'])
-#     if 'student_netID' in query_params:
-#         query2 = form_class.query(form_class._properties['student_netID'] == query_params['student_netID'])
-#     if 'advisor_name' in query_params:
-#         query3 = form_class.query(form_class._properties['advisor_name'] == query_params['advisor_name'])
-#     if 'advisor_netID' in query_params:
-#         query4 = form_class.query(form_class._properties['advisor_netID'] == query_params['advisor_netID'])
-   # query = form_class
-  #  for qp in query_params:
-  #      query = form_class.query(form_class._properties[qp] == query_params[qp])
+    query = form_class.query()
 
-    query = form_class.query(ndb.AND(form_class.student_name == query_params['student_name'],
-                             ndb.AND(form_class.student_netID == query_params['student_netID'],
-                             ndb.AND(form_class.advisor_name == query_params['advisor_name'],
-                             ndb.AND(form_class.advisor_netID == query_params['advisor_netID'])))))
-
-
-#    query = form_class.query()
-#    if 'student_name' in query_params:
-#        query.filter("student_name =", query_params['student_name'])
-#    if 'student_netID' in query_params:
-#        query2 = form_class.query(form_class._properties['student_netID'] == query_params['student_netID'])
-#    if 'advisor_name' in query_params:
-#        query3 = form_class.query(form_class._properties['advisor_name'] == query_params['advisor_name'])
- #   if 'advisor_netID' in query_params:
-  #      query4 = form_class.query(form_class._properties['advisor_netID'] == query_params['advisor_netID'])
+    for kw, vals in query_params.items():
+        if not isinstance(vals, (list, tuple)):
+            vals = (vals,)
+        for v in vals:
+            query = query.filter(getattr(form_class, kw) ==v) #ndb.GenericProperty(kw) == v)
 
     return query
 
@@ -330,9 +310,13 @@ class QueryResults(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
+        self.response.write("query params:")
         self.response.write(query_params)
         if 'form_type' in query_params:
             query = make_query_all(query_params)
+            self.response.write("<br>")
+            self.response.write(query)
+            self.response.write("<br>")
             forms = query.fetch(20)
         else: # form_type has not been entered as a query criterion
             forms = []
