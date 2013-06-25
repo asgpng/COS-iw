@@ -74,32 +74,6 @@ def build_query_params(self):
             query_params[arg] = arg_get
     return query_params
 
-# check if a student has submitted a given form yet
-# in the case of submitted forms, query_params only contains form_type and student_netID
-def validateSubmission(form):
-    query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
-    query = make_query_all(query_params)
-    forms = query.fetch(1)
-    if len(forms) == 0:
-        alreadySubmitted = False
-    else:
-        alreadySubmitted = True
-    # add user/ information to the database
-    if not alreadySubmitted(sf.form_type, sf.netID):
-        form.put()
-        # sets the next url using student_netID and form_type
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
-    else:
-        self.redirect('/forms/invalid_entry?' + urllib.urlencode(query_params))
-
-
-# for when we get netIDs working
-class User(ndb.Model):
-    netID = ndb.StringProperty()
-    email = ndb.StringProperty()
-    user_type = ndb.StringProperty(choices=set(["student", "advisor", "second_reader", "administrator"]))
-
-
 class SignupForm(ndb.Model):
     # needs form_type, student_name, student_netID, advisor_name, advisor_netID
     form_type = ndb.StringProperty(default="signup")
@@ -205,7 +179,11 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
-        validateSubmission(sf)
+        # add user/ information to the database
+        sf.put()
+        # sets the next url using student_netID and form_type
+        query_params = {'student_netID':sf.student_netID,'form_type':sf.form_type}
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -381,13 +359,7 @@ class FormDelete(webapp2.RequestHandler):
             # the original query page.
             self.redirect('/forms/query')
 
-class FormInvalid(webapp2.RequestHandler):
-
-    def get(self):
-        template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
-        self.response.write(template.render(template_values))        
-
-class Upload(webapp2.RequestHandler):
+class NewFile(webapp2.RequestHandler):
 
     def get(self):
 
@@ -443,8 +415,8 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
-	('/forms/invalid_entry', FormInvalid),
     ('/files/new_file', NewFile),
+    ('/files/success', Success),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
     ('/files/view', ViewFiles),
