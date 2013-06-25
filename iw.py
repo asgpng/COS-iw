@@ -136,24 +136,24 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], 
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
 
 class SignupFormPage(webapp2.RequestHandler):
-
+    # get information from the user
     def get(self):
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], 
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }        
         template = JINJA_ENVIRONMENT.get_template('signupform.html')
         self.response.write(template.render(template_values))
 
     def post(self):
-
+        # get the information entered by user
         sf = SignupForm(student_name=self.request.get('student_name'),
                         class_year = int(self.request.get('class_year')),
                         coursework = self.request.get('coursework'),
@@ -165,9 +165,9 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
-
+        # add user/ information to the database
         sf.put()
-
+        # sets the next url using student_netID and form_type
         query_params = {'student_netID':sf.student_netID,'form_type':sf.form_type}
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
@@ -175,8 +175,8 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0],
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
@@ -203,8 +203,8 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0], 
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
         self.response.write(template.render(template_values))
@@ -233,8 +233,8 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0],
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('february_form.html')
         self.response.write(template.render(template_values))
@@ -260,8 +260,9 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
 
 class FormView(webapp2.RequestHandler):
-    
+    # this shows the results of what has been submitted
     def get(self):
+        # calls helper method
         query_params = build_query_params(self)
         query = make_query_all(query_params)
         forms = query.fetch(1)
@@ -269,10 +270,10 @@ class FormView(webapp2.RequestHandler):
 
         template_values = {
             'form': form,
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0],
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
-        template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form_type)
+        template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form.form_type)
         self.response.write(template.render(template_values))
 
 class FormQuery(webapp2.RequestHandler):
