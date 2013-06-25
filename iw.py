@@ -410,6 +410,14 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         blob_info = blobstore.BlobInfo.get(resource)
         self.send_blob(blob_info)
 
+class ViewFiles(webapp2.RequestHandler):
+    
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('view_files.html')
+
+        self.response.write(template.render(template_values))
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
@@ -425,5 +433,6 @@ application = webapp2.WSGIApplication([
 #    ('/files/new_file', NewFile),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
+    ('/files/view', ViewFiles),
 
 ], debug=True)
