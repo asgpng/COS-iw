@@ -17,6 +17,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 # note: Jinja 2.7 includes a urlencode filter by default, but GAE uses Jinja 2.6
 #       This hack seems to work for our small purposes, but it may not be as
 #       robust as the Jinja library filters.
+
 def do_urlencode(dict):
     url = urllib.urlencode(dict)
     return url
@@ -279,9 +280,7 @@ class FormView(webapp2.RequestHandler):
     def get(self):
         # calls helper method
         query_params = build_query_params(self)
-        self.response.write(query_params)
-        query = make_query(CheckpointForm, query_params)
-        self.response.write(query)
+        query = make_query_all(query_params)
         forms = query.fetch(1)
         form = forms[0]
         
@@ -360,9 +359,9 @@ class FormDelete(webapp2.RequestHandler):
             query  = make_query_all(query_params)
             form = query.fetch(1)[0]
             form.key.delete()
-
-        self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
-
+            # maybe make a page saying it's been deleted, or return them to 
+            # the original query page.
+            self.redirect('/forms/query')
 
 class Upload(webapp2.RequestHandler):
     def get(self):
