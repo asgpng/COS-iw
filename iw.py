@@ -401,8 +401,8 @@ class Upload(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
-    def post(self):
-       self.response.write("<b>Upload Successful</b>")
+    #def post(self):
+     #  self.redirect("/files/success")
         
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
@@ -412,6 +412,17 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         blob_info = upload_files[0]
         self.redirect('/serve/%s' % blob_info.key())
         
+
+class Success(webapp2.RequestHandler):
+    
+    def get(self):
+        self.response.write("Success!")
+
+class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
+  def get(self, resource):
+    resource = str(urllib.unquote(resource))
+    blob_info = blobstore.BlobInfo.get(resource)
+    self.send_blob(blob_info)
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -424,7 +435,9 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
-    ('/forms/invalid_entry', FormInvalid),
-    ('/files/upload', Upload),
+	('/forms/invalid_entry', FormInvalid),
+    ('/files/new_file', NewFile),
+    ('/upload', UploadHandler),
+    ('/serve/([^/]+)?', ServeHandler),
 
 ], debug=True)

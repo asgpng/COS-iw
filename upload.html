@@ -20,6 +20,9 @@
 
 <div class="container">
   <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data"> 
+    <div>
+      Upload File:
+    </div>   
     <input type="file" name="uploadField" id="newFile"/>
     <div id="submit">
       <input type="submit" value="Submit">
