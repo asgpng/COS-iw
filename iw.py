@@ -429,7 +429,7 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
-	('/forms/invalid_entry', FormInvalid),
+    ('/forms/invalid_entry', FormInvalid),
 #    ('/files/new_file', NewFile),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
