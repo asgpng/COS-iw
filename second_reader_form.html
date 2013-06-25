@@ -1,62 +1,56 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link type = "text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    <title>Second Reader Form</title>
-  </head>
-  <body>
-    <h1>Department of Computer Science</h1>
-    <h2> Second Reader Form for IW</h2>
+{% extends "base.html" %}
+{% block title %}Second Reader Form{% endblock %}
+{% block content %}
+<h1>Department of Computer Science</h1>
+<h2> Second Reader Form for IW</h2>
 
-    <div class="container">
-      <form action="/forms/secondreaderform", method="post">
+<div class="container">
+  <form action="/forms/secondreaderform", method="post">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID"/>
 	</div>
-        <div>
-          <label>Student Name:</label>
-          <input type="text" name="student_name"/>
-        </div>
-        <div>
-          <label>Class:</label>
-          <input type="text" name="class_year"/>
-        </div>
-        <div>
-          <label>Title of Project:</label>
-          <textarea name="title" rows="2" cols="23"></textarea>
-        </div>
-        <div>
-          <label>Description:</label>
-          <textarea name="description" rows="10" cols="23"></textarea>
-        </div>
-        <div>
-          <label>Advisor Name</label>
-          <input type="text" name="sr_name"/>
-          <div>
-            <label>Advisor NetID</label>
-            <input type="text" name="sr_id"/>
-          </div>
-          <div>
-            <label>Advisor Department</label>
-            <input type="text" name="sr_department" />
-          </div>
-          <div>
-            <label>I agree to be a second reader</label><br>
-            <input type="checkbox" name="sr_agreement" value="advisor_approval"/>
-          </div>
-          <div>
-            <label>Electronic signature: (needed for senior thesis or two semester IW only)</label>
-            <input type="text" align="center" name="sr_signature"/>
-          </div>
-          <br>
-          <div id="submit">
-            <input type="submit" value="Submit">
-          </div>
-          <br>
-          <a href="/">Home</a>
-        </div>
-      </form>
+    <div>
+      <label>Student Name:</label>
+      <input type="text" name="student_name"/>
     </div>
-  </body>
-</html>
+    <div>
+      <label>Class:</label>
+      <input type="text" name="class_year"/>
+    </div>
+    <div>
+      <label>Title of Project:</label>
+      <textarea name="title" rows="2" cols="23"></textarea>
+    </div>
+    <div>
+      <label>Description:</label>
+      <textarea name="description" rows="10" cols="23"></textarea>
+    </div>
+    <div>
+      <label>Advisor Name</label>
+      <input type="text" name="sr_name"/>
+      <div>
+        <label>Advisor NetID</label>
+        <input type="text" name="sr_id"/>
+      </div>
+      <div>
+        <label>Advisor Department</label>
+        <input type="text" name="sr_department" />
+      </div>
+      <div>
+        <label>I agree to be a second reader</label><br>
+        <input type="checkbox" name="sr_agreement" value="advisor_approval"/>
+      </div>
+      <div>
+        <label>Electronic signature: (needed for senior thesis or two semester IW only)</label>
+        <input type="text" align="center" name="sr_signature"/>
+      </div>
+      <br>
+      <div id="submit">
+        <input type="submit" value="Submit">
+      </div>
+      <br>
+    </div>
+  </form>
+</div>
+{% endblock %}
