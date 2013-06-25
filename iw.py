@@ -377,6 +377,13 @@ class FormDelete(webapp2.RequestHandler):
 
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
+
+class Upload(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('upload.html')
+        self.response.write(template.render(template_values))
+
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/forms/signupform', SignupFormPage),
@@ -388,5 +395,6 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
+    ('files/upload', Upload),
 
 ], debug=True)
