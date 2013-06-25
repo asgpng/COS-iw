@@ -311,13 +311,8 @@ class QueryResults(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
-        self.response.write("query params:")
-        self.response.write(query_params)
         if 'form_type' in query_params:
             query = make_query_all(query_params)
-            self.response.write("<br>")
-            self.response.write(query)
-            self.response.write("<br>")
             forms = query.fetch(20)
         else: # form_type has not been entered as a query criterion
             forms = []
@@ -325,12 +320,10 @@ class QueryResults(webapp2.RequestHandler):
                 for form in make_query(form_type, query_params).fetch(20):
                     forms.append(form)
         
-        #self.response.write(query)
- 
         template_values = {
             'forms':forms,
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0],
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('query_results.html')
         self.response.write(template.render(template_values))
@@ -345,8 +338,8 @@ class QueryView(webapp2.RequestHandler):
 
         template_values = {
             'form':form[0], # pass form as form object rather than list
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0],
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % query_params['form_type'])
         self.response.write(template.render(template_values))
