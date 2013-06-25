@@ -2,6 +2,9 @@ import os
 import urllib
 import datetime
 
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.api import files
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import gql
@@ -359,17 +362,27 @@ class FormDelete(webapp2.RequestHandler):
 class Upload(webapp2.RequestHandler):
 
     def get(self):
-        template_values = {}
+
+        upload_url = blobstore.create_upload_url('/upload')
+
+        template_values = {
+           'upload_url': upload_url, 
+           }
+
         template = JINJA_ENVIRONMENT.get_template('upload.html')
         self.response.write(template.render(template_values))
 
 
     def post(self):
-        self.response.write("Uploading ")
-        content = self.request.get('uploadField')
-        self.response.out.write(content)
-        print content
+       self.response.write("<b>Upload Successful</b>")
         
+
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+    
+    def post(self):
+        upload_files = self.get_uploads('uploadField')
+        blob_info = upload_files[0]
+        self.redirect('/serve/%s' % blob_info.key())
         
 
 application = webapp2.WSGIApplication([

@@ -4,9 +4,9 @@
 <script type="text/javascript">
     
     function check() {
-    var check = document.getElementById("upload").value;
+    var check = document.getElementById("newFile").value;
     if (check == "") {
-	window.alert("You did not upload a file");
+	window.alert("You did not select a file!");
 	return false;
     }
     else
@@ -19,8 +19,8 @@
 <h1> Upload New File</h1>
 
 <div class="container">
-  <form name="upload" method="post" onsubmit="return check();">
-    <input type="file" name="uploadField" id="upload"/>
+  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data"> 
+    <input type="file" name="uploadField" id="newFile"/>
     <div id="submit">
       <input type="submit" value="Submit">
     </div>
