@@ -1,62 +1,55 @@
-<!DOCTYPE html>
-<head>
-  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-</head>
-{% autoescape true %}
-<html>
-  <body>
+{% extends "base.html" %}
+{% block title %}Second Reader Form{% endblock %}
+{% block content %}
 
-    <h1>Second Reader Form</h1>
+  <h1>Second Reader Form</h1>
 
-    <h2>Your form has been successfully submitted.</h2>
-    
-    <div class="container">
-      <form action="/forms/secondreaderform", method="post">
-        <div>
-          <label> Student netID</label>
-          <input type="text" name="student_netID" value=" {{ form.student_netID }}" disabled/>
-        </div>
-	<div>
-          <label>Student Name:</label>
-          <input type="text" name="student_name" value=" {{ form.student_name }}" disabled/>
-        </div>
-        <div>
-          <label>Class:</label>
-          <input type="text" name="class_year" value=" {{ form.class_year }}" disabled/>
-        </div>
-        <div>
-          <label>Title of Project:</label>
-          <textarea name="title" rows="2" cols="23" disabled>{{ form.title }}</textarea>
-        </div>
-        <div>
-          <label>Description:</label>
-          <textarea name="description" rows="10" cols="23" disabled>{{ form.description }}</textarea>
-        </div>
-        <div>
-          <label>Advisor Name</label>
-          <input type="text" name="sr_name" value=" {{ form.sr_name }}" disabled/>
-          <div>
-            <label>Advisor NetID</label>
-            <input type="text" name="sr_netID" value=" {{form.sr_netID }}" disabled/>
-          </div>
-          <div>
-            <label>Advisor Department</label>
-            <input type="text" name="sr_department" value="{{ form.sr_department }}" disabled/>
-          </div>
-          <div>
-            <label>I agree to be a second reader</label><br>
-            <input type="checkbox" name="sr_agreement" value="{{ form.sr_agreement  }}"/>
-          </div>
+  <h2>Your form has been successfully submitted.</h2>
+  
+  <div class="container">
+    <form action="/forms/secondreaderform", method="post">
+      <div>
+        <label> Student netID</label>
+        <input type="text" name="student_netID" value=" {{ form.student_netID }}" disabled/>
+      </div>
 	  <div>
-            <label>Electronic signature: (needed for senior thesis or two semester IW only)</label>
-            <input type="text" align="center" name="sr_signature" value="{{ form.sr_signature }}" disabled/>
-          </div>
-	</div>
-    <hr>
-
-    <!-- links: -->
-    <a href="/">Home</a>
-
-  </body>
-</html>
-{% endautoescape %}
+        <label>Student Name:</label>
+        <input type="text" name="student_name" value=" {{ form.student_name }}" disabled/>
+      </div>
+      <div>
+        <label>Class:</label>
+        <input type="text" name="class_year" value=" {{ form.class_year }}" disabled/>
+      </div>
+      <div>
+        <label>Title of Project:</label>
+        <textarea name="title" rows="2" cols="23" disabled>{{ form.title }}</textarea>
+      </div>
+      <div>
+        <label>Description:</label>
+        <textarea name="description" rows="10" cols="23" disabled>{{ form.description }}</textarea>
+      </div>
+      <div>
+        <label>Advisor Name</label>
+        <input type="text" name="sr_name" value=" {{ form.sr_name }}" disabled/>
+        <div>
+          <label>Advisor NetID</label>
+          <input type="text" name="sr_netID" value=" {{form.sr_netID }}" disabled/>
+        </div>
+        <div>
+          <label>Advisor Department</label>
+          <input type="text" name="sr_department" value="{{ form.sr_department }}" disabled/>
+        </div>
+        <div>
+          <label>I agree to be a second reader</label><br>
+            <input type="checkbox" name="sr_agreement" value="{{ form.sr_agreement  }}"/>
+        </div>
+	    <div>
+          <label>Electronic signature: (needed for senior thesis or two semester IW only)</label>
+          <input type="text" align="center" name="sr_signature" value="{{ form.sr_signature }}" disabled/>
+        </div>
+	  </div>
+    </form>
+  </div>
+  
+  <hr>
+{% endblock %}
