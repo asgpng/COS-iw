@@ -41,13 +41,11 @@ def getLoginStatus(uri):
 def make_query(form_class, query_params):
 
     query = form_class.query()
-
     for kw, vals in query_params.items():
         if not isinstance(vals, (list, tuple)):
             vals = (vals,)
         for v in vals:
             query = query.filter(getattr(form_class, kw) ==v) #ndb.GenericProperty(kw) == v)
-
     return query
 
 # outer level of query, for deciding which type of form to query
@@ -76,7 +74,7 @@ def build_query_params(self):
 
 # check if a student has submitted a given form yet
 # in the case of submitted forms, query_params only contains form_type and student_netID
-def validateSubmission(form):
+def validateSubmission(self, form):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = make_query_all(query_params)
     forms = query.fetch(1)
@@ -85,7 +83,7 @@ def validateSubmission(form):
     else:
         alreadySubmitted = True
     # add user/ information to the database
-    if not alreadySubmitted(sf.form_type, sf.netID):
+    if not alreadySubmitted:
         form.put()
         # sets the next url using student_netID and form_type
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
@@ -205,7 +203,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
-        validateSubmission(sf)
+        validateSubmission(self, sf)
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -231,10 +229,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                              comments = self.request.get('comments'),
                              student_netID = self.request.get('student_netID')
                              )
-        cpf.put()
-
-        query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
+        validateSubmission(self, cpf)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
@@ -262,12 +257,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_signature = self.request.get('sr_signature'),
                                student_netID = self.request.get('student_netID')
                                )
-
-        srf.put()
-
-        query_params = {'student_netID':srf.student_netID, 'form_type':srf.form_type}
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
-
+        validateSubmission(self, srf)
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -294,11 +284,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
                           advisor_comments = self.request.get('advisor_comments'),
                           student_netID = self.request.get('student_netID')
                       )
-        ff.put()
-
-        query_params = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
-
+        validateSubmission(self, ff)
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -385,7 +371,7 @@ class FormInvalid(webapp2.RequestHandler):
 
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
-        self.response.write(template.render(template_values))        
+        self.response.write(template.render())        
 
 class Upload(webapp2.RequestHandler):
 
@@ -419,10 +405,10 @@ class Success(webapp2.RequestHandler):
         self.response.write("Success!")
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
-  def get(self, resource):
-    resource = str(urllib.unquote(resource))
-    blob_info = blobstore.BlobInfo.get(resource)
-    self.send_blob(blob_info)
+    def get(self, resource):
+        resource = str(urllib.unquote(resource))
+        blob_info = blobstore.BlobInfo.get(resource)
+        self.send_blob(blob_info)
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -436,7 +422,7 @@ application = webapp2.WSGIApplication([
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
 	('/forms/invalid_entry', FormInvalid),
-    ('/files/new_file', NewFile),
+#    ('/files/new_file', NewFile),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
 
