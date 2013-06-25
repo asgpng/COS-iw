@@ -1,84 +1,75 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    <title>Thesis &amp; IW 2 Semester February Checkpoint Form</title>
-  </head>
+{% extends "base.html" %}
+{% block title %}February Checkpoint Form{% endblock %}
+{% block content %}
+<h1>Department of Computer Science</h1>
+<h2>Thesis &amp; IW 2 Semester February Checkpoint Form</h2>
 
-  <body>
-    <h1>Department of Computer Science</h1>
-    <h2>Thesis &amp; IW 2 Semester February Checkpoint Form</h2>
 
-    <div class="container">
+<div class="container">
 
-      <h3>Student Section:</h3>
-      <form action="/forms/februaryform", method="post">
+  <h3>Student Section:</h3>
+  <form action="/forms/februaryform", method="post">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID"/>
 	</div>
-        <div>
-          <label>Student Name:</label>
-          <input type="text" name="student_name"/>
-        </div>
-        <div>
-          <label>Title/Topic:</label>
-          <textarea name="title" rows="2" cols="23"></textarea>
-        </div>
-        <div>
-          <label>Advisor:</label>
-          <input type="text" name="advisor_id"/>
-        </div>
-        <div>
-          <label>Approximate Number of Meetings with Advisor:</label>
-          <!-- add comment: (1, 2, 3-5, etc.) -->
-          <input type="text" name="number_of_meetings"/>
-        </div>
-        <br>
-        <div>
-          <label>Student Comments:</label>
-          <textarea name="student_comments" rows="2" cols="23"></textarea>
-        </div>
-
-        <h3>Advisor Section:</h3>
-        <div>
-          <label>I read the student's 5-page progress research paper:</label>
-          <div class="radio">
-            <input type="radio" name="advisor_read" value="True">Yes<br>
-            <input type="radio" name="advisor_read" value="False">No<br>
-          </div>
-        </div>
-        <div>
-          <label>Would you like your student to meet with you more often?</label>
-          <div class="radio">
-            <input type="radio" name="advisor_more_meetings" value="True">Yes<br>
-            <input type="radio" name="advisor_more_meetings" value="False">No<br>
-          </div>
-        </div>
-        <br>
-        <div>
-          <label>Student Progress:</label>
-          <div class="radio">
-            <input type="radio" name="student_progress_eval" value="3">Sensational<br>
-            <input type="radio" name="student_progress_eval" value="2">Good<br>
-            <input type="radio" name="student_progress_eval" value="1">Satisfactory<br>
-          </div>
-        </div>
-        <div>
-          <label>Comments:</label>
-          <textarea name="advisor_comments" rows="2" cols="23"></textarea>
-        </div>
-        <div id="submit">
-          <input type="submit" value="Submit">
-        </div>
-
-      </form>
+    <div>
+      <label>Student Name:</label>
+      <input type="text" name="student_name"/>
+    </div>
+    <div>
+      <label>Title/Topic:</label>
+      <textarea name="title" rows="2" cols="23"></textarea>
+    </div>
+    <div>
+      <label>Advisor:</label>
+      <input type="text" name="advisor_id"/>
+    </div>
+    <div>
+      <label>Approximate Number of Meetings with Advisor:</label>
+      <!-- add comment: (1, 2, 3-5, etc.) -->
+      <input type="text" name="number_of_meetings"/>
+    </div>
+    <br>
+    <div>
+      <label>Student Comments:</label>
+      <textarea name="student_comments" rows="2" cols="23"></textarea>
     </div>
 
-    <hr>
+    <h3>Advisor Section:</h3>
+    <div>
+      <label>I read the student's 5-page progress research paper:</label>
+      <div class="radio">
+        <input type="radio" name="advisor_read" value="True">Yes<br>
+        <input type="radio" name="advisor_read" value="False">No<br>
+      </div>
+    </div>
+    <div>
+      <label>Would you like your student to meet with you more often?</label>
+      <div class="radio">
+        <input type="radio" name="advisor_more_meetings" value="True">Yes<br>
+        <input type="radio" name="advisor_more_meetings" value="False">No<br>
+      </div>
+    </div>
+    <br>
+    <div>
+      <label>Student Progress:</label>
+      <div class="radio">
+        <input type="radio" name="student_progress_eval" value="3">Sensational<br>
+        <input type="radio" name="student_progress_eval" value="2">Good<br>
+        <input type="radio" name="student_progress_eval" value="1">Satisfactory<br>
+      </div>
+    </div>
+    <div>
+      <label>Comments:</label>
+      <textarea name="advisor_comments" rows="2" cols="23"></textarea>
+    </div>
+    <div id="submit">
+      <input type="submit" value="Submit">
+    </div>
 
-    <!-- links: -->
-    <a href="/">Home</a>
+  </form>
+</div>
 
-  </body>
-</html>
+<hr>
+{% endblock %}
