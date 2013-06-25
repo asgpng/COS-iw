@@ -34,23 +34,24 @@
       var radios = document.getElementsByName("coursework");
       var OK = false;
 
-      for (var i = 0; i < radios.length; i++) {
+     for (var i = 0; i < radios.length; i++) {
 			  if (radios[i].checked) {
 			  OK = true;
 			  break;
 			  }
 		}	
 
-      if (!OK) { document.getElementById("test").style.color='#ff0'; }
-      else { document.getElementById("test").style.color='#000'; }
-      return(OK);
+			 if (!OK) { document.getElementById("test").style.color='#ff0'; }
+			 else { document.getElementById("test").style.color='#000'; }
+			 //window.alert(document.coursework);   
+			 return(OK);
       }
 
      function text() {
      var re = /.+/;
      var title = document.getElementById("title").value;
      var description = document.getElementById("description").value;
-     var faculty_name = document.getElementById("faculty_name").value;
+     var advisor_name = document.getElementById("advisor_name").value;
 			  
      if (!re.test(title)) { document.getElementById("title").style.backgroundColor='#ff0'; }
      else { document.getElementById("title").style.backgroundColor='#fff'; }
@@ -58,10 +59,10 @@
      if (!re.test(description)) { document.getElementById("description").style.backgroundColor='#ff0'; }
      else { document.getElementById("description").style.backgroundColor='#fff'; }
 
-     if (!re.test(faculty_name)) { document.getElementById("faculty_name").style.backgroundColor='#ff0'; }
-     else { document.getElementById("faculty_name").style.backgroundColor='#fff'; }
+     if (!re.test(advisor_name)) { document.getElementById("advisor_name").style.backgroundColor='#ff0'; }
+     else { document.getElementById("advisor_name").style.backgroundColor='#fff'; }
 
-     var OK = re.test(title) && re.test(description) && re.test(faculty_name)
+     var OK = re.test(title) && re.test(description) && re.test(advisor_name);
      return OK;
      }
 
