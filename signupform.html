@@ -8,70 +8,99 @@
 
     <script type="text/javascript">
 
-      function proceed() {
-      
-      var proceed = year() && radio() && text();
-      if (!proceed) { window.alert("Please check highlighted field(s)!"); }
-      return proceed;
-      
-      }
 
-      function year() {
+  
 
-      var re = /^\d{4}$/;
-      var year = document.getElementById("class_year").value;
-      
-      if (!re.test(year))
-      { document.getElementById("class_year").style.backgroundColor='#ff0'; }
 
-      else { document.getElementById("class_year").style.backgroundColor='#fff'; }
-
-      return re.test(year);
-      }
-
-      function radio() {
-
-      var radios = document.getElementsByName("coursework");
-      var OK = false;
-
-     for (var i = 0; i < radios.length; i++) {
-			  if (radios[i].checked) {
-			  OK = true;
-			  break;
-			  }
-		}	
-
-			 if (!OK) { document.getElementById("test").style.color='#ff0'; }
-			 else { document.getElementById("test").style.color='#000'; }
-			 //window.alert(document.coursework);   
-			 return(OK);
-      }
-
-     function text() {
-     var re = /.+/;
-     var title = document.getElementById("title").value;
-     var description = document.getElementById("description").value;
-     var advisor_name = document.getElementById("advisor_name").value;
-			  
-     if (!re.test(title)) { document.getElementById("title").style.backgroundColor='#ff0'; }
-     else { document.getElementById("title").style.backgroundColor='#fff'; }
-
-     if (!re.test(description)) { document.getElementById("description").style.backgroundColor='#ff0'; }
-     else { document.getElementById("description").style.backgroundColor='#fff'; }
-
-     if (!re.test(advisor_name)) { document.getElementById("advisor_name").style.backgroundColor='#ff0'; }
-     else { document.getElementById("advisor_name").style.backgroundColor='#fff'; }
-
-     var OK = re.test(title) && re.test(description) && re.test(advisor_name);
-     return OK;
+function proceed() {
+     var proceed =  highlight(year(), radio(), text1(), text2(), text3());
+     if (!proceed) { 
+	 window.alert("Please check highlighted field(s)!");
      }
+  
+     return proceed;
+ }
 
+function highlight(year, radio, text1, text2, text3) {
+	 
+    if (year)
+	document.getElementById("class_year").style.backgroundColor='#fff'; 
+    else
+	document.getElementById("class_year").style.backgroundColor='#fa7f00'; 
 
-    </script>
+    if (radio)
+	document.getElementById("test").style.color='#000'; 
+    else
+	document.getElementById("test").style.color='#fa7f00';  
 
-  </head>
+    if (text1)
+	document.getElementById("title").style.backgroundColor='#fff';
+    else
+	document.getElementById("title").style.backgroundColor='#fa7f00';  
 
-  <body>
+    if (text2)
+	document.getElementById("description").style.backgroundColor='#fff';
+    else
+	document.getElementById("description").style.backgroundColor='#fa7f00'; 
+
+    if (text3)
+	document.getElementById("advisor_name").style.backgroundColor='#fff';
+    else
+	document.getElementById("advisor_name").style.backgroundColor='#fa7f00'; 
+
+    var checked = year && radio && text1 && text2 && text3;
+    return checked;
+
+}
+
+function year() {
+
+    var re = /^\d{4}$/;
+    var year = document.getElementById("class_year").value;
+
+    return re.test(year);
+}
+      
+function radio() {
+
+    var radios = document.getElementsByName("coursework");
+    var OK = false;
+
+    for (var i = 0;i<radios.length;i++) {
+	if (radios[i].checked) {
+	    OK = true;
+	    break; }
+    }	
+    return(OK); 
+}
+
+function text1() {
+	
+    var re = /.+/;
+    var title = document.getElementById("title").value;
+			  
+    return re.test(title);
+}
+
+function text2() {
+    var re = /.+/;
+    var description = document.getElementById("description").value;
+
+    return re.test(description);
+}
+
+function text3() {
+    var re = /.+/;
+    var advisor_name = document.getElementById("advisor_name").value;
+	
+    return re.test(advisor_name);
+}
+
+</script>
+
+    </head>
+
+    <body>
     <h1>Department of Computer Science</h1>
 
     <h2>Princeton CS IW & Thesis Signup Form</h2>
