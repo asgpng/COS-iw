@@ -35,15 +35,35 @@ def getLoginStatus(uri):
 
 # Queries a form_class based on given query parameters
 def make_query(form_class, query_params):
-    query = form_class.query()
-    if 'student_name' in query_params:
-        query.filter(form_class.student_name==query_params['student_name'])
-    if 'student_netID' in query_params:
-        query.filter(form_class.student_netID==query_params['student_netID'])
-    if 'advisor_name' in query_params:
-        query.filter(form_class.advisor_name==query_params['advisor_name'])
-    if 'advisor_netID' in query_params:
-        query.filter(form_class.advisor_netID==query_params['advisor_netID'])
+
+#     if 'student_name' in query_params:
+#         query1 = form_class.query(form_class._properties['student_name'] == query_params['student_name'])
+#     if 'student_netID' in query_params:
+#         query2 = form_class.query(form_class._properties['student_netID'] == query_params['student_netID'])
+#     if 'advisor_name' in query_params:
+#         query3 = form_class.query(form_class._properties['advisor_name'] == query_params['advisor_name'])
+#     if 'advisor_netID' in query_params:
+#         query4 = form_class.query(form_class._properties['advisor_netID'] == query_params['advisor_netID'])
+   # query = form_class
+  #  for qp in query_params:
+  #      query = form_class.query(form_class._properties[qp] == query_params[qp])
+
+    query = form_class.query(ndb.AND(form_class.student_name == query_params['student_name'],
+                             ndb.AND(form_class.student_netID == query_params['student_netID'],
+                             ndb.AND(form_class.advisor_name == query_params['advisor_name'],
+                             ndb.AND(form_class.advisor_netID == query_params['advisor_netID'])))))
+
+
+#    query = form_class.query()
+#    if 'student_name' in query_params:
+#        query.filter("student_name =", query_params['student_name'])
+#    if 'student_netID' in query_params:
+#        query2 = form_class.query(form_class._properties['student_netID'] == query_params['student_netID'])
+#    if 'advisor_name' in query_params:
+#        query3 = form_class.query(form_class._properties['advisor_name'] == query_params['advisor_name'])
+ #   if 'advisor_netID' in query_params:
+  #      query4 = form_class.query(form_class._properties['advisor_netID'] == query_params['advisor_netID'])
+
     return query
 
 # outer level of query, for deciding which type of form to query
@@ -71,6 +91,7 @@ def build_query_params(self):
     return query_params
 
 class SignupForm(ndb.Model):
+    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
     form_type = ndb.StringProperty(default="signup")
     student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
@@ -88,6 +109,7 @@ class SignupForm(ndb.Model):
     # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
 
 class CheckpointForm(ndb.Model):
+    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
     form_type = ndb.StringProperty(default="checkpoint")
     student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
@@ -95,6 +117,7 @@ class CheckpointForm(ndb.Model):
     advisor = ndb.StringProperty()
     meetings_w_advisor = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
+    advisor_name = ndb.StringProperty()
     advisor_netID = ndb.StringProperty()
     advisor_read_summary = ndb.BooleanProperty()
     meet_more_often = ndb.BooleanProperty()
@@ -102,6 +125,7 @@ class CheckpointForm(ndb.Model):
     comments = ndb.StringProperty()
 
 class FebruaryForm(ndb.Model):
+    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
     form_type = ndb.StringProperty(default="february")
     student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
@@ -110,6 +134,7 @@ class FebruaryForm(ndb.Model):
     advisor_name = ndb.StringProperty()
     number_of_meetings = ndb.IntegerProperty()
     student_comments = ndb.StringProperty()
+    advisor_name = ndb.StringProperty()
     advisor_netID = ndb.StringProperty()
     advisor_signature = ndb.BooleanProperty()
     advisor_read = ndb.BooleanProperty()
@@ -120,12 +145,15 @@ class FebruaryForm(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class SecondReaderForm(ndb.Model):
+    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
     form_type = ndb.StringProperty(default="second_reader")
     student_netID = ndb.StringProperty()
     student_name = ndb.StringProperty()
     class_year = ndb.IntegerProperty()
     title = ndb.StringProperty()
     description = ndb.StringProperty()
+    advisor_name = ndb.StringProperty()
+    advisor_netID = ndb.StringProperty()
     sr_name = ndb.StringProperty()
     sr_netID = ndb.StringProperty()
     sr_department = ndb.StringProperty()
@@ -153,6 +181,7 @@ class SignupFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
+        ##### FIX THE ADVISOR NET ID --->>> RIGHT NOW IT IS HARDWIRED
         # get the information entered by user
         sf = SignupForm(student_name=self.request.get('student_name'),
                         class_year = int(self.request.get('class_year')),
@@ -161,6 +190,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         description = self.request.get('description'),
                         advisor_signature = bool(self.request.get('advisor_signature')),
                         advisor_name = self.request.get('advisor_name'),
+                        advisor_netID = 'olivia',
                         advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
@@ -182,10 +212,11 @@ class CheckPointFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-
+        ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
         cpf = CheckpointForm(student_name=self.request.get('student_name'),
                              topic_title = self.request.get('topic_title'),
-                             advisor = self.request.get('advisor'),
+                             advisor_name = self.request.get('advisor'),
+                             adviosr_netID = 'olivia',
                              meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                              self_assessment = self.request.get('self_assessment'),
                              advisor_read_summary = bool(self.request.get('advisor_read_summary')),
@@ -211,10 +242,13 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
 
     def post(self):
+        ###### FIX ADVISOR NAME AND ADVISOR NETID (HARDWIRED) & ALL FORMS RELATED TO SR
         srf = SecondReaderForm(student_name=self.request.get('student_name'), 
                                class_year =int(self.request.get('class_year')),
                                title = self.request.get('title'),
                                description = self.request.get('description'),
+                               advisor_name = "olivia",
+                               advisor_netID = "olivia",
                                sr_name = self.request.get('sr_name'),
                                sr_netID = self.request.get('sr_netID'),
                                sr_department = self.request.get('sr_department'),
@@ -240,11 +274,12 @@ class FebruaryFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        
+        ###### FIX ADVISOR_NETID (HARDWIRED)
         ff = FebruaryForm(student_name = self.request.get('student_name'),
                           title = self.request.get('title'),
                           description = self.request.get('description'),
                           advisor_name = self.request.get('advisor_name'),
+                          advisor_netID = "olivia",
                           number_of_meetings = int(self.request.get('number_of_meetings')),
                           student_comments = self.request.get('student_comments'),
                           advisor_read = bool(self.request.get('advisor_read')),
@@ -267,7 +302,7 @@ class FormView(webapp2.RequestHandler):
         query = make_query_all(query_params)
         forms = query.fetch(1)
         form = forms[0]
-
+        
         template_values = {
             'form': form,
             'url': getLoginStatus(self.request.uri)[0],
@@ -277,16 +312,17 @@ class FormView(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 class FormQuery(webapp2.RequestHandler):
-
+    # user inputs what he/she wants to query
     def get(self):
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], #url,
-            'url_linktext': getLoginStatus(self.request.uri)[1], #url_linktext,
+            'url': getLoginStatus(self.request.uri)[0],
+            'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('query.html')
         self.response.write(template.render(template_values))
-
+    
     def post(self):
+        # calls helper method
         query_params = build_query_params(self)
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
@@ -294,6 +330,7 @@ class QueryResults(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
+        self.response.write(query_params)
         if 'form_type' in query_params:
             query = make_query_all(query_params)
             forms = query.fetch(20)
@@ -302,7 +339,9 @@ class QueryResults(webapp2.RequestHandler):
             for form_type in [SignupForm, FebruaryForm, CheckpointForm, SecondReaderForm]:
                 for form in make_query(form_type, query_params).fetch(20):
                     forms.append(form)
-            
+        
+        #self.response.write(query)
+ 
         template_values = {
             'forms':forms,
             'url': getLoginStatus(self.request.uri)[0], #url,
