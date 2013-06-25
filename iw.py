@@ -368,6 +368,7 @@ class FormDelete(webapp2.RequestHandler):
             self.redirect('/forms/query')
 
 class FormInvalid(webapp2.RequestHandler):
+class NewFile(webapp2.RequestHandler):
 
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
