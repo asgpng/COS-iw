@@ -8,16 +8,10 @@ class Student(ndb.Model):
     advisor_netID = ndb.StringProperty()
     second_reader_netID = ndb.StringProperty()
 
-class Advisor(ndb.Model):
+class Faculty(ndb.Model):
     netID = ndb.StringProperty()
     email = ndb.StringProperty()
     user_type = ndb.StringProperty(default="advisor")
-    student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
-
-class SecondReader(ndb.Model):
-    netID = ndb.StringProperty()
-    email = ndb.StringProperty()
-    user_type = ndb.StringProperty(default="second_reader")
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
 
 class Administrator(ndb.Model):
