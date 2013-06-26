@@ -2,12 +2,16 @@ import os
 import urllib
 import datetime
 
-from google.appengine.ext import blobstore
-from google.appengine.ext.webapp import blobstore_handlers
+
+
 from google.appengine.api import files
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import gql
+
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext.blobstore import BlobInfo
 
 import jinja2
 import webapp2
@@ -386,24 +390,7 @@ class NewFile(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('upload.html')
         self.response.write(template.render(template_values))
 
-class Upload(webapp2.RequestHandler):
-
-    def get(self):
-
-        upload_url = blobstore.create_upload_url('/upload')
-
-        template_values = {
-           'upload_url': upload_url, 
-           }
-
-        template = JINJA_ENVIRONMENT.get_template('upload.html')
-        self.response.write(template.render(template_values))
-
-
-    #def post(self):
-     #  self.redirect("/files/success")
-        
-
+    
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     
     def post(self):
@@ -411,12 +398,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         blob_info = upload_files[0]
         self.redirect('/serve/%s' % blob_info.key())
         
-
-class Success(webapp2.RequestHandler):
     
-    def get(self):
-        self.response.write("Success!")
-
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
@@ -428,8 +410,12 @@ class ViewFiles(webapp2.RequestHandler):
     def get(self):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
-
         self.response.write(template.render(template_values))
+        
+        query = BlobInfo.all()
+        text = query.get()
+        self.response.write(text)
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
