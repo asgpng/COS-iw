@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Checkpoint Form{% endblock %}
-{% block content %}
+{% block header %}
 <h1>Department of Computer Science</h1>
 <h2>Princeton CS IW Checkpoint Form</h2>
+{% endblock %}
 
+{% block student %}
 <h3>Student Section:</h3>
 <form action="/forms/checkpointform", method="post">
   <div class="container">
@@ -34,7 +36,11 @@
       <textarea name="self_assessment" rows="5" cols="60"></textarea>
     </div>
   </div>
-  <h3>Advisor Section:</h3>
+{% endblock %}
+{% block advisor %}
+<h1>Department of Computer Science</h1>
+<h2>Princeton CS IW Checkpoint Form</h2>
+ <h3>Advisor Section:</h3>
   <div class="container" >
     <div>
 	  <label>I read the student's 1-page progress summary report</label>
@@ -64,6 +70,8 @@
 	  <label>Comments: <br> [If student progress is unsatisfactory, explain what steps they need to take to get on track.]</label>
 	  <textarea name="comments" rows="4" cols="60"></textarea>
 	</div>
+  {% endblock %}
+  {% block submit %}
     <div id="submit">
       <input type="submit" value="Submit">
     </div>
