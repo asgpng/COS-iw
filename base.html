@@ -9,6 +9,8 @@
   </head>
   <body>
     <div id="content">
+      {% block content %}
+      {% endblock %}
       {% block header %}
       {% endblock %}
       {% if user_type=="student"%}
