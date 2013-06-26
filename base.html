@@ -9,7 +9,17 @@
   </head>
   <body>
     <div id="content">
-      {% block content %}
+      {% block header %}
+      {% endblock %}
+      {% if user_type=="student"%}
+      {% block student%}
+      {% endblock %}
+      {% else %}
+      {{ self.student() }}
+      {% block advisor %}
+      {% endblock %}
+      {% endif %}
+      {% block submit %}
       {% endblock %}
     </div>
     <div id="footer">
