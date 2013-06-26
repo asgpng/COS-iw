@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}February Checkpoint Form{% endblock %}
-{% block content %}
+{% block header %}
 <h1>Department of Computer Science</h1>
 <h2>Thesis &amp; IW 2 Semester February Checkpoint Form</h2>
-
-
 <div class="container">
+{% endblock %}
 
+{% block student %}
   <h3>Student Section:</h3>
   <form action="/forms/februaryform", method="post">
 	<div>
@@ -35,7 +35,8 @@
       <label>Student Comments:</label>
       <textarea name="student_comments" rows="2" cols="23"></textarea>
     </div>
-
+{% endblock %}
+{% block advisor %}
     <h3>Advisor Section:</h3>
     <div>
       <label>I read the student's 5-page progress research paper:</label>
@@ -64,6 +65,8 @@
       <label>Comments:</label>
       <textarea name="advisor_comments" rows="2" cols="23"></textarea>
     </div>
+{% endblock %}
+{% block submit %}
     <div id="submit">
       <input type="submit" value="Submit">
     </div>
