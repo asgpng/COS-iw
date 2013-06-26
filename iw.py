@@ -285,6 +285,7 @@ class ViewUsers(webapp2.RequestHandler):
     
     def get(self):
         users = []
+        query_params = build_query_params(self)
         for user_type in [Student, Faculty, Administrator]:
             for user in object_query(user_type, query_params).fetch():
                 users.append(user)
