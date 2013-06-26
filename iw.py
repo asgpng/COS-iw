@@ -18,8 +18,10 @@ from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.blobstore import BlobInfo
 
-import jinja2
-import webapp2
+# custom libraries
+from app.forms import *
+from app.helper_methods import *
+from app.Users import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
