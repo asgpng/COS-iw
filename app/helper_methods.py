@@ -24,34 +24,34 @@ def getLoginStatus(uri):
         url_linktext = 'Login'
     return (url, url_linktext)
 
-# Queries a form_class based on given query parameters
-def make_query(form_class, query_params):
+# Queries a form or user based on given query parameters
+def object_query(object_class, query_params):
 
-    query = form_class.query()
+    query = object_class.query()
     for kw, vals in query_params.items():
         if not isinstance(vals, (list, tuple)):
             vals = (vals,)
         for v in vals:
-            query = query.filter(getattr(form_class, kw) ==v) #ndb.GenericProperty(kw) == v)
+            query = query.filter(getattr(object_class, kw) ==v) #ndb.GenericProperty(kw) == v)
     return query
 
 # outer level of query, for deciding which type of form to query
 def form_query_all(query_params):
     try:
         if query_params['form_type'] == 'signup':
-            query = make_query(SignupForm, query_params)
+            query = form_query(SignupForm, query_params)
         elif query_params['form_type'] == 'february':
-            query = make_query(FebruaryForm, query_params)
+            query = form_query(FebruaryForm, query_params)
         elif query_params['form_type'] == 'checkpoint':
-            query = make_query(CheckpointForm, query_params)
+            query = form_query(CheckpointForm, query_params)
         else: # form_type == 'second_reader':
-            query = make_query(SecondReaderForm, query_params)
+            query = form_query(SecondReaderForm, query_params)
         return query
     except KeyError:
         print 'form_type is not in query_params'
 
 def build_query_params(self):
-    args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID']
+    args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID', 'user_type', 'netID']
     query_params = {}
     for arg in args:
         arg_get = self.request.get(arg)
@@ -59,20 +59,34 @@ def build_query_params(self):
             query_params[arg] = arg_get
     return query_params
 
+
 # returns all users of all user_types
-def user_query_all():
-    students       = Student.query().fetch()
-    faculty        = Faculty.query().fetch()
-    administrators = Administrator.query().fetch()
-    users = []
-    for student in students:
-        users.append(student)
-    for prof in faculty:
-        users.append(prof)
-    for admin in administrators:
-        users.append(admin)
-    return users
-    
+def user_query_all(query_params):
+    try:
+        if query_params['user_type'] == 'student':
+            query = object_query(Student, query_params)
+        elif query_params['user_type'] == 'faculty':
+            query = object_query(Faculty, query_params)
+        else: # query_params['user_type'] == 'administrator':
+            query = object_query(Administrator, query_params)
+        return query
+    except KeyError:
+        print 'form_type is not in query_params'
+
+# # overloaded method to obtain all users - replace when we think of a better way
+# nevermind - no overloading in python
+# def user_query_all():
+#     students       = Student.query().fetch()
+#     faculty        = Faculty.query().fetch()
+#     administrators = Administrator.query().fetch()
+#     users = []
+#     for student in students:
+#         users.append(student)
+#     for prof in faculty:
+#         users.append(prof)
+#     for admin in administrators:
+#         users.append(admin)
+#     return users
 
 # check if a student has submitted a given form yet
 # in the case of submitted forms, query_params only contains form_type and student_netID
@@ -94,7 +108,7 @@ def validateFormSubmission(self, form):
 
 def validateNewUser(self, user):
     query_params = {'netID':user.netID,'user_type':user.user_type}
-    query = form_query_all(query_params)
+    query = user_query_all(query_params)
     users = query.fetch(1)
     if len(users) == 0:
         alreadySubmitted = False

@@ -65,7 +65,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
-        validateSubmission(self, sf)
+        validateFormSubmission(self, sf)
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -91,7 +91,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                              comments = self.request.get('comments'),
                              student_netID = self.request.get('student_netID')
                              )
-        validateSubmission(self, cpf)
+        validateFormSubmission(self, cpf)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
@@ -119,7 +119,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_signature = self.request.get('sr_signature'),
                                student_netID = self.request.get('student_netID')
                                )
-        validateSubmission(self, srf)
+        validateFormSubmission(self, srf)
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -146,14 +146,14 @@ class FebruaryFormPage(webapp2.RequestHandler):
                           advisor_comments = self.request.get('advisor_comments'),
                           student_netID = self.request.get('student_netID')
                       )
-        validateSubmission(self, ff)
+        validateFormSubmission(self, ff)
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
     def get(self):
         # calls helper method
         query_params = build_query_params(self)
-        query = make_query_all(query_params)
+        query = form_query_all(query_params)
         forms = query.fetch(1)
         form = forms[0]
         
@@ -185,12 +185,12 @@ class QueryResults(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         if 'form_type' in query_params:
-            query = make_query_all(query_params)
+            query = form_query_all(query_params)
             forms = query.fetch(20)
         else: # form_type has not been entered as a query criterion
             forms = []
             for form_type in [SignupForm, FebruaryForm, CheckpointForm, SecondReaderForm]:
-                for form in make_query(form_type, query_params).fetch(20):
+                for form in object_query(form_type, query_params).fetch():
                     forms.append(form)
         
         template_values = {
@@ -205,8 +205,7 @@ class QueryView(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
-        query = make_query_all(query_params)
-
+        query = form_query_all(query_params)
         form = query.fetch(1)
 
         template_values = {
@@ -222,7 +221,7 @@ class FormDelete(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         if 'form_type' in query_params:
-            query  = make_query_all(query_params)
+            query  = form_query_all(query_params)
             form = query.fetch(1)[0]
             form.key.delete()
             # maybe make a page saying it's been deleted, or return them to 
@@ -284,7 +283,11 @@ class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
 class ViewUsers(webapp2.RequestHandler):
     
     def get(self):
-        users = user_query_all()
+        users = []
+        for user_type in [Student, Faculty, Administrator]:
+            for user in object_query(user_type, query_params).fetch():
+                users.append(user)
+
         template_values = {
             'users':users
         }
@@ -302,8 +305,19 @@ class ViewUsers(webapp2.RequestHandler):
                 user = Faculty(netID=user_netID, user_type='faculty')
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
-            user.put()
-            self.redirect('/administrative/users')
+            validateNewUser(self, user)
+
+class UserInvalid(webapp2.RequestHandler):
+
+    def get(self):
+        query_params = build_query_params(self)
+        template_values = {
+            'netID': query_params['netID'],
+            'user_type': query_params['user_type']
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_invalid.html')
+        self.response.write(template.render(template_values))   
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -322,5 +336,6 @@ application = webapp2.WSGIApplication([
     ('/serve/([^/]+)?', ServeHandler),
     ('/files/view', ViewFiles),
     ('/administrative/users', ViewUsers),
+    ('/administrative/invalid_entry', UserInvalid),
 
 ], debug=True)
