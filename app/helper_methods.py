@@ -4,7 +4,7 @@ import os
 
 from google.appengine.api import users
 from forms import *
-
+from Users import *
 
 # for encoding dictionary urls in jinja
 # note: Jinja 2.7 includes a urlencode filter by default, but GAE uses Jinja 2.6
@@ -36,7 +36,7 @@ def make_query(form_class, query_params):
     return query
 
 # outer level of query, for deciding which type of form to query
-def make_query_all(query_params):
+def form_query_all(query_params):
     try:
         if query_params['form_type'] == 'signup':
             query = make_query(SignupForm, query_params)
@@ -59,11 +59,26 @@ def build_query_params(self):
             query_params[arg] = arg_get
     return query_params
 
+# returns all users of all user_types
+def user_query_all():
+    students       = Student.query().fetch()
+    faculty        = Faculty.query().fetch()
+    administrators = Administrator.query().fetch()
+    users = []
+    for student in students:
+        users.append(student)
+    for prof in faculty:
+        users.append(prof)
+    for admin in administrators:
+        users.append(admin)
+    return users
+    
+
 # check if a student has submitted a given form yet
 # in the case of submitted forms, query_params only contains form_type and student_netID
-def validateSubmission(self, form):
+def validateFormSubmission(self, form):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
-    query = make_query_all(query_params)
+    query = form_query_all(query_params)
     forms = query.fetch(1)
     if len(forms) == 0:
         alreadySubmitted = False
@@ -76,3 +91,19 @@ def validateSubmission(self, form):
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
     else:
         self.redirect('/forms/invalid_entry?' + urllib.urlencode(query_params))
+
+def validateNewUser(self, user):
+    query_params = {'netID':user.netID,'user_type':user.user_type}
+    query = form_query_all(query_params)
+    users = query.fetch(1)
+    if len(users) == 0:
+        alreadySubmitted = False
+    else:
+        alreadySubmitted = True
+    # add user/ information to the database
+    if not alreadySubmitted:
+        user.put()
+        # sets the next url using student_netID and form_type
+        self.redirect('/administrative/users?' + urllib.urlencode(query_params))
+    else:
+        self.redirect('/administrative/invalid_entry?' + urllib.urlencode(query_params))
