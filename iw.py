@@ -411,16 +411,17 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         blob_info = blobstore.BlobInfo.get(resource)
         self.send_blob(blob_info)
 
-class ViewFiles(webapp2.RequestHandler):
+class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
     
     def get(self):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
         
-        query = BlobInfo.all()
-        text = query.get()
-        self.response.write(text)
+        self.send_blob(blob_info.key())
+        
+        
+        
 
 
 application = webapp2.WSGIApplication([
