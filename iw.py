@@ -370,8 +370,13 @@ class FormDelete(webapp2.RequestHandler):
 class FormInvalid(webapp2.RequestHandler):
 
     def get(self):
+        query_params = build_query_params(self)
+        template_values = {
+            'student_netID': query_params['student_netID'],
+            'form_type': query_params['form_type']
+        }
         template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
-        self.response.write(template.render())   
+        self.response.write(template.render(template_values))   
 
 class NewFile(webapp2.RequestHandler):
 
@@ -418,6 +423,7 @@ class Success(webapp2.RequestHandler):
         self.response.write("Success!")
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
+
     def get(self, resource):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
@@ -428,7 +434,6 @@ class ViewFiles(webapp2.RequestHandler):
     def get(self):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
-
         self.response.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
@@ -442,7 +447,7 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
     ('/forms/form_delete', FormDelete),
-	('/forms/invalid_entry', FormInvalid),
+    ('/forms/invalid_entry', FormInvalid),
     ('/files/new_file', NewFile),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
