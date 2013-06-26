@@ -320,6 +320,18 @@ class UserInvalid(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_invalid.html')
         self.response.write(template.render(template_values))   
 
+class UserDelete(webapp2.RequestHandler):
+    
+    def get(self):
+        query_params = build_query_params(self)
+        if 'user_type' in query_params:
+            query  = user_query_all(query_params)
+            user = query.fetch(1)[0]
+            user.key.delete()
+            # maybe make a page saying it's been deleted, or return them to 
+            # the original query page.
+            self.redirect('/administrative/users')
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -338,6 +350,7 @@ application = webapp2.WSGIApplication([
     ('/serve/([^/]+)?', ServeHandler),
     ('/files/view', ViewFiles),
     ('/administrative/users', ViewUsers),
+    ('/administrative/user_delete', UserDelete),
     ('/administrative/invalid_entry', UserInvalid),
 
 ], debug=True)
