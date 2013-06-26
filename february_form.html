@@ -1,5 +1,38 @@
 {% extends "base.html" %}
-{% block title %}February Checkpoint Form{% endblock %}
+{% block head %}
+<script type = "text/javascript">
+
+function whole() {
+}
+
+function student() {
+
+    var re = /.+/;
+    var re2= /[0-9]+/;
+
+    var title = re.test(document.getElementById('title').value);
+    var advisor = re.test(document.getElementById('advisor_name').value);
+    var number = re2.test(document.getElementById('number_of_meetings').value);
+
+    if (title && advisor && number)
+	return true;
+    else {
+	highlight_student(title, advisor, number);
+	window.alert("Please check highlighted field(s)!");
+	return false;
+}
+
+function highlight_whole() {
+}
+
+function highlight_student() {
+}
+
+</script>
+{% endblock %}
+
+{% block title %}February Checkpoint Form
+{% endblock %}
 {% block header %}
 <h1>Department of Computer Science</h1>
 <h2>Thesis &amp; IW 2 Semester February Checkpoint Form</h2>
@@ -8,7 +41,7 @@
 
 {% block student %}
   <h3>Student Section:</h3>
-  <form action="/forms/februaryform", method="post">
+  <form action="/forms/februaryform" method="post" onsubmit ="return student();">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID"/>
@@ -18,17 +51,17 @@
       <input type="text" name="student_name"/>
     </div>
     <div>
-      <label>Title/Topic:</label>
-      <textarea name="title" rows="2" cols="23"></textarea>
+      <label>Title of Project:</label>
+      <textarea name="title" id="title" rows="2" cols="23"></textarea>
     </div>
     <div>
       <label>Advisor:</label>
-      <input type="text" name="advisor_id"/>
+      <input type="text" name="advisor" id="advisor_name"/>
     </div>
     <div>
       <label>Approximate Number of Meetings with Advisor:</label>
       <!-- add comment: (1, 2, 3-5, etc.) -->
-      <input type="text" name="number_of_meetings"/>
+      <input type="text" name="number_of_meetings" id="number_of_meetings"/>
     </div>
     <br>
     <div>
