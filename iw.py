@@ -1,9 +1,14 @@
+# general python libraries
 import os
 import urllib
 import datetime
 
+# web development libraries
+import jinja2
+import webapp2
+import urllib
 
-
+# GAE libraries
 from google.appengine.api import files
 from google.appengine.api import users
 from google.appengine.ext import ndb
@@ -20,157 +25,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'])
 
-# for encoding dictionary urls in jinja
-# note: Jinja 2.7 includes a urlencode filter by default, but GAE uses Jinja 2.6
-#       This hack seems to work for our small purposes, but it may not be as
-#       robust as the Jinja library filters.
-
-def do_urlencode(dict):
-    url = urllib.urlencode(dict)
-    return url
-
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
-
-def getLoginStatus(uri):
-    if users.get_current_user():
-        url = users.create_logout_url(uri)
-        url_linktext = 'Logout'
-    else:
-        url = users.create_login_url(uri)
-        url_linktext = 'Login'
-    return (url, url_linktext)
-
-# Queries a form_class based on given query parameters
-def make_query(form_class, query_params):
-
-    query = form_class.query()
-    for kw, vals in query_params.items():
-        if not isinstance(vals, (list, tuple)):
-            vals = (vals,)
-        for v in vals:
-            query = query.filter(getattr(form_class, kw) ==v) #ndb.GenericProperty(kw) == v)
-    return query
-
-# outer level of query, for deciding which type of form to query
-def make_query_all(query_params):
-    try:
-        if query_params['form_type'] == 'signup':
-            query = make_query(SignupForm, query_params)
-        elif query_params['form_type'] == 'february':
-            query = make_query(FebruaryForm, query_params)
-        elif query_params['form_type'] == 'checkpoint':
-            query = make_query(CheckpointForm, query_params)
-        else: # form_type == 'second_reader':
-            query = make_query(SecondReaderForm, query_params)
-        return query
-    except KeyError:
-        print 'form_type is not in query_params'
-
-def build_query_params(self):
-    args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID']
-    query_params = {}
-    for arg in args:
-        arg_get = self.request.get(arg)
-        if arg_get != '':
-            query_params[arg] = arg_get
-    return query_params
-
-# check if a student has submitted a given form yet
-# in the case of submitted forms, query_params only contains form_type and student_netID
-def validateSubmission(self, form):
-    query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
-    query = make_query_all(query_params)
-    forms = query.fetch(1)
-    if len(forms) == 0:
-        alreadySubmitted = False
-    else:
-        alreadySubmitted = True
-    # add user/ information to the database
-    if not alreadySubmitted:
-        form.put()
-        # sets the next url using student_netID and form_type
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
-    else:
-        self.redirect('/forms/invalid_entry?' + urllib.urlencode(query_params))
-
-
-# for when we get netIDs working
-class User(ndb.Model):
-    netID = ndb.StringProperty()
-    email = ndb.StringProperty()
-    user_type = ndb.StringProperty(choices=set(["student", "advisor", "second_reader", "administrator"]))
-
-
-class SignupForm(ndb.Model):
-    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
-    form_type = ndb.StringProperty(default="signup")
-    student_netID = ndb.StringProperty()
-    student_name = ndb.StringProperty()
-    class_year = ndb.IntegerProperty()
-    coursework = ndb.StringProperty(choices=set(["397", "398", "497", "498", "AB JIW", "AB Senior Thesis", "BSE Senior Thesis"]))
-    title = ndb.StringProperty()
-    description = ndb.StringProperty()
-    advisor_netID = ndb.StringProperty()
-    advisor_signature = ndb.BooleanProperty()
-    advisor_name = ndb.StringProperty()
-    advisor_department = ndb.StringProperty()
-    student_signature = ndb.BooleanProperty()
-    submitted = ndb.BooleanProperty()
-    date = ndb.DateTimeProperty(auto_now_add=True)
-    # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
-
-class CheckpointForm(ndb.Model):
-    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
-    form_type = ndb.StringProperty(default="checkpoint")
-    student_netID = ndb.StringProperty()
-    student_name = ndb.StringProperty()
-    topic_title = ndb.StringProperty()
-    advisor = ndb.StringProperty()
-    meetings_w_advisor = ndb.IntegerProperty()
-    self_assessment = ndb.StringProperty()
-    advisor_name = ndb.StringProperty()
-    advisor_netID = ndb.StringProperty()
-    advisor_read_summary = ndb.BooleanProperty()
-    meet_more_often = ndb.BooleanProperty()
-    student_progress = ndb.IntegerProperty(choices=set([4, 3, 2, 1]))
-    comments = ndb.StringProperty()
-
-class FebruaryForm(ndb.Model):
-    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
-    form_type = ndb.StringProperty(default="february")
-    student_netID = ndb.StringProperty()
-    student_name = ndb.StringProperty()
-    title = ndb.StringProperty()
-    description = ndb.StringProperty()
-    advisor_name = ndb.StringProperty()
-    number_of_meetings = ndb.IntegerProperty()
-    student_comments = ndb.StringProperty()
-    advisor_name = ndb.StringProperty()
-    advisor_netID = ndb.StringProperty()
-    advisor_signature = ndb.BooleanProperty()
-    advisor_read = ndb.BooleanProperty()
-    advisor_more_meetings = ndb.BooleanProperty()
-    student_progress_eval = ndb.IntegerProperty(choices=set([1,2,3]))
-    advisor_comments = ndb.StringProperty()
-    submitted = ndb.BooleanProperty()
-    date = ndb.DateTimeProperty(auto_now_add=True)
-
-class SecondReaderForm(ndb.Model):
-    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
-    form_type = ndb.StringProperty(default="second_reader")
-    student_netID = ndb.StringProperty()
-    student_name = ndb.StringProperty()
-    class_year = ndb.IntegerProperty()
-    title = ndb.StringProperty()
-    description = ndb.StringProperty()
-    advisor_name = ndb.StringProperty()
-    advisor_netID = ndb.StringProperty()
-    sr_name = ndb.StringProperty()
-    sr_netID = ndb.StringProperty()
-    sr_department = ndb.StringProperty()
-    sr_agreement = ndb.BooleanProperty()
-    sr_signature = ndb.StringProperty()
 
 class MainPage(webapp2.RequestHandler):
 
@@ -403,7 +259,12 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         blob_info = upload_files[0]
         self.redirect('/serve/%s' % blob_info.key())
         
+
+class Success(webapp2.RequestHandler):
     
+    def get(self):
+        self.response.write("Success!")
+
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
     def get(self, resource):
