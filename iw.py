@@ -201,6 +201,9 @@ class QueryResults(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('query_results.html')
         self.response.write(template.render(template_values))
 
+    def post(self):
+        self.request.get(
+
 class QueryView(webapp2.RequestHandler):
 
     def get(self):
