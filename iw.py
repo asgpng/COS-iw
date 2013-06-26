@@ -1,5 +1,6 @@
 # general python libraries
 import os
+import urllib
 import datetime
 
 # web development libraries
@@ -8,17 +9,17 @@ import webapp2
 import urllib
 
 # GAE libraries
-from google.appengine.ext import blobstore
-from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import files
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import gql
 
-# custom libraries
-from app.Users import *
-from app.helper_methods import *
-from app.forms import *
+from google.appengine.ext import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.ext.blobstore import BlobInfo
+
+import jinja2
+import webapp2
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -250,24 +251,7 @@ class NewFile(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('upload.html')
         self.response.write(template.render(template_values))
 
-class Upload(webapp2.RequestHandler):
-
-    def get(self):
-
-        upload_url = blobstore.create_upload_url('/upload')
-
-        template_values = {
-           'upload_url': upload_url, 
-           }
-
-        template = JINJA_ENVIRONMENT.get_template('upload.html')
-        self.response.write(template.render(template_values))
-
-
-    #def post(self):
-     #  self.redirect("/files/success")
-        
-
+    
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     
     def post(self):
@@ -294,6 +278,11 @@ class ViewFiles(webapp2.RequestHandler):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
+        
+        query = BlobInfo.all()
+        text = query.get()
+        self.response.write(text)
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
