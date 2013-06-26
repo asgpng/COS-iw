@@ -260,7 +260,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         upload_files = self.get_uploads('uploadField')
         blob_info = upload_files[0]
         self.redirect('/serve/%s' % blob_info.key())
-        
 
 class Success(webapp2.RequestHandler):
     
@@ -280,12 +279,31 @@ class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
-        
         self.send_blob(blob_info.key())
-        
-        
-        
 
+class ViewUsers(webapp2.RequestHandler):
+    
+    def get(self):
+        users = user_query_all()
+        template_values = {
+            'users':users
+        }
+        template = JINJA_ENVIRONMENT.get_template('users.html')
+        self.response.write(template.render(template_values))
+        
+    def post(self):
+        action = self.request.get('action')
+        if action == 'add':
+            user_type = self.request.get('user_type')
+            user_netID = self.request.get('user_netID')
+            if user_type == 'student':
+                user = Student(netID=user_netID, user_type='student')
+            elif user_type == 'faculty':
+                user = Faculty(netID=user_netID, user_type='faculty')
+            else: # user_type == 'administrator':
+                user = Administrator(netID=user_netID, user_type='administrator')
+            user.put()
+            self.redirect('/administrative/users')
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -303,5 +321,6 @@ application = webapp2.WSGIApplication([
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
     ('/files/view', ViewFiles),
+    ('/administrative/users', ViewUsers),
 
 ], debug=True)
