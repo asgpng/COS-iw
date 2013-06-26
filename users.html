@@ -11,6 +11,7 @@
 
 <h2>Current Users</h2>
 
+<form action="/administrative/users?action=add" method="post">
 <table border="1">
   <tr>
     <th>User Type:</th>
@@ -27,22 +28,25 @@
     <td><a href="form_delete?{{ {'user_type':user.user_type, 'user_netID':user.netID} | urlencode}}">delete user </a></td>
     </td>
   </tr>
+
   {% endfor %}
+<tr>
+  <td>
+    <!-- <input type="text" name="user_type"/> -->
+    <select name="user_type">
+      <option value="student">Student</option>
+      <option value="faculty">Faculty</option>
+      <option value="administrator">Administrator</option>
+    </select>
+  </td>
+  <td>
+    <input type="text" name="user_netID"/>
+  </td>
+  <td>
+    <input type="submit" value="New User">
+  </tr>
+</tr>
+
 </table>
-
-
-<h2>Add User</h2>
-<form action="/administrative/users?action=add" method="post">
-  <div>
-	<label>User NetID:</label>
-	<input type="text" name="user_netID"/>
-  </div>
-  <div>
-    <label>User Type:</label>
-    <input type="text" name="user_Type"/>
-  </div>
-  <div id="submit">
-    <input type="submit" value="Submit">
-  </div>
 </form>
 {% endblock %}
