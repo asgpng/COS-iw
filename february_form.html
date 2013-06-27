@@ -25,7 +25,30 @@ for (var i = 0; i < checks.length; i++) {
 	}  
     }
 }
+
+if (OK[0])
+    document.getElementById("first").style.color='#000';
+else
+    document.getElementById("first").style.color='#fa7f00';
+
+
+if (OK[1])
+    document.getElementById("second").style.color='#000';
+else
+    document.getElementById("second").style.color='#fa7f00';
+
+	
+if (OK[2])
+    document.getElementById("third").style.color='#000';
+else
+    document.getElementById("third").style.color='#fa7f00';
+
+
 var result = OK[0] && OK[1] && OK[2];
+
+if (!result)
+    window.alert("Please check highlighted field(s)!");
+
 return result;
 }
 
@@ -78,14 +101,14 @@ return result;
 {% block advisor %}
     <h3>Advisor Section:</h3>
     <div>
-      <label>I read the student's 5-page progress research paper:</label>
+      <label id="first">I read the student's 5-page progress research paper:</label>
       <div class="radio">
         <input type="radio" name="advisor_read" value="True">Yes<br>
         <input type="radio" name="advisor_read" value="False">No<br>
       </div>
     </div>
     <div>
-      <label>Would you like your student to meet with you more often?</label>
+      <label id="second">Would you like your student to meet with you more often?</label>
       <div class="radio">
         <input type="radio" name="advisor_more_meetings" value="True">Yes<br>
         <input type="radio" name="advisor_more_meetings" value="False">No<br>
@@ -93,7 +116,7 @@ return result;
     </div>
     <br>
     <div>
-      <label>Student Progress:</label>
+      <label id="third">Student Progress:</label>
       <div class="radio">
         <input type="radio" name="student_progress_eval" value="3">Sensational<br>
         <input type="radio" name="student_progress_eval" value="2">Good<br>
