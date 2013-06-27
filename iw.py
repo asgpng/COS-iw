@@ -107,7 +107,7 @@ class MainPage(webapp2.RequestHandler):
             self.redirect('/login')
         else:
             template_values = {
-                'user': getCurrentUser(self),
+                'current_user': getCurrentUser(self),
                 'url_linktext': getLoginStatus(self.request.uri)[1],
             }
             template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -204,7 +204,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
-            'user_type': session["user"].user_type
+            #'user_type': session["user"].user_type
         }
         template = JINJA_ENVIRONMENT.get_template('february_form.html')
         self.response.write(template.render(template_values))

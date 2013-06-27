@@ -12,8 +12,8 @@
         <img src="/images/princeton.gif" width="40" height="40">
       </div>
       <div id="user_info">
-       User Type: {{user.user_type}}<br>
-       netID: {{user.netID}}<br>
+   
+
       </div>
     </div>
     <div id="content">
@@ -21,10 +21,10 @@
       {% endblock %}
       {% block header %}
       {% endblock %}
-      {% if user.user_type=="student" %}
+      {% if current_user.user_type=="student" %}
       {% block student%}
       {% endblock %}
-      {% elif user.user_type=="faculty" %}
+      {% elif current_user.user_type=="faculty" %}
       {{ self.student() }}
       {% block advisor %}
       {% endblock %}
