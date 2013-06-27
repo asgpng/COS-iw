@@ -32,6 +32,82 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
 
+config = {
+    'secret_key': 'OUR_SECRET_KEY' # update later
+}
+
+# from http://blog.abahgat.com/2013/01/07/user-authentication-with-" \ 
+#             webapp2-on-google-app-engine/
+class BaseHandler(webapp2.RequestHandler):
+    @webapp2.cached_property
+    def auth(self):
+        """Shortcut to access the auth instance as a property."""
+        return auth.get_auth()
+        
+  @webapp2.cached_property
+  def user_info(self):
+      """Shortcut to access a subset of the user attributes that are stored
+    in the session.
+ 
+    The list of attributes to store in the session is specified in
+      config['webapp2_extras.auth']['user_attributes'].
+    :returns
+      A dictionary with most user information
+    """
+    return self.auth.get_user_by_session()
+    
+  @webapp2.cached_property
+  def user(self):
+      """Shortcut to access the current logged in user.
+ 
+    Unlike user_info, it fetches information from the persistence layer and
+    returns an instance of the underlying model.
+ 
+    :returns
+      The instance of the user model associated to the logged in user.
+    """
+    u = self.user_info
+    return self.user_model.get_by_id(u['user_id']) if u else None
+    
+  @webapp2.cached_property
+  def user_model(self):
+      """Returns the implementation of the user model.
+ 
+    It is consistent with config['webapp2_extras.auth']['user_model'], if set.
+    """   
+    return self.auth.store.user_model
+    
+  @webapp2.cached_property
+  def session(self):
+      """Shortcut to access the current session."""
+      return self.session_store.get_session(backend="datastore")
+      
+  def render_template(self, view_filename, params={}):
+      user = self.user_info
+      params['user'] = user
+      path = os.path.join(os.path.dirname(__file__), 'views', view_filename)
+      self.response.out.write(template.render(path, params))
+      
+  def display_message(self, message):
+      """Utility function to display a template with a simple message."""
+      params = {
+          'message': message
+      }
+    self.render_template('message.html', params)
+    
+  # this is needed for webapp2 sessions to work
+  def dispatch(self):
+      # Get a session store for this request.
+      self.session_store = sessions.get_store(request=self.request)
+      
+      try:
+          # Dispatch the request.
+          webapp2.RequestHandler.dispatch(self)
+      finally:
+          # Save all sessions.
+          self.session_store.save_sessions(self.response)
+
+
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
@@ -65,7 +141,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
-                        )
+        )
         validateFormSubmission(self, sf)
 
 class CheckPointFormPage(webapp2.RequestHandler):
@@ -75,7 +151,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
             'user_type': True 
-                    }
+        }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
 
@@ -92,7 +168,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                              student_progress = int(self.request.get('student_progress')),
                              comments = self.request.get('comments'),
                              student_netID = self.request.get('student_netID')
-                             )
+        )
         validateFormSubmission(self, cpf)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
@@ -119,8 +195,9 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_department = self.request.get('sr_department'),
                                sr_agreement =bool(self.request.get('sr_agreement')),
                                sr_signature = self.request.get('sr_signature'),
-                               student_netID = self.request.get('student_netID')
-                               )
+                               student_netID = self.request.get('student_netID'),
+                               form_type = 'second_reader'
+        )
         validateFormSubmission(self, srf)
 
 class FebruaryFormPage(webapp2.RequestHandler):
@@ -148,7 +225,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
                           student_progress_eval = int(self.request.get('student_progress_eval')),
                           advisor_comments = self.request.get('advisor_comments'),
                           student_netID = self.request.get('student_netID')
-                      )
+        )
         validateFormSubmission(self, ff)
 
 class FormView(webapp2.RequestHandler):
@@ -156,10 +233,9 @@ class FormView(webapp2.RequestHandler):
     def get(self):
         # calls helper method
         query_params = build_query_params(self)
-        query = form_query_all(query_params)
+        query = object_query(Form, query_params)
         forms = query.fetch(1)
         form = forms[0]
-        
         template_values = {
             'form': form,
             'url': getLoginStatus(self.request.uri)[0],
@@ -177,9 +253,8 @@ class FormQuery(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('query.html')
         self.response.write(template.render(template_values))
-    
+        
     def post(self):
-        # calls helper method
         query_params = build_query_params(self)
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
@@ -187,15 +262,8 @@ class QueryResults(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
-        if 'form_type' in query_params:
-            query = form_query_all(query_params)
-            forms = query.fetch(20)
-        else: # form_type has not been entered as a query criterion
-            forms = []
-            for form_type in [SignupForm, FebruaryForm, CheckpointForm, SecondReaderForm]:
-                for form in object_query(form_type, query_params).fetch():
-                    forms.append(form)
-        
+        query = object_query(Form, query_params)
+        forms = query.fetch(20)
         template_values = {
             'forms':forms,
             'url': getLoginStatus(self.request.uri)[0],
@@ -208,11 +276,10 @@ class QueryView(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
-        query = form_query_all(query_params)
-        form = query.fetch(1)
-
+        query = object_query(Form, query_params)
+        form = query.fetch(1)[0]
         template_values = {
-            'form':form[0], # pass form as form object rather than list
+            'form':form,
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
@@ -223,14 +290,24 @@ class FormDelete(webapp2.RequestHandler):
     
     def get(self):
         query_params = build_query_params(self)
-        if 'form_type' in query_params:
-            query  = form_query_all(query_params)
-            form = query.fetch(1)[0]
-            form.key.delete()
-            # maybe make a page saying it's been deleted, or return them to 
-            # the original query page.
-            self.redirect('/forms/query')
+        query  = object_query(Form, query_params)
+        form = query.fetch(1)[0]
+        form.key.delete()
+        # maybe make a page saying it's been deleted, or return them to 
+        # the original query page.
+        self.redirect('/forms/delete/confirmation')
 
+class FormDeleteConfirmation(webapp2.RequestHandler):
+
+    def get(self):
+        query_params = build_query_params(self)
+        template_values = {
+            'student_netID':query_params['student_netID']
+            'form_type':query_params['form_type'],
+        }
+        template = JINJA_ENVIRONMENT.get_template('form_delete_confirmation.html')
+        self.response.write(template.render(template_values))  
+        
 class FormInvalid(webapp2.RequestHandler):
 
     def get(self):
@@ -247,15 +324,12 @@ class NewFile(webapp2.RequestHandler):
     def get(self):
 
         upload_url = blobstore.create_upload_url('/upload')
-
         template_values = {
-           'upload_url': upload_url, 
-           }
-
+            'upload_url': upload_url, 
+        }
         template = JINJA_ENVIRONMENT.get_template('upload.html')
         self.response.write(template.render(template_values))
-
-    
+        
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     
     def post(self):
@@ -288,10 +362,8 @@ class ViewUsers(webapp2.RequestHandler):
     def get(self):
         users = []
         query_params = {} # empty because we want all users
-        for user_type in [Student, Faculty, Administrator]:
-            for user in object_query(user_type, query_params).fetch():
-                users.append(user)
-
+        query = object_query(User, query_params)
+        users = query.fetch()
         template_values = {
             'users':users
         }
@@ -309,15 +381,14 @@ class ViewUsers(webapp2.RequestHandler):
                 user = Faculty(netID=user_netID, user_type='faculty')
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
-            validateNewUser(self, user)
+                validateNewUser(self, user)
 
 class UserInvalid(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
-        if 'user_type' in query_params:
-            query  = user_query_all(query_params)
-            user = query.fetch(1)[0]
+        query  = object_query(User, query_params)
+        user = query.fetch(1)[0]
         template_values = {
             'user': user
         }
@@ -328,14 +399,21 @@ class UserDelete(webapp2.RequestHandler):
     
     def get(self):
         query_params = build_query_params(self)
-        if 'user_type' in query_params:
-            query  = user_query_all(query_params)
-            user = query.fetch(1)[0]
-            user.key.delete()
-            # maybe make a page saying it's been deleted, or return them to 
-            # the original query page.
-            # self.redirect('/administrative/users')
-            self.redirect('/administrative/users')
+        query  = object_query(User, query_params)
+        user = query.fetch(1)[0]
+        user.key.delete()
+        self.redirect('/administrative/user_delete/confirmation?' + urllib.urlencode(query_params))
+
+class UserDeleteConfirmation(webapp2.RequestHandler):
+
+    def get(self):
+        query_params = build_query_params(self)
+        template_values = {
+            'netID': query_params['netID'],
+            'user_type': query_params['user_type']
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_delete_confirmation.html')
+        self.response.write(template.render(template_values))  
 
 class UserView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -362,7 +440,8 @@ application = webapp2.WSGIApplication([
     ('/forms/query', FormQuery),
     ('/forms/query_results', QueryResults),
     ('/forms/query_view', QueryView),
-    ('/forms/form_delete', FormDelete),
+    ('/forms/delete', FormDelete),
+    ('/forms/delete/confirmation', FormDeleteConfirmation),
     ('/forms/invalid_entry', FormInvalid),
     ('/files/new_file', NewFile),
     ('/upload', UploadHandler),
@@ -370,6 +449,7 @@ application = webapp2.WSGIApplication([
     ('/files/view', ViewFiles),
     ('/administrative/users', ViewUsers),
     ('/administrative/user_delete', UserDelete),
+    ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
 
