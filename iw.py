@@ -72,7 +72,7 @@ class MainPage(webapp2.RequestHandler):
         # get current session, then modify permissions and content
         session = get_current_session()
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0], 
+            'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -84,7 +84,7 @@ class SignupFormPage(webapp2.RequestHandler):
         template_values = {
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
-        }        
+        }
         template = JINJA_ENVIRONMENT.get_template('signupform.html')
         self.response.write(template.render(template_values))
 
@@ -355,7 +355,7 @@ class ViewUsers(webapp2.RequestHandler):
                 user = Faculty(netID=user_netID, user_type='faculty')
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
-                validateNewUser(self, user)
+            validateNewUser(self, user)
 
 class UserInvalid(webapp2.RequestHandler):
 
