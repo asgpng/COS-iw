@@ -77,8 +77,8 @@ class LogoutPage(webapp2.RequestHandler):
 
         query_params = build_query_params(self)
         template_values = {
-            'netID':query_params['netID']
- #           'current_user': getCurrentUser(self)
+            'netID':query_params['netID'],
+            'current_user': getCurrentUser(self)
         }
 
     def get(self):
@@ -93,15 +93,6 @@ class LogoutPage(webapp2.RequestHandler):
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
-        # get current session, then modify permissions and content
-        session = get_current_session()
-        user = session['user']
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        template = JINJA_ENVIRONMENT.get_template('index.html')
-        self.response.write(template.render(template_values))
         user = getCurrentUser(self)
         if user == None:
             self.redirect('/login')
