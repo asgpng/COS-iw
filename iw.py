@@ -80,7 +80,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
         template_values = {
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
-            'user_type': True 
+            'user_type': True,
         }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))

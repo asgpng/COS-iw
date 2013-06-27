@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Checkpoint Form{% endblock %}
-{% block header %}
-<h1>Department of Computer Science</h1>
-<h2>Princeton CS IW Checkpoint Form</h2>
+{% block head %}
+<script type = "text/javascript">
+
+//func
+</script>
 {% endblock %}
 
+{% block content %}
+<h1>Department of Computer Science</h1>
+<h2>Princeton CS IW Checkpoint Form</h2>
+<form action="/forms/checkpointform", method="post">
+{% endblock %}
 {% block student %}
 <h3>Student Section:</h3>
-<form action="/forms/checkpointform", method="post">
+
   <div class="container">
     <div>
 	  <label>Student NetID: </label>

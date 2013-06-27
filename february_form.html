@@ -2,46 +2,52 @@
 {% block head %}
 <script type = "text/javascript">
 
-function whole() {
+function checkStudent() {
+window.alert("yo");
+return false;
 }
 
-function student() {
+function checkAdvisor() {
 
-    var re = /.+/;
-    var re2= /[0-9]+/;
+var read = document.getElementsByName('advisor_read');
+var meetings = document.getElementsByName('advisor_more_meetings');
+var progress = document.getElementsByName('student_progress_eval');
 
-    var title = re.test(document.getElementById('title').value);
-    var advisor = re.test(document.getElementById('advisor_name').value);
-    var number = re2.test(document.getElementById('number_of_meetings').value);
+var checks = new Array(read, meetings, progress);
+var OK = new Array(false, false, false);
 
-    if (title && advisor && number)
-	return true;
-    else {
-	highlight_student(title, advisor, number);
-	window.alert("Please check highlighted field(s)!");
-	return false;
+for (var i = 0; i < checks.length; i++) {
+    var temp = checks[i];
+    for (var j = 0; j < temp.length; j++) {
+        if (temp[j].checked) {
+           OK[i] = true;
+           break;
+	}  
+    }
 }
-
-function highlight_whole() {
-}
-
-function highlight_student() {
+var result = OK[0] && OK[1] && OK[2];
+return result;
 }
 
 </script>
 {% endblock %}
 
-{% block title %}February Checkpoint Form
+{% block title %}February Progress Form
 {% endblock %}
 {% block header %}
 <h1>Department of Computer Science</h1>
-<h2>Thesis &amp; IW 2 Semester February Checkpoint Form</h2>
+<h2>Thesis &amp; IW 2 Semester February Progress Form</h2>
 <div class="container">
+{% if user_type is sameas True %}
+<form action="/forms/februaryform" method="post" onsubmit ="return checkStudent();">
+{% elif user_type is sameas False %}
+<form action="/forms/februaryform" method="post" onsubmit ="return checkAdvisor();">
+{% endif %}
 {% endblock %}
 
 {% block student %}
   <h3>Student Section:</h3>
-  <form action="/forms/februaryform" method="post" onsubmit ="return student();">
+
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID"/>
