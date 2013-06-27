@@ -105,9 +105,9 @@ return result;
 <h1>Department of Computer Science</h1>
 <h2>Thesis &amp; IW 2 Semester February Progress Form</h2>
 <div class="container">
-{% if user_type=="student" %}
+{% if  user.user_type=="student" %}
 <form action="/forms/februaryform" method="post" onsubmit ="return checkStudent();">
-{% elif user_type=="faculty" %}
+{% elif user.user_type=="faculty" %}
 <form action="/forms/februaryform" method="post" onsubmit ="return checkAdvisor();">
 {% endif %}
 {% endblock %}

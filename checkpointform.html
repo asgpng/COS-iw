@@ -7,10 +7,14 @@
 </script>
 {% endblock %}
 
-{% block content %}
+{% block header %}
 <h1>Department of Computer Science</h1>
 <h2>Princeton CS IW Checkpoint Form</h2>
-<form action="/forms/checkpointform", method="post">
+{% if user.user_type=="student" %}
+<form action="/forms/checkpointform" method="post" onsubmit="return checkStudent();">
+{% elif user.user_type=="faculty" %}
+<form action="/forms/checkpointform" method="post" onsubmit="return checkFaculty();">
+{% endif %}
 {% endblock %}
 {% block student %}
 <h3>Student Section:</h3>
