@@ -91,5 +91,7 @@ def validateNewUser(self, user):
 
 def getCurrentUser(self):
     session = get_current_session()
-    user = session['user']
-    return user
+    if session.has_key('user'):
+        return session['user']
+    else:
+        return None
