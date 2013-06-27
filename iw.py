@@ -8,6 +8,8 @@ import jinja2
 import webapp2
 import urllib
 
+from webapp2_extras import sessions # not sure how to implement yet, but will be helpful, maybe necessary
+
 # GAE libraries
 from google.appengine.api import files
 from google.appengine.api import users
@@ -51,7 +53,6 @@ class SignupFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        ##### FIX THE ADVISOR NET ID --->>> RIGHT NOW IT IS HARDWIRED
         # get the information entered by user
         sf = SignupForm(student_name=self.request.get('student_name'),
                         class_year = int(self.request.get('class_year')),
@@ -60,7 +61,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         description = self.request.get('description'),
                         advisor_signature = bool(self.request.get('advisor_signature')),
                         advisor_name = self.request.get('advisor_name'),
-                        advisor_netID = 'olivia',
+                        advisor_netID = self.request.get('advisor_netID'),
                         advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
@@ -286,7 +287,7 @@ class ViewUsers(webapp2.RequestHandler):
     
     def get(self):
         users = []
-        query_params = build_query_params(self)
+        query_params = {} # empty because we want all users
         for user_type in [Student, Faculty, Administrator]:
             for user in object_query(user_type, query_params).fetch():
                 users.append(user)
@@ -314,9 +315,11 @@ class UserInvalid(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
+        if 'user_type' in query_params:
+            query  = user_query_all(query_params)
+            user = query.fetch(1)[0]
         template_values = {
-            'netID': query_params['netID'],
-            'user_type': query_params['user_type']
+            'user': user
         }
         template = JINJA_ENVIRONMENT.get_template('user_invalid.html')
         self.response.write(template.render(template_values))   
@@ -331,8 +334,23 @@ class UserDelete(webapp2.RequestHandler):
             user.key.delete()
             # maybe make a page saying it's been deleted, or return them to 
             # the original query page.
+            # self.redirect('/administrative/users')
             self.redirect('/administrative/users')
 
+class UserView(webapp2.RequestHandler):
+    # this shows the results of what has been submitted
+    def get(self):
+        # calls helper method
+        query_params = build_query_params(self)
+        query = user_query_all(query_params)
+        users = query.fetch(1)
+        user = users[0]
+        
+        template_values = {
+            'user': user,
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_view.html')
+        self.response.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -352,6 +370,7 @@ application = webapp2.WSGIApplication([
     ('/files/view', ViewFiles),
     ('/administrative/users', ViewUsers),
     ('/administrative/user_delete', UserDelete),
+    ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
 
 ], debug=True)

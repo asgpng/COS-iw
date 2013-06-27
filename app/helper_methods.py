@@ -98,10 +98,19 @@ def validateFormSubmission(self, form):
         alreadySubmitted = False
     else:
         alreadySubmitted = True
-    # add user/ information to the database
+
+    # update relevant datastore properties
     if not alreadySubmitted:
+        # first, add form to database
         form.put()
-        # sets the next url using student_netID and form_type
+
+        # # update student's submitted forms list
+        # student.forms_submitted.append(form.form_type) # when we get users working
+        # # for signup form, update student's advisor_netID:
+        # if form.form_type == "signup":
+        #     student.advisor_netID = form.advisor_netID
+
+        # set the next url using student_netID and form_type
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
     else:
         self.redirect('/forms/invalid_entry?' + urllib.urlencode(query_params))
