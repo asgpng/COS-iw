@@ -72,6 +72,8 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
 class LogoutPage(webapp2.RequestHandler):
 
     def post(self):
+
+
         query_params = build_query_params(self)
         template_values = {
             'netID':query_params['netID']
@@ -83,14 +85,16 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         # get current session, then modify permissions and content
-        session = get_current_session()
-        user = session['user']
-        template_values = {
-            'user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        template = JINJA_ENVIRONMENT.get_template('index.html')
-        self.response.write(template.render(template_values))
+        user = getCurrentUser(self)
+        if user == None:
+            self.redirect('/login')
+        else:
+            template_values = {
+                'user': getCurrentUser(self),
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+            }
+            template = JINJA_ENVIRONMENT.get_template('index.html')
+            self.response.write(template.render(template_values))
 
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
@@ -366,7 +370,6 @@ class ViewUsers(webapp2.RequestHandler):
         session = get_current_session()
         if session['user'].user_type != 'administrator':
             self.redirect('unauthorized')
-        users = []
         query_params = {} # empty because we want all users
         query = object_query(User, query_params)
         users = query.fetch()
