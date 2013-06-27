@@ -2,15 +2,19 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
-    <img src="/images/princeton.gif" width="40" height="40">
     {% block head %}
     <title>{% block title %}{% endblock %} - COS IW</title>
     {% endblock %}
   </head>
   <body>
-    <div id="user_info">
-      {{user.user_type}}<br>
-      {{user.netID}}
+    <div id="header">
+      <div id="logo">
+        <img src="/images/princeton.gif" width="40" height="40">
+      </div>
+      <div id="user_info">
+        {{user.user_type}}<br>
+        {{user.netID}}<br>
+      </div>
     </div>
     <div id="content">
       {% block content %}
@@ -31,6 +35,10 @@
     <div id="footer">
       {% block footer %}
       <!-- links: -->
+      <a href="login">Login</a>
+      <br>
+      <a href="logout">Logout</a>
+      <br>
       <a href="/">Home</a>
       <!-- &copy; Copyright 2013 by <a href="http://domain.invalid/">you</a>. -->
       {% endblock %}

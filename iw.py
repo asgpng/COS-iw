@@ -72,6 +72,7 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
 
 class LogoutPage(webapp2.RequestHandler):
 
+<<<<<<< HEAD
     def post(self):
 
 
@@ -82,6 +83,16 @@ class LogoutPage(webapp2.RequestHandler):
         }
 
 
+=======
+    def get(self):
+        session = get_current_session()
+        user = getCurrentUser(self)
+        if user == None:
+            self.redirect('login')
+        else:
+            session.terminate()
+            self.redirect('/')
+>>>>>>> 92162ac302101e7fd8e755e63448ad22564ffd78
 
 class MainPage(webapp2.RequestHandler):
 
@@ -459,6 +470,7 @@ class UserView(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/login', LoginPage),
+    ('/logout', LogoutPage),
     ('/login/unauthorized', LoginUnauthorizedPage),
     ('/unauthorized', Unauthorized),
     ('/forms/signupform', SignupFormPage),
@@ -481,6 +493,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
+    ('/administrative/unauthorized', Unauthorized),
 
 ], debug=True)
 
