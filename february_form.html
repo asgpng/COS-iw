@@ -15,8 +15,40 @@ document.getElementById("comments").disabled=true;
 }
 
 function checkStudent() {
-window.alert("yo");
-return false;
+
+var title = document.getElementById("project_title").value;
+var advisor = document.getElementById("advisor_name").value;
+var meetings = document.getElementById("number_of_meetings").value;
+
+var re = /.+/;
+var re2 = /[0-9]+/;
+
+var OK1 = re.test(title);
+var OK2 = re.test(advisor);
+var OK3 = re2.test(meetings);
+
+if (OK1)
+    document.getElementById("project_title").style.backgroundColor = '#fff';
+else
+    document.getElementById("project_title").style.backgroundColor = '#fa7f00';
+
+if (OK2)
+    document.getElementById("advisor_name").style.backgroundColor = '#fff';
+else
+    document.getElementById("advisor_name").style.backgroundColor = '#fa7f00';
+
+if (OK1)
+    document.getElementById("number_of_meetings").style.backgroundColor = '#fff';
+else
+    document.getElementById("number_of_meetings").style.backgroundColor = '#fa7f00';
+
+
+var result = OK1 && OK2 && OK3;
+
+if (!result)
+    window.alert("Please check highlighted field(s)!");
+
+return result;
 }
 
 function checkAdvisor() {
