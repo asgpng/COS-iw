@@ -10,9 +10,9 @@
 {% block header %}
 <h1>Department of Computer Science</h1>
 <h2>Princeton CS IW Checkpoint Form</h2>
-{% if user.user_type=="student" %}
+{% if current_user.user_type=="student" %}
 <form action="/forms/checkpointform" method="post" onsubmit="return checkStudent();">
-{% elif user.user_type=="faculty" %}
+{% elif current_user.user_type=="faculty" %}
 <form action="/forms/checkpointform" method="post" onsubmit="return checkFaculty();">
 {% endif %}
 {% endblock %}
