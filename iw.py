@@ -108,11 +108,11 @@ class SignupFormPage(webapp2.RequestHandler):
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
+
         template_values = {
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
-            'user_type': True
-        }
+            }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
 
@@ -165,10 +165,11 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 class FebruaryFormPage(webapp2.RequestHandler):
 
     def get(self):
+        session = get_current_session()
         template_values = {
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
-            'user_type': False
+            'user_type': session["user"].user_type
         }
         template = JINJA_ENVIRONMENT.get_template('february_form.html')
         self.response.write(template.render(template_values))
