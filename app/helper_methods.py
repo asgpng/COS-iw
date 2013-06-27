@@ -48,7 +48,7 @@ def build_query_params(self):
 # in the case of submitted forms, query_params only contains form_type and student_netID
 def validateFormSubmission(self, form):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
-    query = form_query_all(query_params)
+    query = object_query(Form, query_params)
     forms = query.fetch(1)
     if len(forms) == 0:
         alreadySubmitted = False

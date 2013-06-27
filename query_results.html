@@ -13,11 +13,11 @@
 
 <table border="1">
   <tr>
-    <th>Form Type:</th>
-    <th>Student netID:</th>
-    <th>Student Name:</th>
-    <th>Advisor netID:</th>
-    <th>Advisor Name:</th>
+    <th><a href="query_results?{{ {'sort_by':'form_type'} | urlencode }}">Form Type:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'student_netID'} | urlencode }}">Student NetID:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'student_name'} | urlencode }}">Student Name:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'advisor_netID'} | urlencode }}">Advisor NetID:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'advisor_name'} | urlencode }}">Advisor Name:</a></th>
     <th>Link:</th>
     <th>Delete:</th>
   </tr>

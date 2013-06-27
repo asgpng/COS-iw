@@ -2,57 +2,98 @@
 {% block head %}
 <script type = "text/javascript">
 
-function whole() {
+
+function disable() {
+
+document.getElementById("student_netid").disabled=true;
+document.getElementById("student_name").disabled=true;
+document.getElementById("project_title").disabled=true;
+document.getElementById("advisor_name").disabled=true;
+document.getElementById("number_of_meetings").disabled=true;
+document.getElementById("comments").disabled=true;
+
 }
 
-function student() {
-
-    var re = /.+/;
-    var re2= /[0-9]+/;
-
-    var title = re.test(document.getElementById('title').value);
-    var advisor = re.test(document.getElementById('advisor_name').value);
-    var number = re2.test(document.getElementById('number_of_meetings').value);
-
-    if (title && advisor && number)
-	return true;
-    else {
-	highlight_student(title, advisor, number);
-	window.alert("Please check highlighted field(s)!");
-	return false;
+function checkStudent() {
+window.alert("yo");
+return false;
 }
 
-function highlight_whole() {
+function checkAdvisor() {
+
+var read = document.getElementsByName('advisor_read');
+var meetings = document.getElementsByName('advisor_more_meetings');
+var progress = document.getElementsByName('student_progress_eval');
+
+var checks = new Array(read, meetings, progress);
+var OK = new Array(false, false, false);
+
+for (var i = 0; i < checks.length; i++) {
+    var temp = checks[i];
+    for (var j = 0; j < temp.length; j++) {
+        if (temp[j].checked) {
+           OK[i] = true;
+           break;
+	}  
+    }
 }
 
-function highlight_student() {
+if (OK[0])
+    document.getElementById("first").style.color='#000';
+else
+    document.getElementById("first").style.color='#fa7f00';
+
+
+if (OK[1])
+    document.getElementById("second").style.color='#000';
+else
+    document.getElementById("second").style.color='#fa7f00';
+
+	
+if (OK[2])
+    document.getElementById("third").style.color='#000';
+else
+    document.getElementById("third").style.color='#fa7f00';
+
+
+var result = OK[0] && OK[1] && OK[2];
+
+if (!result)
+    window.alert("Please check highlighted field(s)!");
+
+return result;
 }
 
 </script>
 {% endblock %}
 
-{% block title %}February Checkpoint Form
+{% block title %}February Progress Form
 {% endblock %}
 {% block header %}
 <h1>Department of Computer Science</h1>
-<h2>Thesis &amp; IW 2 Semester February Checkpoint Form</h2>
+<h2>Thesis &amp; IW 2 Semester February Progress Form</h2>
 <div class="container">
+{% if user_type is sameas True %}
+<form action="/forms/februaryform" method="post" onsubmit ="return checkStudent();">
+{% elif user_type is sameas False %}
+<form action="/forms/februaryform" method="post" onsubmit ="return checkAdvisor();">
+{% endif %}
 {% endblock %}
 
 {% block student %}
   <h3>Student Section:</h3>
-  <form action="/forms/februaryform" method="post" onsubmit ="return student();">
+
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID"/>
+	  <input type="text" name="student_netID" id="student_netid"/>
 	</div>
     <div>
       <label>Student Name:</label>
-      <input type="text" name="student_name"/>
+      <input type="text" name="student_name" id="student_name"/>
     </div>
     <div>
       <label>Title of Project:</label>
-      <textarea name="title" id="title" rows="2" cols="23"></textarea>
+      <textarea name="title" id="project_title" rows="2" cols="23"></textarea>
     </div>
     <div>
       <label>Advisor:</label>
@@ -66,20 +107,21 @@ function highlight_student() {
     <br>
     <div>
       <label>Student Comments:</label>
-      <textarea name="student_comments" rows="2" cols="23"></textarea>
+      <textarea name="student_comments" id="comments" rows="2" cols="23"></textarea>
     </div>
 {% endblock %}
 {% block advisor %}
+<body onload="disable()">
     <h3>Advisor Section:</h3>
     <div>
-      <label>I read the student's 5-page progress research paper:</label>
+      <label id="first">I read the student's 5-page progress research paper:</label>
       <div class="radio">
         <input type="radio" name="advisor_read" value="True">Yes<br>
         <input type="radio" name="advisor_read" value="False">No<br>
       </div>
     </div>
     <div>
-      <label>Would you like your student to meet with you more often?</label>
+      <label id="second">Would you like your student to meet with you more often?</label>
       <div class="radio">
         <input type="radio" name="advisor_more_meetings" value="True">Yes<br>
         <input type="radio" name="advisor_more_meetings" value="False">No<br>
@@ -87,7 +129,7 @@ function highlight_student() {
     </div>
     <br>
     <div>
-      <label>Student Progress:</label>
+      <label id="third">Student Progress:</label>
       <div class="radio">
         <input type="radio" name="student_progress_eval" value="3">Sensational<br>
         <input type="radio" name="student_progress_eval" value="2">Good<br>
@@ -98,6 +140,7 @@ function highlight_student() {
       <label>Comments:</label>
       <textarea name="advisor_comments" rows="2" cols="23"></textarea>
     </div>
+</body>
 {% endblock %}
 {% block submit %}
     <div id="submit">

@@ -8,8 +8,6 @@ import jinja2
 import webapp2
 import urllib
 
-#from webapp2_extras import sessions # not sure how to implement yet, but will be helpful, maybe necessary
-
 # GAE libraries
 from google.appengine.api import files
 from google.appengine.api import users
@@ -74,7 +72,7 @@ class MainPage(webapp2.RequestHandler):
         # get current session, then modify permissions and content
         session = get_current_session()
         template_values = {
-            'url': getLoginStatus(self.request.uri)[0],
+            'url': getLoginStatus(self.request.uri)[0], 
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -86,13 +84,14 @@ class SignupFormPage(webapp2.RequestHandler):
         template_values = {
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
+        }        
         template = JINJA_ENVIRONMENT.get_template('signupform.html')
         self.response.write(template.render(template_values))
 
     def post(self):
         # get the information entered by user
         sf = SignupForm(student_name=self.request.get('student_name'),
+                        form_type= 'signup',
                         class_year = int(self.request.get('class_year')),
                         coursework = self.request.get('coursework'),
                         title = self.request.get('title'),
@@ -120,6 +119,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
     def post(self):
         ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
         cpf = CheckpointForm(student_name=self.request.get('student_name'),
+                             form_type= 'checkpoint',
                              topic_title = self.request.get('topic_title'),
                              advisor_name = self.request.get('advisor'),
                              advisor_netID = 'olivia',
@@ -186,7 +186,8 @@ class FebruaryFormPage(webapp2.RequestHandler):
                           advisor_more_meetings = bool(self.request.get('advisor_more_meetings')),
                           student_progress_eval = int(self.request.get('student_progress_eval')),
                           advisor_comments = self.request.get('advisor_comments'),
-                          student_netID = self.request.get('student_netID')
+                          student_netID = self.request.get('student_netID'),
+                          form_type = 'february'
         )
         validateFormSubmission(self, ff)
 
@@ -225,7 +226,20 @@ class QueryResults(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         query = object_query(Form, query_params)
-        forms = query.fetch(20)
+        # sort query results (sort_by is a link selected by the user in query_results.html)
+        sort_by = self.request.get('sort_by')
+        if sort_by == 'form_type':
+            query = query.order(Form.form_type, Form.student_netID, Form.student_name)
+        if sort_by == 'student_netID':
+            query = query.order(Form.student_netID, Form.student_name)
+        if sort_by == 'student_name':
+            query = query.order(Form.student_name, Form.student_netID)
+        if sort_by == 'advisor_netID':
+            query = query.order(Form.advisor_netID, Form.student_netID, Form.student_name)
+        if sort_by == 'advisor_name':
+            query = query.order(Form.advisor_name, Form.student_netID, Form.student_name)
+
+        forms = query.fetch()
         template_values = {
             'forms':forms,
             'url': getLoginStatus(self.request.uri)[0],
@@ -255,8 +269,6 @@ class FormDelete(webapp2.RequestHandler):
         query  = object_query(Form, query_params)
         form = query.fetch(1)[0]
         form.key.delete()
-        # maybe make a page saying it's been deleted, or return them to
-        # the original query page.
         self.redirect('/forms/delete/confirmation')
 
 class FormDeleteConfirmation(webapp2.RequestHandler):
