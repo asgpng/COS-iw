@@ -196,6 +196,7 @@ class QueryResults(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         query = object_query(Form, query_params)
+        # sort query results (sort_by is a link selected by the user in query_results.html)
         sort_by = self.request.get('sort_by')
         if sort_by == 'form_type':
             query = query.order(Form.form_type, Form.student_netID, Form.student_name)
@@ -207,6 +208,7 @@ class QueryResults(webapp2.RequestHandler):
             query = query.order(Form.advisor_netID, Form.student_netID, Form.student_name)
         if sort_by == 'advisor_name':
             query = query.order(Form.advisor_name, Form.student_netID, Form.student_name)
+
         forms = query.fetch()
         template_values = {
             'forms':forms,
