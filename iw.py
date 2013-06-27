@@ -38,7 +38,7 @@ class LoginPage(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'user':getCurrentUser(self)
+            'current_user': getCurrentUser(self)
         }
         template = JINJA_ENVIRONMENT.get_template('login.html')
         self.response.write(template.render(template_values))
@@ -65,6 +65,7 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'netID':query_params['netID']
+#            'current_user': getCurrentUser(self)
         }
         template = JINJA_ENVIRONMENT.get_template('login_unauthorized.html')
         self.response.write(template.render(template_values))
@@ -75,6 +76,7 @@ class LogoutPage(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'netID':query_params['netID']
+ #           'current_user': getCurrentUser(self)
         }
 
 
@@ -86,7 +88,7 @@ class MainPage(webapp2.RequestHandler):
         session = get_current_session()
         user = session['user']
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -96,7 +98,7 @@ class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('signupform.html')
@@ -124,7 +126,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
     def get(self):
 
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
             }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
@@ -151,7 +153,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
@@ -181,7 +183,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
     def get(self):
         session = get_current_session()
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
             'user_type': session["user"].user_type
         }
@@ -216,7 +218,7 @@ class FormView(webapp2.RequestHandler):
         form = forms[0]
         template_values = {
             'form': form,
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form.form_type)
@@ -226,7 +228,7 @@ class FormQuery(webapp2.RequestHandler):
     # user inputs what he/she wants to query
     def get(self):
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('query.html')
@@ -257,7 +259,7 @@ class QueryResults(webapp2.RequestHandler):
         forms = query.fetch()
         template_values = {
             'forms':forms,
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('query_results.html')
@@ -271,7 +273,7 @@ class QueryView(webapp2.RequestHandler):
         form = query.fetch(1)[0]
         template_values = {
             'form':form,
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % query_params['form_type'])
@@ -291,7 +293,7 @@ class FormDeleteConfirmation(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'student_netID':query_params['student_netID'],
             'form_type':query_params['form_type']
         }
@@ -303,7 +305,7 @@ class FormInvalid(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'student_netID': query_params['student_netID'],
             'form_type': query_params['form_type']
         }
@@ -316,7 +318,7 @@ class NewFile(webapp2.RequestHandler):
 
         upload_url = blobstore.create_upload_url('/upload')
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
             'upload_url': upload_url,
         }
         template = JINJA_ENVIRONMENT.get_template('upload.html')
@@ -345,7 +347,7 @@ class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
 
     def get(self):
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
         }
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
@@ -355,7 +357,7 @@ class Unauthorized(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
         }
         template = JINJA_ENVIRONMENT.get_template('unauthorized.html')
         self.response.write(template.render(template_values))
@@ -372,7 +374,7 @@ class ViewUsers(webapp2.RequestHandler):
         users = query.fetch()
         template_values = {
             'users':users,
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
         }
         template = JINJA_ENVIRONMENT.get_template('users.html')
         self.response.write(template.render(template_values))
@@ -398,7 +400,7 @@ class UserInvalid(webapp2.RequestHandler):
         user = query.fetch(1)[0]
         template_values = {
             'user': user,
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
         }
         template = JINJA_ENVIRONMENT.get_template('user_invalid.html')
         self.response.write(template.render(template_values))
@@ -419,7 +421,7 @@ class UserDeleteConfirmation(webapp2.RequestHandler):
         template_values = {
             'netID': query_params['netID'],
             'user_type': query_params['user_type'],
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
         }
         template = JINJA_ENVIRONMENT.get_template('user_delete_confirmation.html')
         self.response.write(template.render(template_values))
@@ -435,7 +437,7 @@ class UserView(webapp2.RequestHandler):
 
         template_values = {
             'user': user,
-            'user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
         }
         template = JINJA_ENVIRONMENT.get_template('user_view.html')
         self.response.write(template.render(template_values))
