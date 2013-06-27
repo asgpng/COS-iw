@@ -2,6 +2,18 @@
 {% block head %}
 <script type = "text/javascript">
 
+
+function disable() {
+
+document.getElementById("student_netid").disabled=true;
+document.getElementById("student_name").disabled=true;
+document.getElementById("project_title").disabled=true;
+document.getElementById("advisor_name").disabled=true;
+document.getElementById("number_of_meetings").disabled=true;
+document.getElementById("comments").disabled=true;
+
+}
+
 function checkStudent() {
 window.alert("yo");
 return false;
@@ -73,15 +85,15 @@ return result;
 
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID"/>
+	  <input type="text" name="student_netID" id="student_netid"/>
 	</div>
     <div>
       <label>Student Name:</label>
-      <input type="text" name="student_name"/>
+      <input type="text" name="student_name" id="student_name"/>
     </div>
     <div>
       <label>Title of Project:</label>
-      <textarea name="title" id="title" rows="2" cols="23"></textarea>
+      <textarea name="title" id="project_title" rows="2" cols="23"></textarea>
     </div>
     <div>
       <label>Advisor:</label>
@@ -95,10 +107,11 @@ return result;
     <br>
     <div>
       <label>Student Comments:</label>
-      <textarea name="student_comments" rows="2" cols="23"></textarea>
+      <textarea name="student_comments" id="comments" rows="2" cols="23"></textarea>
     </div>
 {% endblock %}
 {% block advisor %}
+<body onload="disable()">
     <h3>Advisor Section:</h3>
     <div>
       <label id="first">I read the student's 5-page progress research paper:</label>
@@ -127,6 +140,7 @@ return result;
       <label>Comments:</label>
       <textarea name="advisor_comments" rows="2" cols="23"></textarea>
     </div>
+</body>
 {% endblock %}
 {% block submit %}
     <div id="submit">
