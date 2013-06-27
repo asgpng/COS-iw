@@ -13,22 +13,11 @@
 
 <table border="1">
   <tr>
-    <th>Sort by:</th>
-    <th><a href="query_results">Form Type</a></th>
-    <th><a href="query_results">Student NetID</a></th>
-    <th><a href="query_results">Student Name</a></th>
-    <th><a href="query_results">Advisor NetID</a></th>
-    <th><a href="query_results">Advisor Name</a></th>
-  </tr>
-</table>
-<hr>
-<table border="1">
-  <tr>
-    <th>Form Type:</th>
-    <th>Student NetID:</th>
-    <th>Student Name:</th>
-    <th>Advisor NetID:</th>
-    <th>Advisor Name:</th>
+    <th><a href="query_results?{{ {'sort_by':'form_type'} | urlencode }}">Form Type:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'student_netID'} | urlencode }}">Student NetID:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'student_name'} | urlencode }}">Student Name:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'advisor_netID'} | urlencode }}">Advisor NetID:</a></th>
+    <th><a href="query_results?{{ {'sort_by':'advisor_name'} | urlencode }}">Advisor Name:</a></th>
     <th>Link:</th>
     <th>Delete:</th>
   </tr>
