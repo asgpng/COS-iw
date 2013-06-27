@@ -37,8 +37,11 @@ JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
 class LoginPage(webapp2.RequestHandler):
 
     def get(self):
+        template_values = {
+            'user':getCurrentUser(self)
+        }
         template = JINJA_ENVIRONMENT.get_template('login.html')
-        self.response.write(template.render())
+        self.response.write(template.render(template_values))
 
     def post(self):
         # eventually don't allow multiple login.
@@ -66,12 +69,24 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('login_unauthorized.html')
         self.response.write(template.render(template_values))
 
+class LogoutPage(webapp2.RequestHandler):
+
+    def post(self):
+        query_params = build_query_params(self)
+        template_values = {
+            'netID':query_params['netID']
+        }
+
+
+
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
         # get current session, then modify permissions and content
         session = get_current_session()
+        user = session['user']
         template_values = {
+            'user':user,
             'url': getLoginStatus(self.request.uri)[0],
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
@@ -332,9 +347,18 @@ class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
         self.response.write(template.render(template_values))
         self.send_blob(blob_info.key())
 
+class Unauthorized(webapp2.RequestHandler):
+
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('unauthorized.html')
+        self.response.write(template.render(template_values))
+
 class ViewUsers(webapp2.RequestHandler):
 
     def get(self):
+        session = get_current_session()
+        if session['user'].user_type != 'administrator':
+            self.redirect('unauthorized')
         users = []
         query_params = {} # empty because we want all users
         query = object_query(User, query_params)
@@ -409,6 +433,7 @@ application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/login', LoginPage),
     ('/login/unauthorized', LoginUnauthorizedPage),
+    ('/unauthorized', Unauthorized),
     ('/forms/signupform', SignupFormPage),
     ('/forms/secondreaderform', SecondReaderFormPage),
     ('/forms/checkpointform', CheckPointFormPage),
