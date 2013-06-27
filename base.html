@@ -8,6 +8,10 @@
     {% endblock %}
   </head>
   <body>
+    <div id="user_info">
+      {{user.user_type}}<br>
+      {{user.netID}}
+    </div>
     <div id="content">
       {% block content %}
       {% endblock %}
@@ -33,4 +37,3 @@
     </div>
   </body>
 </html>
-

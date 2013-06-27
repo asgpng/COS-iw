@@ -6,6 +6,8 @@ from google.appengine.api import users
 from forms import *
 from Users import *
 
+from gaesessions import get_current_session
+
 # for encoding dictionary urls in jinja
 # note: Jinja 2.7 includes a urlencode filter by default, but GAE uses Jinja 2.6
 #       This hack seems to work for our small purposes, but it may not be as
@@ -86,3 +88,8 @@ def validateNewUser(self, user):
         self.redirect('/administrative/users?' + urllib.urlencode(query_params))
     else:
         self.redirect('/administrative/invalid_entry?' + urllib.urlencode(query_params))
+
+def getCurrentUser(self):
+    session = get_current_session()
+    user = session['user']
+    return user
