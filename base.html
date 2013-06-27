@@ -17,10 +17,10 @@
       {% endblock %}
       {% block header %}
       {% endblock %}
-      {% if user_type %}
+      {% if user_type=="student" %}
       {% block student%}
       {% endblock %}
-      {% else %}
+      {% elif user_type=="faculty" %}
       {{ self.student() }}
       {% block advisor %}
       {% endblock %}
