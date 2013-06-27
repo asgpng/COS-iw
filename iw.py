@@ -72,7 +72,6 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
 
 class LogoutPage(webapp2.RequestHandler):
 
-<<<<<<< HEAD
     def post(self):
 
 
@@ -82,8 +81,6 @@ class LogoutPage(webapp2.RequestHandler):
  #           'current_user': getCurrentUser(self)
         }
 
-
-=======
     def get(self):
         session = get_current_session()
         user = getCurrentUser(self)
@@ -92,13 +89,11 @@ class LogoutPage(webapp2.RequestHandler):
         else:
             session.terminate()
             self.redirect('/')
->>>>>>> 92162ac302101e7fd8e755e63448ad22564ffd78
 
 class MainPage(webapp2.RequestHandler):
 
     def get(self):
         # get current session, then modify permissions and content
-<<<<<<< HEAD
         session = get_current_session()
         user = session['user']
         template_values = {
@@ -107,7 +102,6 @@ class MainPage(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
-=======
         user = getCurrentUser(self)
         if user == None:
             self.redirect('/login')
@@ -118,7 +112,6 @@ class MainPage(webapp2.RequestHandler):
             }
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
->>>>>>> 4319a24bf739cc0fe4caa5984b4757a60d5224ad
 
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user

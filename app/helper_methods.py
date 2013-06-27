@@ -91,13 +91,13 @@ def validateNewUser(self, user):
 
 def getCurrentUser(self):
     session = get_current_session()
-<<<<<<< HEAD
+
     if (session.has_key('user')):
         user = session['user']
         return user
-=======
+
     if session.has_key('user'):
         return session['user']
->>>>>>> 92162ac302101e7fd8e755e63448ad22564ffd78
+
     else:
         return None
