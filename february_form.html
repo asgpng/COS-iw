@@ -66,7 +66,7 @@ for (var i = 0; i < checks.length; i++) {
         if (temp[j].checked) {
            OK[i] = true;
            break;
-	}  
+	}
     }
 }
 
@@ -81,7 +81,7 @@ if (OK[1])
 else
     document.getElementById("second").style.color='#fa7f00';
 
-	
+
 if (OK[2])
     document.getElementById("third").style.color='#000';
 else
@@ -102,7 +102,6 @@ return result;
 {% block title %}February Progress Form
 {% endblock %}
 {% block header %}
-<h1>Department of Computer Science</h1>
 <h2>Thesis &amp; IW 2 Semester February Progress Form</h2>
 <div class="container">
 {% if  current_user.user_type=="student" %}

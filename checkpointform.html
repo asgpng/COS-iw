@@ -94,7 +94,6 @@ return result;
 {% endblock %}
 
 {% block header %}
-<h1>Department of Computer Science</h1>
 <h2>Princeton CS IW Checkpoint Form</h2>
 {% if current_user.user_type=="student" %}
 <form action="/forms/checkpointform" method="post" onsubmit="return checkStudent();">
@@ -135,6 +134,7 @@ return result;
   </div>
 {% endblock %}
 {% block advisor %}
+<h2>Princeton CS IW Checkpoint Form</h2>
 <body onload="disable()">
  <h3>Advisor Section:</h3>
   <div class="container" >

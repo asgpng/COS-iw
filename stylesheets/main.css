@@ -9,15 +9,21 @@ body {
     text-align:center;
     font-family: Arial;
     background-color:#fefefe;
+    margin: 0 auto;
 }
 h2 {
-color: #646464;
-font-size: 22px;
+    color: #646464;
+    font-size: 22px;
+}
+li {
+    list-style:none;
 }
 a {
-color:black;
+    color:black;
 }
-a:hover {color:#fa7f00;}
+a:hover {
+    color:#fa7f00;
+}
 .container {
     margin:0 auto;
     padding:5px;
@@ -47,29 +53,51 @@ textarea {
     padding-left:70px
 }
 #wrapper {
-margin: 0;
-padding: 0;
-overflow: hidden;
-text-align:right;
-}
-#wrapper li.first {
-display:inline;
-}
-#wrapper li.first a {
-font-size: 14px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align:right;
 }
 #menucontainer {
-height:100%;
-width:100%;
-text-align: left;
+    height:100%;
+    width:100%;
+    text-align: left;
 }
 #menucontainer ul {
-padding:0;
-color: black;
-width: 100%;
-line-height:22px;
+    padding:0;
+    color: black;
+    width: 100%;
+    line-height:22px;
 }
 #menucontainer ul li.forms a {
-color: #fa7f00;
+    color: #fa7f00;
 }
-#menucontainer ul li.forms a:hover{color:black;}
+#menucontainer ul li.forms a:hover{
+    color:black;
+}
+#top_menu ul li{
+    float:left;
+    width: 150px;
+}
+#top_menu {
+    height: 20px;
+    text-align: center;
+    margin-left: 40px;
+}
+#user {
+    float: right;
+    position: relative;
+    top: -80px;
+}
+#title {
+    height: 80px;
+}
+#content h1 {
+    margin-left:40px
+}
+#title h1 {
+    margin-left: -60px;
+}
+table {
+    margin: 0 auto;
+}

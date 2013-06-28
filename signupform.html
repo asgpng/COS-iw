@@ -5,39 +5,39 @@
 
   function proceed() {
   var proceed =  highlight(year(), radio(), text1(), text2(), text3());
-  if (!proceed) { 
+  if (!proceed) {
   window.alert("Please check highlighted field(s)!");
   }
-  
+
   return proceed;
   }
 
   function highlight(year, radio, text1, text2, text3) {
-  
+
   if (year)
-  document.getElementById("class_year").style.backgroundColor='#fff'; 
+  document.getElementById("class_year").style.backgroundColor='#fff';
   else
-  document.getElementById("class_year").style.backgroundColor='#fa7f00'; 
+  document.getElementById("class_year").style.backgroundColor='#fa7f00';
 
   if (radio)
-  document.getElementById("test").style.color='#000'; 
+  document.getElementById("test").style.color='#000';
   else
-  document.getElementById("test").style.color='#fa7f00';  
+  document.getElementById("test").style.color='#fa7f00';
 
   if (text1)
   document.getElementById("title").style.backgroundColor='#fff';
   else
-  document.getElementById("title").style.backgroundColor='#fa7f00';  
+  document.getElementById("title").style.backgroundColor='#fa7f00';
 
   if (text2)
   document.getElementById("description").style.backgroundColor='#fff';
   else
-  document.getElementById("description").style.backgroundColor='#fa7f00'; 
+  document.getElementById("description").style.backgroundColor='#fa7f00';
 
   if (text3)
   document.getElementById("advisor_name").style.backgroundColor='#fff';
   else
-  document.getElementById("advisor_name").style.backgroundColor='#fa7f00'; 
+  document.getElementById("advisor_name").style.backgroundColor='#fa7f00';
 
   var checked = year && radio && text1 && text2 && text3;
   return checked;
@@ -51,7 +51,7 @@
 
   return re.test(year);
   }
-  
+
   function radio() {
 
   var radios = document.getElementsByName("coursework");
@@ -61,15 +61,15 @@
 	                                  if (radios[i].checked) {
 	                                  OK = true;
 	                                  break; }
-                                      }	
-                                      return(OK); 
+                                      }
+                                      return(OK);
                                       }
 
                                       function text1() {
-	                                  
+
                                       var re = /.+/;
                                       var title = document.getElementById("title").value;
-			                          
+
                                       return re.test(title);
                                       }
 
@@ -83,7 +83,7 @@
                                       function text3() {
                                       var re = /.+/;
                                       var advisor_name = document.getElementById("advisor_name").value;
-	                                  
+
                                       return re.test(advisor_name);
                                       }
 
@@ -92,11 +92,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Department of Computer Science</h1>
-
 <h2>Princeton CS IW & Thesis Signup Form</h2>
-
-
 <div class="container">
   <form action="/forms/signupform" method="post" onsubmit="return proceed();">
 	<div>
@@ -121,7 +117,7 @@
         <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
         <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
         <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
-	  </div>         
+	  </div>
       <div>
         <label>Title of Project:</label>
         <textarea name="title" id="title" rows="2" cols="23"></textarea>
