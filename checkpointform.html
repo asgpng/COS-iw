@@ -5,9 +5,9 @@
 
 function disable() {
 
-document.getElementById('title').disabled=true;
+document.getElementById('project_title').disabled=true;
 document.getElementById('advisor_name').disabled=true;
-//document.getElementById('meetings').disabled=true;
+document.getElementById('meetings').disabled=true;
 document.getElementById('self_ass.').disabled=true;
 
 }
@@ -55,9 +55,10 @@ function checkFaculty() {
 var read = document.getElementsByName('advisor_read_summary');
 var meet = document.getElementsByName('student_progress');
 var progress = document.getElementsByName('student_progress');
+var comments = document.getElementById('faculty_comments');
 
 var checks = new Array(read, meet, progress);
-var OK = new Array(false, false, false);
+var OK = new Array(false, false, false, true);
 
 for (var i = 0; i < checks.length; i++) {
     var temp = checks[i];
@@ -66,6 +67,19 @@ for (var i = 0; i < checks.length; i++) {
 	    OK[i] = true;
 	    break;
 	}
+    }
+}
+
+if (document.getElementById('unsatisfactory').checked == true) {
+    var re = /.+/;
+    if (re.test(document.getElementById('faculty_comments').value)) {
+	OK[3] = true;
+	document.getElementById('faculty_comments').style.backgroundColor = "#fff";
+    }
+
+    else {
+	OK[3] = false;
+	document.getElementById('faculty_comments').style.backgroundColor = "#fa7f00";
     }
 }
 
@@ -84,7 +98,7 @@ if (OK[2])
 else
     document.getElementById('third').style.color='#fa7f00';
 
-var result = OK[0] && OK[1] && OK[2];
+var result = OK[0] && OK[1] && OK[2] && OK[3];
 
 if (!result)
    window.alert("Please check highlighted field(s)!");
@@ -159,12 +173,12 @@ return result;
 	    <input type="radio" name="student_progress" value="4f"/>Exceptional<br>
 	    <input type="radio" name="student_progress" value="3t"/>Very Good<br>
 	    <input type="radio" name="student_progress" value="2t"/>Good<br>
-	    <input type="radio" name="student_progress" value="1o"/>Unsatisfactory<br>
+	    <input type="radio" name="student_progress" value="1o" id="unsatisfactory" />Unsatisfactory<br>
 	  </div>
     </div>
     <div>
 	  <label>Comments: <br> [If student progress is unsatisfactory, explain what steps they need to take to get on track.]</label>
-	  <textarea name="comments" rows="4" cols="60"></textarea>
+	  <textarea name="comments" id="faculty_comments" rows="4" cols="60"></textarea>
 	</div>
 </body>
   {% endblock %}
