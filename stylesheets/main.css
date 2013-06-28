@@ -101,3 +101,6 @@ textarea {
 table {
     margin: 0 auto;
 }
+#login label {
+    margin-left: 200px;
+}

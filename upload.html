@@ -2,7 +2,7 @@
 {% block title %} Upload New File{% endblock %}
 {% block head %}
 <script type="text/javascript">
-    
+
     function check() {
     var check = document.getElementById("newFile").value;
     if (check == "") {
@@ -16,13 +16,13 @@
 
 {% endblock %}
 {% block content %}
-<h1> Upload New File</h1>
+<h2> Upload New File</h2>
 
 <div class="container">
-  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data"> 
+  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data">
     <div>
       Upload File:
-    </div>   
+    </div>
     <input type="file" name="uploadField" id="newFile"/>
     <div id="submit">
       <input type="submit" value="Submit">

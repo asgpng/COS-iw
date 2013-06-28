@@ -271,7 +271,16 @@ class QueryResults(webapp2.RequestHandler):
         if sort_by == 'advisor_name':
             query = query.order(Form.advisor_name, Form.student_netID, Form.student_name)
 
-        forms = query.fetch()
+        current_user = getCurrentUser(self)
+        if current_user.user_type == 'student':
+            query2 = query.filter(Form.student_netID == current_user.netID)
+            forms = query2.fetch()
+        elif current_user.user_type == 'faculty':
+            query2 = query.filter(Form.advisor_netID == current_user.netID)
+        else:
+            forms = query.fetch()
+
+
         template_values = {
             'forms':forms,
             'current_user': getCurrentUser(self),
@@ -382,7 +391,7 @@ class ViewUsers(webapp2.RequestHandler):
     def get(self):
         session = get_current_session()
         if session['user'].user_type != 'administrator':
-            self.redirect('unauthorized')
+            self.redirect('/unauthorized')
         query_params = {} # empty because we want all users
         query = object_query(User, query_params)
         users = query.fetch()
@@ -482,7 +491,6 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
-    ('/administrative/unauthorized', Unauthorized), # easiest way to fix url issue
 
 ], debug=True)
 
