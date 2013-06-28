@@ -5,8 +5,6 @@
 
 function disable() {
 
-document.getElementById("student_netid").disabled=true;
-document.getElementById("student_name").disabled=true;
 document.getElementById("project_title").disabled=true;
 document.getElementById("advisor_name").disabled=true;
 document.getElementById("number_of_meetings").disabled=true;
@@ -116,11 +114,11 @@ return result;
 
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" id="student_netid"/>
+	  <input type="text" name="student_netID" id="student_netid" disabled/>
 	</div>
     <div>
       <label>Student Name:</label>
-      <input type="text" name="student_name" id="student_name"/>
+      <input type="text" name="student_name" id="student_name" disabled/>
     </div>
     <div>
       <label>Title of Project:</label>

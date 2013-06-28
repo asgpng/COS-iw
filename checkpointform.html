@@ -5,8 +5,8 @@
 
 function disable() {
 
-document.getElementById('student_netID').disabled=true;
-document.getElementById('student_name').disabled=true;
+
+
 document.getElementById('title').disabled=true;
 document.getElementById('advisor_name').disabled=true;
 document.getElementById('meetings').disabled=true;
@@ -103,7 +103,6 @@ return result;
 {% endblock %}
 {% block student %}
 <h3>Student Section:</h3>
-{{ current_user.user_type }}
   <div class="container">
     <div>
 	  <label>Student NetID: </label>
