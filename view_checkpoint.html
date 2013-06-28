@@ -1,20 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Checkpoint Form{% endblock %}
 {% block head %}
-<script type = "text/javascript">
+<script type="text/javascript">
 
-  function check(id) {
-
-  window.alert(id);
-  document.getElementById(id).checked=true;
-
-  }
-
+function radio(read) {
+alert("yo");
+document.getElementById(read).checked=true;
+//document.getElementById(meet).checked=true;
+//document.getElementById(progress).checked=true;
+}
 </script>
+
 {% endblock %}
 {% block content %}
 <!-- now that we're using Jinja templating, we shouldn't have multiple <body> tags -->
-<body onload="check('one');">
 
   <h2>Checkpoint Form</h2>
 
@@ -49,13 +48,15 @@
 	  <label>Student Self Assessment: </label>
 	  <textarea name="self_assessment" rows="5" cols="60" disabled>{{ form.self_assessment }}</textarea>
     </div>
+   <!-- <body onload"=radio({{form.advisor_read_summary}}, {{form.meet_more_often}}, {{form.student_progress}});">-->
+<body onload="radio({{form.advisor_read_summary}});">
     <h3>Advisor Section:</h3>
     <div>
 	  <label>I read the student's 1-page summary report:</label>
 	  <div class="radio">
 
-	    <input type="radio" name="advisor_read_summary" value="yes" id="one" disabled/>yes<br>
-	    <input type="radio" name="advisor_read_summary" value="no" id="two" disabled/>no<br>
+	    <input type="radio" name="advisor_read_summary" id="yes_read" disabled/>yes<br>
+	    <input type="radio" name="advisor_read_summary" id="no_read" disabled/>no<br>
         {% if form.advisor_read_summary == "yes":   %}
 
 	    <body onload="check('one');"></body>
@@ -68,23 +69,18 @@
     <div>
 	  <label>Would you like your student to meet with you more often? {{form.meet_more_often }}</label>
 	  <div class="radio">
-        {% if form.meet_more_often == "yes": %}
-	    <input type="radio" name="meet_more_often" value="yes" checked disabled/>yes<br>
-        <input type="radio" name="meet_more_often" value="no" disabled/>no<br>
-	    {% else: %}
-	    <input type="radio" name="meet_more_often" value="yes" disabled/>yes<br>
-	    <input type="radio" name="meet_more_often" value="no" checked disabled/>no<br>
-	    {% endif %}
+	    <input type="radio" name="meet_more_often" id="yes_meet" disabled/>yes<br>
+	    <input type="radio" name="meet_more_often" id="no_meet" disabled/>no<br>
       </div>
     </div>
     <br>
     <div>
 	  <label>Student progress:</label>
 	  <div class="radio">
-        <input type="radio" name="student_progress" value="4" disabled/>Exceptional<br>
-        <input type="radio" name="student_progress" value="3" disabled/>Very Good<br>
-        <input type="radio" name="student_progress" value="2" disabled/>Good<br>
-        <input type="radio" name="student_progress" value="1" disabled/>Unsatisfactory<br>
+        <input type="radio" name="student_progress" id="4f" disabled/>Exceptional<br>
+        <input type="radio" name="student_progress" id="3t" disabled/>Very Good<br>
+        <input type="radio" name="student_progress" id="2t" disabled/>Good<br>
+        <input type="radio" name="student_progress" id="1o" disabled/>Unsatisfactory<br>
       </div>
     </div>
     <div>
