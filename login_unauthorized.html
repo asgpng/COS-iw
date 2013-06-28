@@ -1,34 +1,15 @@
 <!-- In this case we don't extend base.html because there is no user to pass -->
 <!-- Though not ideal, the best solution for now is to treat this page separately. -->
-<!-- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"> -->
-<!-- <html lang="en"> -->
-<!--   <head> -->
-<!--     <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" /> -->
-<!--     <title>Login Unauthorized - COS IW</title> -->
-<!--   </head> -->
-<!--   <body> -->
-<!--     <div id="title"> -->
-<!--       <h1>Department of Computer Science</h1> -->
-<!--     </div> -->
-<!--     <div id="user"> -->
-<!--       <div id="logo"> -->
-<!--         <img src="/images/princeton.gif" width="40" height="40"> -->
-<!--       </div> -->
-<!--       <div id="user_info"> -->
-<!--         {% if current_user %} -->
-<!--         <a href="logout"> -->
-<!--           <b>{{current_user.netID}}</b> -->
-<!--           ({{current_user.user_type}}) -->
-<!--           {% endif %} -->
-<!--         </a> -->
-<!--         <br> -->
-<!--       </div> -->
-<!--     </div> -->
-{% extends "base.html" %}
-{% block title %}Thesis and COS IW Forms{% endblock %}
-{% block content %}
-
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css" />
+    <title>Login Unauthorized - COS IW</title>
+  </head>
+  <body>
+    <div id="title">
+      <h1>Department of Computer Science</h1>
+    </div>
     <h2>Login Unauthorized</h2>
     {% if netID %}
     <p>There is no entry for user <b>{{netID}}</b> in the COS IW database. Please contact the <a href="mailto:ckenny@cs.princeton.edu">COS department administrator</a> if you would like to gain access to this web application.
@@ -38,6 +19,5 @@
     {% endif %}
     <hr>
     <a href="/">Return to Login</a>
-<!--   </body> -->
-<!-- </html> -->
-{% endblock %}
+  </body>
+</html>
