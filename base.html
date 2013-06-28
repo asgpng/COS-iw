@@ -17,7 +17,7 @@
           <img src="/images/princeton.gif" width="40" height="40">
         </div>
         <div id="user_info">
-          {% if current_user %}
+          {% if not current_user == "None" %}
           <a href="logout">
             <b>{{current_user.netID}}</b>
             ({{current_user.user_type}})
