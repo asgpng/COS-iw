@@ -50,7 +50,10 @@ class LoginPage(webapp2.RequestHandler):
         query_params = build_query_params(self)
         query = object_query(User, query_params)
         users = query.fetch()
-        if len(users) == 0:
+        # blank submissions are unauthorized
+        if len(query_params) == 0:
+            self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
+        elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
             user = query.fetch()[0]
@@ -63,10 +66,12 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
-        template_values = {
-            'netID':query_params['netID']
-#            'current_user': getCurrentUser(self)
-        }
+        if 'netID' in query_params:
+            template_values = {
+                'netID':query_params['netID']
+            }
+        else:
+            template_values = {}
         template = JINJA_ENVIRONMENT.get_template('login_unauthorized.html')
         self.response.write(template.render(template_values))
 
@@ -477,7 +482,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
-    ('/administrative/unauthorized', Unauthorized),
+    ('/administrative/unauthorized', Unauthorized), # easiest way to fix url issue
 
 ], debug=True)
 
