@@ -11,6 +11,42 @@ document.getElementById('title').disabled=true;
 document.getElementById('advisor_name').disabled=true;
 document.getElementById('meetings').disabled=true;
 document.getElementById('self_ass.').disabled=true;
+
+}
+
+function checkStudent() {
+
+var re = /.+/;
+var re2 = /[0-9]+/;
+
+var title = re.test(document.getElementById('title').value);
+var advisor_name =  re.test(document.getElementById('advisor_name').value);
+var meetings =  re2.test(document.getElementById('meetings').value);
+var assessment =  re.test(document.getElementById('self_ass.').value);
+
+if (title)
+    document.getElementById('title').style.backgroundColor = '#fff';
+else
+    document.getElementById('title').style.backgroundColor = '#fa7f00';
+
+if (advisor_name)
+    document.getElementById('advisor_name').style.backgroundColor = '#fff';
+else
+    document.getElementById('advisor_name').style.backgroundColor = '#fa7f00';
+
+if (meetings)
+    document.getElementById('meetings').style.backgroundColor = '#fff';
+else
+    document.getElementById('meetings').style.backgroundColor = '#fa7f00';
+
+if (meetings)
+    document.getElementById('self_ass.').style.backgroundColor = '#fff';
+else
+    document.getElementById('self_ass.').style.backgroundColor = '#fa7f00';
+
+var result = title && advisor_name && meetings && assessment;
+
+return result;
 }
 
 function checkFaculty() {
@@ -68,7 +104,7 @@ return result;
 {% endblock %}
 {% block student %}
 <h3>Student Section:</h3>
-
+{{ current_user.user_type }}
   <div class="container">
     <div>
 	  <label>Student NetID: </label>
@@ -79,7 +115,7 @@ return result;
       <input type="text" name="student_name" id="student_name" disabled/>
     </div>
     <div>
-      <label>Title/Topic:</label>
+      <label>Title of Project:</label>
       <input type="text" name="topic_title" id="title"/>
     </div>
     <div>
