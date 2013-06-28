@@ -8,12 +8,22 @@
   </head>
   <body>
     <div id="header">
-      <div id="logo">
-        <img src="/images/princeton.gif" width="40" height="40">
+      <div id="title">
+        <h1>Department of Computer Science</h1>
       </div>
-      <div id="user_info">
-   
-
+      <div id="user">
+        <div id="logo">
+          <img src="/images/princeton.gif" width="40" height="40">
+        </div>
+        <div id="user_info">
+          {% if current_user %}
+          <a href="logout">
+            <b>{{current_user.netID}}</b>
+            ({{current_user.user_type}})
+            {% endif %}
+          </a>
+          <br>
+        </div>
       </div>
     </div>
     <div id="content">
@@ -35,9 +45,6 @@
     <div id="footer">
       {% block footer %}
       <!-- links: -->
-      <a href="login">Login</a>
-      <br>
-      <a href="logout">Logout</a>
       <br>
       <a href="/">Home</a>
       <!-- &copy; Copyright 2013 by <a href="http://domain.invalid/">you</a>. -->

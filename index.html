@@ -2,12 +2,20 @@
 {% block title %}Thesis and COS IW Forms{% endblock %}
 {% block head %}{% endblock %}
 {% block content %}
-<h1>COS Independent Work</h1>
+<h2>COS Independent Work</h2>
 <div id="wrapper">
-  <li class="first"><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
+  <div id="top_menu" />
+  <ul>
+    <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
+    <li><a href="forms/query">Form Query</a></li>
+    <li><a href="administrative/users">View Users</a></li>
+    <li><a href="files/new_file">Upload New File</a></li>
+    <li><a href="files/view">Uploaded Files</a></li>
+  </ul>
+</div>
   <div id="menucontainer">
 	<ul id="menulist">
-	  <h2>Forms</h2>
+	  <h3>Forms</h3>
 	  <li class="forms"><a href="forms/signupform">Signup Form</a></li>
 	  <li class="forms"><a href="forms/checkpointform">Checkpoint Form</a></li>
 	  <li class="forms"><a href="forms/februaryform">February Progress Form</a></li>(for all 2-semester work)
@@ -16,12 +24,5 @@
   </div>
   <hr>
   <!-- links: -->
-  <a href="forms/query">Form Query</a>
-  <br>
-  <a href="administrative/users">View Users</a>
-  <br>
-  <a href="files/new_file">Upload New File</a>
-  <br>
-  <a href="files/view">View Uploaded Files</a>
 </div>
 {% endblock %}
