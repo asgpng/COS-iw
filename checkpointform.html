@@ -17,15 +17,15 @@ function checkStudent() {
 var re = /.+/;
 var re2 = /[0-9]+/;
 
-var title = re.test(document.getElementById('title').value);
+var title = re.test(document.getElementById('project_title').value);
 var advisor_name =  re.test(document.getElementById('advisor_name').value);
 var meetings =  re2.test(document.getElementById('meetings').value);
 var assessment =  re.test(document.getElementById('self_ass.').value);
 
 if (title)
-    document.getElementById('title').style.backgroundColor = '#fff';
+    document.getElementById('project_title').style.backgroundColor = '#fff';
 else
-    document.getElementById('title').style.backgroundColor = '#fa7f00';
+    document.getElementById('project_title').style.backgroundColor = '#fa7f00';
 
 if (advisor_name)
     document.getElementById('advisor_name').style.backgroundColor = '#fff';
@@ -37,12 +37,15 @@ if (meetings)
 else
     document.getElementById('meetings').style.backgroundColor = '#fa7f00';
 
-if (meetings)
+if (assessment)
     document.getElementById('self_ass.').style.backgroundColor = '#fff';
 else
     document.getElementById('self_ass.').style.backgroundColor = '#fa7f00';
 
 var result = title && advisor_name && meetings && assessment;
+
+if (!result)
+    window.alert("Please check highlighted field(s)!");
 
 return result;
 }
@@ -104,7 +107,7 @@ return result;
   <div class="container">
     <div>
 	  <label>Student NetID: </label>
-	  <input type="text" name="student_netID" id="student_netID" disabled/>
+	  <input type="text" name="student_netID" id="student_netID" value="{{current_user.netID}}" disabled/>
 	</div>
     <div>
       <label>Student Name:</label>
@@ -112,7 +115,7 @@ return result;
     </div>
     <div>
       <label>Title of Project:</label>
-      <input type="text" name="topic_title" id="title"/>
+      <input type="text" name="topic_title" id="project_title"/>
     </div>
     <div>
       <label>Advisor:</label>
