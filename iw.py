@@ -133,6 +133,8 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
+
+   
         )
         validateFormSubmission(self, sf)
 
@@ -149,19 +151,33 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def post(self):
         ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
-        cpf = CheckpointForm(student_name=self.request.get('student_name'),
-                             form_type= 'checkpoint',
-                             topic_title = self.request.get('topic_title'),
-                             advisor_name = self.request.get('advisor'),
-                             advisor_netID = 'olivia',
-                             meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
-                             self_assessment = self.request.get('self_assessment'),
-                             advisor_read_summary = bool(self.request.get('advisor_read_summary')),
-                             meet_more_often = bool(self.request.get('meet_more_often')),
-                             student_progress = int(self.request.get('student_progress')),
-                             comments = self.request.get('comments'),
-                             student_netID = self.request.get('student_netID')
-        )
+        
+
+        cpf = None
+        if getCurrentUser(self).user_type  == "faculty":
+            cpf = CheckpointForm(student_name=self.request.get('student_name'),
+                                 student_netID = self.request.get('student_netID'),
+                                 form_type= 'checkpoint',
+                                 meet_more_often = bool(self.request.get('meet_more_often')),
+                                 student_progress = int(self.request.get('student_progress')),
+                                 comments = self.request.get('comments'),
+                                 submitted = False
+                                 
+                                 )
+
+        elif getCurrentUser(self).user_type == "student":
+            cpf = CheckpointForm(student_name=self.request.get('student_name'),
+                                 form_type= 'checkpoint',
+                                 topic_title = self.request.get('topic_title'),
+                                 advisor_name = self.request.get('advisor'),
+                                 advisor_netID = 'olivia',
+                                 meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
+                                 self_assessment = self.request.get('self_assessment'),                  
+                                 student_netID = self.request.get('student_netID'),
+                                 submitted = False,
+
+                                 )
+        #self.response.write(getCurrentUser(self))
         validateFormSubmission(self, cpf)
 
 class SecondReaderFormPage(webapp2.RequestHandler):

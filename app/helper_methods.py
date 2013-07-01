@@ -52,8 +52,9 @@ def validateFormSubmission(self, form):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = object_query(Form, query_params)
     forms = query.fetch(1)
-    if len(forms) == 0:
+    if not form.submitted:
         alreadySubmitted = False
+        form.submitted = True
     else:
         alreadySubmitted = True
 
