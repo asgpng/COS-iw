@@ -21,9 +21,8 @@ from google.appengine.ext.blobstore import BlobInfo
 from gaesessions import get_current_session
 
 # custom libraries
-from app.forms import *
+from app.models import *
 from app.helper_methods import *
-from app.Users import *
 from app.appengine_config import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -32,7 +31,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
-
 
 class LoginPage(webapp2.RequestHandler):
 
@@ -53,10 +51,10 @@ class LoginPage(webapp2.RequestHandler):
         # blank submissions are unauthorized
         if len(query_params) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
-#        elif len(users) == 0:
- #           self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
+        elif len(users) == 0:
+            self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
-            #user = User(netID="help", user_type="administrator")
+            # user = User(netID="admin", user_type="administrator")
             user = query.fetch()[0]
 
             session['user'] = user
@@ -466,6 +464,23 @@ class UserView(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_view.html')
         self.response.write(template.render(template_values))
 
+class ViewMessages(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'messages': getMessages(self),
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('messages.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        message = Message(author_netID=getCurrentUser(self).netID,
+                          content=self.request.get("content")
+                      )
+        message.put()
+        self.redirect('messages')
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/login', LoginPage),
@@ -492,6 +507,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
+    ('/messages', ViewMessages),
 
 ], debug=True)
 

@@ -5,6 +5,7 @@ import os
 from google.appengine.api import users
 from forms import *
 from Users import *
+from messages import *
 
 from gaesessions import get_current_session
 
@@ -101,3 +102,8 @@ def getCurrentUser(self):
 
     else:
         return None
+
+def getMessages(self):
+    query_params = build_query_params(self)
+    query = object_query(Message, query_params).order(Message.date)
+    return query.fetch()
