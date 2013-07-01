@@ -136,7 +136,36 @@ class SignupFormPage(webapp2.RequestHandler):
 
    
         )
-        validateFormSubmission(self, sf)
+
+        current_user = getCurrentUser(self)
+        current_user.advisor_netID = sf.advisor_netID
+
+        query_params = {'netID': sf.advisor_netID}
+        advisor_user = object_query(User, query_params).fetch(1)[0]
+        advisor_user.student_netIDs.append(current_user.netID)
+
+        current_user.put()
+                          
+    #validateFormSubmission(self, sf)
+
+        sf.put()
+        query_params = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
+        time.sleep(.1)
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
+
+
+class studentSelect(webapp2.RequestHandler):
+    
+    def get(self):
+        
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+            }
+        template = JINJA_ENVIRONMENT.get_template('student_select.html')
+        self.response.write(template.render(template_values))
+
+
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -162,10 +191,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                                  self_assessment = self.request.get('self_assessment'),                  
-                                 student_netID = self.request.get('student_netID'),
-                                 
-                                 
-
+                                 student_netID = self.request.get('student_netID'),                                                             
                                  )
 
         elif getCurrentUser(self).user_type  == "faculty":
@@ -175,14 +201,9 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf.meet_more_often = bool(self.request.get('meet_more_often'))
             cpf.student_progress = int(self.request.get('student_progress'))
             cpf.comments = self.request.get('comments')
-                                     #submitted = False,
-                                #     key_name = self.request.get('student_netID'),
-                                 
-                                     
-        #self.response.write(getCurrentUser(self))
+                                                                                           
         #validateFormSubmission(self, cpf)
 
-        
         cpf.put()
         query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
         time.sleep(.1)
@@ -262,6 +283,7 @@ class FormView(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form.form_type)
         self.response.write(template.render(template_values))
+        self.response.write(getCurrentUser(self).advisor_netID)
 
 class FormQuery(webapp2.RequestHandler):
     # user inputs what he/she wants to query
