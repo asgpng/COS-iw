@@ -5,7 +5,7 @@ import os
 from google.appengine.api import users
 from forms import *
 from Users import *
-from messages import *
+from models import *
 
 from gaesessions import get_current_session
 
@@ -52,7 +52,7 @@ def build_query_params(self):
 def validateFormSubmission(self, form):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = object_query(Form, query_params)
-    forms = query.fetch(1)
+    form = query.fetch(1)
     if not form.submitted:
         alreadySubmitted = False
         form.submitted = True

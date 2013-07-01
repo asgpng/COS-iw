@@ -30,6 +30,7 @@ class CheckpointForm(Form):
     student_progress = ndb.IntegerProperty(choices=set([4, 3, 2, 1]))
     comments = ndb.StringProperty()
     submitted = ndb.BooleanProperty()
+    #key_name = ndb.Key(
 
 class FebruaryForm(Form):
     title = ndb.StringProperty()

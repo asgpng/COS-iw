@@ -2,6 +2,7 @@
 import os
 import urllib
 import datetime
+import time
 
 # web development libraries
 import jinja2
@@ -153,31 +154,39 @@ class CheckPointFormPage(webapp2.RequestHandler):
         
 
         cpf = None
-        if getCurrentUser(self).user_type  == "faculty":
-            cpf = CheckpointForm(student_name=self.request.get('student_name'),
-                                 student_netID = self.request.get('student_netID'),
-                                 form_type= 'checkpoint',
-                                 meet_more_often = bool(self.request.get('meet_more_often')),
-                                 student_progress = int(self.request.get('student_progress')),
-                                 comments = self.request.get('comments'),
-                                 submitted = False
-                                 
-                                 )
-
-        elif getCurrentUser(self).user_type == "student":
+        if getCurrentUser(self).user_type == "student":
             cpf = CheckpointForm(student_name=self.request.get('student_name'),
                                  form_type= 'checkpoint',
                                  topic_title = self.request.get('topic_title'),
                                  advisor_name = self.request.get('advisor'),
-                                 advisor_netID = 'olivia',
+                                 
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                                  self_assessment = self.request.get('self_assessment'),                  
                                  student_netID = self.request.get('student_netID'),
-                                 submitted = False,
+                                 
+                                 
 
                                  )
+
+        elif getCurrentUser(self).user_type  == "faculty":
+            query_params = {'student_netID':'myself','form_type':'checkpoint'}
+            query = object_query(Form, query_params)
+            cpf = query.fetch(1)[0]
+            cpf.meet_more_often = bool(self.request.get('meet_more_often'))
+            cpf.student_progress = int(self.request.get('student_progress'))
+            cpf.comments = self.request.get('comments')
+                                     #submitted = False,
+                                #     key_name = self.request.get('student_netID'),
+                                 
+                                     
         #self.response.write(getCurrentUser(self))
-        validateFormSubmission(self, cpf)
+        #validateFormSubmission(self, cpf)
+
+        
+        cpf.put()
+        query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
+        time.sleep(.1)
+        self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
