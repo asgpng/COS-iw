@@ -2,6 +2,7 @@
 import os
 import urllib
 import datetime
+import time
 
 # web development libraries
 import jinja2
@@ -479,6 +480,7 @@ class ViewMessages(webapp2.RequestHandler):
                           content=self.request.get("content")
                       )
         message.put()
+        time.sleep(0.1)
         self.redirect('messages')
 
 application = webapp2.WSGIApplication([
