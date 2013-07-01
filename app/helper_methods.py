@@ -116,7 +116,8 @@ def getMessages(self):
     messages = query.fetch()
 
     # perform second query to link student and advisors
-    if user.user_type == 'student':
+    # needs work
+    if user.user_type == 'student' and user.advisor_netID != "":
         query2 = object_query(Message, {'author_netID':user.advisor_netID})
         messages.append(query2.fetch())
     if user.user_type == 'faculty' and len(user.student_netIDs) != 0:
