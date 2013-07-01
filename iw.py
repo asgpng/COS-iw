@@ -53,9 +53,10 @@ class LoginPage(webapp2.RequestHandler):
         # blank submissions are unauthorized
         if len(query_params) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
-        elif len(users) == 0:
-            self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
+#        elif len(users) == 0:
+ #           self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
+            #user = User(netID="help", user_type="administrator")
             user = query.fetch()[0]
 
             session['user'] = user
@@ -318,8 +319,8 @@ class FormDeleteConfirmation(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'current_user': getCurrentUser(self),
-            'student_netID':query_params['student_netID'],
-            'form_type':query_params['form_type']
+#            'student_netID':query_params['student_netID'],
+ #           'form_type':query_params['form_type']
         }
         template = JINJA_ENVIRONMENT.get_template('form_delete_confirmation.html')
         self.response.write(template.render(template_values))
@@ -330,7 +331,7 @@ class FormInvalid(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'current_user': getCurrentUser(self),
-            'student_netID': query_params['student_netID'],
+#            'student_netID': query_params['student_netID'],
             'form_type': query_params['form_type']
         }
         template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
@@ -375,7 +376,7 @@ class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
-        self.send_blob(blob_info.key())
+#        self.send_blob(blob_info.key())
 
 class Unauthorized(webapp2.RequestHandler):
 
