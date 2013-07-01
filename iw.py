@@ -33,6 +33,9 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
 
+# # maybe use in the future for code simplification
+# class BaseHandler(webapp2.RequestHandler):
+
 class LoginPage(webapp2.RequestHandler):
 
     def get(self):
@@ -134,7 +137,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
 
-   
+
         )
         validateFormSubmission(self, sf)
 
@@ -151,7 +154,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def post(self):
         ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
-        
+
 
         cpf = None
         if getCurrentUser(self).user_type  == "faculty":
@@ -162,7 +165,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  student_progress = int(self.request.get('student_progress')),
                                  comments = self.request.get('comments'),
                                  submitted = False
-                                 
+
                                  )
 
         elif getCurrentUser(self).user_type == "student":
@@ -172,7 +175,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  advisor_name = self.request.get('advisor'),
                                  advisor_netID = 'olivia',
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
-                                 self_assessment = self.request.get('self_assessment'),                  
+                                 self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
                                  submitted = False,
 
@@ -371,11 +374,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         blob_info = upload_files[0]
         self.redirect('/serve/%s' % blob_info.key())
 
-class Success(webapp2.RequestHandler):
-
-    def get(self):
-        self.response.write("Success!")
-
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
     def get(self, resource):
@@ -499,6 +497,18 @@ class ViewMessages(webapp2.RequestHandler):
         time.sleep(0.1)
         self.redirect('messages')
 
+class UserUpload(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'messages': getMessages(self),
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_upload.html')
+
+        upload_url = blobstore.create_upload_url('/upload')
+        self.response.write(template.render(template_values))
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/login', LoginPage),
@@ -526,6 +536,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
     ('/messages', ViewMessages),
+    ('/user_upload', UserUpload),
 
 ], debug=True)
 
