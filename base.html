@@ -39,6 +39,9 @@
       {{ self.student() }}
       {% block advisor %}
       {% endblock %}
+      {% elif current_user.user_type=="administrator" %}
+      {% block admin %}
+      {% endblock %}
       {% endif %}
       {% block submit %}
       {% endblock %}
