@@ -162,12 +162,12 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  form_type= 'checkpoint',
                                  topic_title = self.request.get('topic_title'),
                                  advisor_name = self.request.get('advisor'),
-                                 
+
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
-                                 self_assessment = self.request.get('self_assessment'),                  
+                                 self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
-                                 
-                                 
+
+
 
                                  )
 
@@ -180,12 +180,12 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf.comments = self.request.get('comments')
                                      #submitted = False,
                                 #     key_name = self.request.get('student_netID'),
-                                 
-                                     
+
+
         #self.response.write(getCurrentUser(self))
         #validateFormSubmission(self, cpf)
 
-        
+
         cpf.put()
         query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
         time.sleep(.1)
@@ -487,6 +487,17 @@ class UserView(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_view.html')
         self.response.write(template.render(template_values))
 
+class UserUpload(webapp2.RequestHandler):
+
+    def get(self):
+        upload_url = blobstore.create_upload_url('/upload')
+        template_values = {
+            'upload_url':upload_url,
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_upload.html')
+        self.response.write(template.render(template_values))
+
 class ViewMessages(webapp2.RequestHandler):
 
     def get(self):
@@ -504,18 +515,6 @@ class ViewMessages(webapp2.RequestHandler):
         message.put()
         time.sleep(0.1)
         self.redirect('messages')
-
-class UserUpload(webapp2.RequestHandler):
-
-    def get(self):
-        template_values = {
-            'messages': getMessages(self),
-            'current_user': getCurrentUser(self),
-        }
-        template = JINJA_ENVIRONMENT.get_template('user_upload.html')
-
-        upload_url = blobstore.create_upload_url('/upload')
-        self.response.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
