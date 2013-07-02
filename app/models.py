@@ -88,7 +88,7 @@ class Student(User):
 
 class Faculty(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
-    hello = ndb.StringProperty(default="testing")
+    hello = ndb.BooleanProperty()
 
 class Administrator(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
