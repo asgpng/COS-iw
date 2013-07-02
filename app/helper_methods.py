@@ -1,10 +1,9 @@
 import urllib
 import jinja2
 import os
+import time
 
 from google.appengine.api import users
-from forms import *
-from Users import *
 from models import *
 
 from gaesessions import get_current_session
@@ -63,7 +62,7 @@ def validateFormSubmission(self, form):
     if not alreadySubmitted:
         # first, add form to database
         form.put()
-
+        time.sleep(0.1) # to allow datastore write before redirect and query
         # # update student's submitted forms list
         # student.forms_submitted.append(form.form_type) # when we get users working
         # # for signup form, update student's advisor_netID:
@@ -86,6 +85,7 @@ def validateNewUser(self, user):
     # add user/ information to the database
     if not alreadySubmitted:
         user.put()
+        time.sleep(0.1)
         # sets the next url using student_netID and form_type
         self.redirect('/administrative/users?' + urllib.urlencode(query_params))
     else:
@@ -105,6 +105,24 @@ def getCurrentUser(self):
         return None
 
 def getMessages(self):
-    query_params = build_query_params(self)
+    user = getCurrentUser(self)
+    # show all messages for administrator
+    if user.user_type == 'administrator':
+        query_params = {}
+    else:
+        query_params = {'author_netID':user.netID}
+
     query = object_query(Message, query_params).order(Message.date)
-    return query.fetch()
+    messages = query.fetch()
+
+    # perform second query to link student and advisors
+    # needs work
+    if user.user_type == 'student' and user.advisor_netID != "":
+        query2 = object_query(Message, {'author_netID':user.advisor_netID})
+        messages.append(query2.fetch())
+    if user.user_type == 'faculty' and len(user.student_netIDs) != 0:
+        query_params = {'author_netID':user.student_netIDs[0]}
+        query2 = object_query(Message, query_params)
+        messages.append(query2.fetch())
+
+    return messages

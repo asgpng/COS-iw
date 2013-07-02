@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Add Users{% endblock %}
 {% block head %}
+<script type="text/javascript">
+
+function check() {
+    var filename = document.getElementById("newFile").value;
+    var extension = filename.split('.').pop()
+    if (extension != "xls") || (extension != "csv") {
+        window.alert("You did not select a valid file!");
+	    return false;
+    }
+    else
+	    return true;
+}
+</script>
 {% endblock %}
 {% block content %}
 <h1>User Administration</h1>
@@ -52,4 +65,7 @@
 
 </table>
 </form>
+
+<a href="/user_upload">User List Upload</a>
+
 {% endblock %}

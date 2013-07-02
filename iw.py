@@ -134,38 +134,8 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
 
-   
+
         )
-
-        current_user = getCurrentUser(self)
-        current_user.advisor_netID = sf.advisor_netID
-
-        query_params = {'netID': sf.advisor_netID}
-        advisor_user = object_query(User, query_params).fetch(1)[0]
-        advisor_user.student_netIDs.append(current_user.netID)
-
-        current_user.put()
-                          
-    #validateFormSubmission(self, sf)
-
-        sf.put()
-        query_params = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-        time.sleep(.1)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
-
-
-class studentSelect(webapp2.RequestHandler):
-    
-    def get(self):
-        
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-            }
-        template = JINJA_ENVIRONMENT.get_template('student_select.html')
-        self.response.write(template.render(template_values))
-
-
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -180,7 +150,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def post(self):
         ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
-        
+
 
         cpf = None
         if getCurrentUser(self).user_type == "student":
@@ -189,9 +159,15 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  topic_title = self.request.get('topic_title'),
                                  advisor_name = self.request.get('advisor'),
                                  
+
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                                  self_assessment = self.request.get('self_assessment'),                  
                                  student_netID = self.request.get('student_netID'),                                                             
+                                 self_assessment = self.request.get('self_assessment'),
+                                 student_netID = self.request.get('student_netID'),
+
+
+
                                  )
 
         elif getCurrentUser(self).user_type  == "faculty":
@@ -202,7 +178,13 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf.student_progress = int(self.request.get('student_progress'))
             cpf.comments = self.request.get('comments')
                                                                                            
+                                     #submitted = False,
+                                #     key_name = self.request.get('student_netID'),
+
+
+        #self.response.write(getCurrentUser(self))
         #validateFormSubmission(self, cpf)
+
 
         cpf.put()
         query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
@@ -511,6 +493,17 @@ class UserView(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_view.html')
         self.response.write(template.render(template_values))
 
+class UserUpload(webapp2.RequestHandler):
+
+    def get(self):
+        upload_url = blobstore.create_upload_url('/upload')
+        template_values = {
+            'upload_url':upload_url,
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_upload.html')
+        self.response.write(template.render(template_values))
+
 class ViewMessages(webapp2.RequestHandler):
 
     def get(self):
@@ -526,6 +519,7 @@ class ViewMessages(webapp2.RequestHandler):
                           content=self.request.get("content")
                       )
         message.put()
+        time.sleep(0.1)
         self.redirect('messages')
 
 application = webapp2.WSGIApplication([
@@ -555,6 +549,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
     ('/messages', ViewMessages),
+    ('/user_upload', UserUpload),
 
 ], debug=True)
 

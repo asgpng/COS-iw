@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Add Users{% endblock %}
+{% block head %}
+<script type="text/javascript">
+
+function check() {
+    var filename = document.getElementById("newFile").value;
+    var extension = filename.split('.').pop()
+    if (extension != "xls") || (extension != "csv") {
+        window.alert("You did not select a valid file!");
+	    return false;
+    }
+    else
+	    return true;
+}
+</script>
+{% endblock %}
+{% block content %}
+<h1>User Administration</h1>
+<h2>User List Upload</h2>
+<p>Use this feature to upload a user list with fields for netID and user_type. Supported formats are xls and csv.</p>
+  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data">
+    <div>
+      Upload File:
+    </div>
+    <input type="file" name="uploadField" id="newFile"/>
+    <div id="submit">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+
+{% endblock %}
