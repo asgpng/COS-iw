@@ -2,10 +2,7 @@
 {% block title %}View Uploaded Files{% endblock %}
 {% block content %}
 <h2>View Uploaded Files</h2>
-{% for blob in blobs %}
-{{blob}}<br>
-<a href="/files/delete?{{ {'blob_key':blob.blob_prop} | urlencode }}">Delete</a><br>
-{% endfor %}
+{# {{blob}} #}
 <br>
 <a href="/files/view_single">View Entry</a>
 {% endblock %}

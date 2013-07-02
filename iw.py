@@ -25,6 +25,8 @@ from gaesessions import get_current_session
 from app.models import *
 from app.helper_methods import *
 from app.appengine_config import *
+from app.user_parser import *
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -32,6 +34,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
+
+TIME_SLEEP = 0.1 # default lenth of time to wait before redirects
 
 # # maybe use in the future for code simplification
 # class BaseHandler(webapp2.RequestHandler):
@@ -60,9 +64,7 @@ class LoginPage(webapp2.RequestHandler):
         else:
             # user = User(netID="admin", user_type="administrator")
             user = query.fetch()[0]
-
             session['user'] = user
-            # self.response.write(session)
             self.redirect('/')
 
 class LoginUnauthorizedPage(webapp2.RequestHandler):
@@ -81,7 +83,6 @@ class LoginUnauthorizedPage(webapp2.RequestHandler):
 class LogoutPage(webapp2.RequestHandler):
 
     def post(self):
-
 
         query_params = build_query_params(self)
         template_values = {
@@ -188,7 +189,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
         cpf.put()
         query_params = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
-        time.sleep(.1)
+        time.sleep(TIME_SLEEP)
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
 
 class SecondReaderFormPage(webapp2.RequestHandler):
@@ -280,7 +281,7 @@ class FormQuery(webapp2.RequestHandler):
         query_params = build_query_params(self)
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
-class QueryResults(webapp2.RequestHandler):
+class FormQueryResults(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
@@ -316,7 +317,7 @@ class QueryResults(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('query_results.html')
         self.response.write(template.render(template_values))
 
-class QueryView(webapp2.RequestHandler):
+class FormQueryView(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
@@ -345,8 +346,8 @@ class FormDeleteConfirmation(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'current_user': getCurrentUser(self),
-#            'student_netID':query_params['student_netID'],
- #           'form_type':query_params['form_type']
+            # 'student_netID':query_params['student_netID'],
+            # 'form_type':query_params['form_type']
         }
         template = JINJA_ENVIRONMENT.get_template('form_delete_confirmation.html')
         self.response.write(template.render(template_values))
@@ -357,7 +358,7 @@ class FormInvalid(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'current_user': getCurrentUser(self),
-#            'student_netID': query_params['student_netID'],
+            # 'student_netID': query_params['student_netID'],
             'form_type': query_params['form_type']
         }
         template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
@@ -367,7 +368,7 @@ class NewFile(webapp2.RequestHandler):
 
     def get(self):
 
-        upload_url = blobstore.create_upload_url('/upload')
+        upload_url = blobstore.create_upload_url('/files/upload')
         template_values = {
             'current_user': getCurrentUser(self),
             'upload_url': upload_url,
@@ -380,7 +381,14 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('uploadField')
         blob_info = upload_files[0]
-        self.redirect('/serve/%s' % blob_info.key())
+        current_user = getCurrentUser(self)
+        blob = Blob(author_netID=current_user.netID,
+                    blob_prop=str(blob_info.key()),
+                    blob_key=blob_info.key())
+        blob.put()
+        time.sleep(TIME_SLEEP)
+        # self.redirect('/files/serve/%s' % blob_info.key())
+        self.redirect('/files/view_list')
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
@@ -388,16 +396,76 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
         self.send_blob(blob_info)
+        #self.redirect('/view_files')
 
-class ViewFiles(blobstore_handlers.BlobstoreDownloadHandler):
+class UploadFile(webapp2.RequestHandler):
+    def post(self):
+        newfile = File()
+        newfile.filename = self.request.get('filename')
+        newfile.ext = self.request.get('ext')
+        newfile.content = self.request.get('upload')
+        newfile.put()
+        self.redirect('/files/view_list')
+
+class FileViewList(blobstore_handlers.BlobstoreDownloadHandler):
 
     def get(self):
+        blobs = object_query(Blob, {}).fetch()
         template_values = {
             'current_user': getCurrentUser(self),
+            'blobs':blobs,
         }
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
-#        self.send_blob(blob_info.key())
+
+class FileViewSingle(blobstore_handlers.BlobstoreDownloadHandler):
+
+    def get(self):
+        blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
+        self.response.write(blob)
+        blob = BlobInfo.get(blob.blob_key)
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'blob':blob,
+        }
+        template = JINJA_ENVIRONMENT.get_template('view_files.html')
+        self.response.write(template.render(template_values))
+
+class FileDelete(webapp2.RequestHandler):
+
+    def get(self):
+        query_params = {'blob_key':self.request.get('blob_key')}
+        query = object_query(Blob, query_params)
+        file = query.get()
+        blob = BlobInfo(file.blob_key)
+        blob.delete()
+        file.key.delete()
+        self.redirect('/files/view_list')
+
+class UserProcessUpload(webapp2.RequestHandler):
+
+    def get(self):
+        blob = object_query(Blob,{'author_netID':'admin'}).get()
+        self.response.write(blob) # debugging
+#        blob = BlobInfo.get(blob.blob_key)
+        blob_reader = blobstore.BlobReader(blob.blob_key)
+        file = blob_reader.read()
+        self.response.write('<br>')
+        user_list = []
+
+        # currently, one letter per line. Need to convert!!!
+        for line in file:
+            self.response.write(line)
+            self.response.write('<br>')
+            # user_list.append(line.split(','))
+        # user_list = parse_users_csv(file)
+        # self.response.write(user_list)
+        template_values = {
+            'current_user': getCurrentUser(self),
+            # 'user_list':user_list
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_list.html')
+        self.response.write(template.render(template_values))
 
 class Unauthorized(webapp2.RequestHandler):
 
@@ -408,7 +476,7 @@ class Unauthorized(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('unauthorized.html')
         self.response.write(template.render(template_values))
 
-class ViewUsers(webapp2.RequestHandler):
+class UserView(webapp2.RequestHandler):
 
     def get(self):
         session = get_current_session()
@@ -471,21 +539,21 @@ class UserDeleteConfirmation(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_delete_confirmation.html')
         self.response.write(template.render(template_values))
 
-class UserView(webapp2.RequestHandler):
-    # this shows the results of what has been submitted
-    def get(self):
-        # calls helper method
-        query_params = build_query_params(self)
-        query = object_query(User, query_params)
-        users = query.fetch(1)
-        user = users[0]
+# class UserView(webapp2.RequestHandler):
+#     # this shows the results of what has been submitted
+#     def get(self):
+#         # calls helper method
+#         query_params = build_query_params(self)
+#         query = object_query(User, query_params)
+#         users = query.fetch(1)
+#         user = users[0]
 
-        template_values = {
-            'user': user,
-            'current_user': getCurrentUser(self),
-        }
-        template = JINJA_ENVIRONMENT.get_template('user_view.html')
-        self.response.write(template.render(template_values))
+#         template_values = {
+#             'user': user,
+#             'current_user': getCurrentUser(self),
+#         }
+#         template = JINJA_ENVIRONMENT.get_template('user_view.html')
+#         self.response.write(template.render(template_values))
 
 class UserUpload(webapp2.RequestHandler):
 
@@ -498,7 +566,7 @@ class UserUpload(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_upload.html')
         self.response.write(template.render(template_values))
 
-class ViewMessages(webapp2.RequestHandler):
+class MessageView(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
@@ -513,7 +581,7 @@ class ViewMessages(webapp2.RequestHandler):
                           content=self.request.get("content")
                       )
         message.put()
-        time.sleep(0.1)
+        time.sleep(TIME_SLEEP)
         self.redirect('messages')
 
 application = webapp2.WSGIApplication([
@@ -528,22 +596,26 @@ application = webapp2.WSGIApplication([
     ('/forms/februaryform', FebruaryFormPage),
     ('/forms/view', FormView),
     ('/forms/query', FormQuery),
-    ('/forms/query_results', QueryResults),
-    ('/forms/query_view', QueryView),
+    ('/forms/query_results', FormQueryResults),
+    ('/forms/query_view', FormQueryView),
     ('/forms/delete', FormDelete),
     ('/forms/delete/confirmation', FormDeleteConfirmation),
     ('/forms/invalid_entry', FormInvalid),
     ('/files/new_file', NewFile),
-    ('/upload', UploadHandler),
+    ('/files/upload', UploadHandler),
+    # ('/upload', UploadFile),
     ('/serve/([^/]+)?', ServeHandler),
-    ('/files/view', ViewFiles),
-    ('/administrative/users', ViewUsers),
+    ('/files/view_list', FileViewList),
+    ('/files/view_single',FileViewSingle),
+    ('/files/delete', FileDelete),
+    ('/administrative/users', UserView),
     ('/administrative/user_delete', UserDelete),
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
-    ('/administrative/user_view', UserView),
+    # ('/administrative/user_view', UserView),
     ('/administrative/invalid_entry', UserInvalid),
-    ('/messages', ViewMessages),
-    ('/user_upload', UserUpload),
+    ('/administrative/user_upload', UserUpload),
+    ('/administrative/user_process_upload', UserProcessUpload),
+    ('/messages', MessageView),
 
 ], debug=True)
 
