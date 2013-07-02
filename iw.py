@@ -109,6 +109,7 @@ class MainPage(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
 
+
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
@@ -159,27 +160,29 @@ class SelectStudent(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('select_student.html')
         self.response.write(template.render(template_values))
-
-    def post(self):
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-            }
-        template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
-        self.response.write(template.render(template_values))
-        getCurrentUser(self).selected_student = True
-        self.redirect('/forms/checkpointform')
+        getCurrentUser(self).hello = "true"
+        def post(self):
+            #template_values = {
+             #   'current_user': getCurrentUser(self),
+              #  'url_linktext': getLoginStatus(self.request.uri)[1],
+               # }
+            
+            getCurrentUser(self).hello = "true"
+            self.redirect('/forms/checkpointform')
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
-        if getCurrentUser(self).user_type == "faculty":
-            getCurrentUser(self).selected_student = False
-            if not getCurrentUser(self).selected_student:
-                self.redirect('/forms/selectstudent')
+        current_user = getCurrentUser(self)
+        self.response.write(current_user)
+#        self.response.write(current_user.selected_student)
+#        self.response.write(current_user.selected_student)
+#        if current_user.user_type == "faculty":
+#            if current_user.hello == "false":
+#                self.redirect('/forms/selectstudent')
            
-            else:
-                getCurrentUser(self).selected_student = False
+#            else:
+#                current_user.hello = "false"
 
 
         template_values = {
@@ -293,7 +296,7 @@ class FormView(webapp2.RequestHandler):
         # calls helper method
         query_params = build_query_params(self)
         query = object_query(Form, query_params)
-        #forms = query.fetch(1)
+        forms = query.fetch(1)
         form = query.get()
         template_values = {
             'form': form,
@@ -476,6 +479,7 @@ class ViewUsers(webapp2.RequestHandler):
                 user = Student(netID=user_netID, user_type='student')
             elif user_type == 'faculty':
                 user = Faculty(netID=user_netID, user_type='faculty')
+                #user.hello = "false"
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
             validateNewUser(self, user)
