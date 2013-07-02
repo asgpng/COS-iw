@@ -469,7 +469,9 @@ class FileViewList(blobstore_handlers.BlobstoreDownloadHandler):
 class FileViewSingle(blobstore_handlers.BlobstoreDownloadHandler):
 
     def get(self):
-        blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
+        # blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
+        query_params = {'blob_key':self.request.get('blob_key')}
+        blob = object_query(Blob, query_params).get()
         self.response.write(blob)
         blob = BlobInfo.get(blob.blob_key)
         template_values = {
@@ -493,7 +495,7 @@ class FileDelete(webapp2.RequestHandler):
 class UserProcessUpload(webapp2.RequestHandler):
 
     def get(self):
-        blob = object_query(Blob,{'author_netID':'admin'}).get()
+        # blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
         self.response.write(blob) # debugging
 #        blob = BlobInfo.get(blob.blob_key)
         blob_reader = blobstore.BlobReader(blob.blob_key)
