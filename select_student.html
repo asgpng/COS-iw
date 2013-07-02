@@ -4,15 +4,15 @@
 <h2>Select The Student You Wish To See:</h2>
 
 <div class="container">
-  <form action="/forms/selectstudent" method="post">
-    <div>
-      <label>Student NetIDs:</label>
-      {% for student in current_user.student_netIDs %}
-        <th><a href="/forms/view?{'student_netID':{{student}}, 'form_type':'checkpointform'} | urlencode">{{ student }}</a></th>
-	<br>
-      {% endfor %}
-      </label>
-    </div>
-  </form>
-</div>
+  <label>Choose student by their netID:</label>
+  <form action="/forms/checkpointform" method="post">
+    <div>  
+      <select name="choose_student"> 
+	{% for student in current_user.student_netIDs %}
+	<option value="{{student}}">{{student}}</option>
+	{% endfor %}
+      </select>
+      <input type="submit" value="Submit"> 
+  </form> 
+  </div> 
 {% endblock %}
