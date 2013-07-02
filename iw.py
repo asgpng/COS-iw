@@ -167,28 +167,16 @@ class SelectStudent(webapp2.RequestHandler):
         self.response.write(getCurrentUser(self).hello)
         template = JINJA_ENVIRONMENT.get_template('select_student.html')
         self.response.write(template.render(template_values))
-<<<<<<< HEAD
+
     def post(self):
         getCurrentUser(self).hello = True
         getCurrentUser(self).put()
         self.redirect('/forms/checkpointform')
-=======
-        getCurrentUser(self).hello = "true"
-        def post(self):
-            #template_values = {
-             #   'current_user': getCurrentUser(self),
-              #  'url_linktext': getLoginStatus(self.request.uri)[1],
-               # }
-
-            getCurrentUser(self).hello = "true"
-            self.redirect('/forms/checkpointform')
->>>>>>> 0a63197efc368d7fe88d11eac3435a29d7342729
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-<<<<<<< HEAD
         self.response.write(current_user.hello)
         if current_user.user_type == "faculty":
             if not current_user.hello:
@@ -196,7 +184,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             else:
                 current_user.hello = False
                 current_user.put()
-=======
+
         self.response.write(current_user)
 #        self.response.write(current_user.selected_student)
 #        self.response.write(current_user.selected_student)
@@ -206,8 +194,6 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
 #            else:
 #                current_user.hello = "false"
-
->>>>>>> 0a63197efc368d7fe88d11eac3435a29d7342729
 
         template_values = {
             'current_user': getCurrentUser(self),
@@ -562,12 +548,8 @@ class UserView(webapp2.RequestHandler):
             if user_type == 'student':
                 user = Student(netID=user_netID, user_type='student')
             elif user_type == 'faculty':
-<<<<<<< HEAD
                 user = Faculty(netID=user_netID, user_type='faculty', hello = False)
-                #user.hello = "false"
-=======
-                user = Faculty(netID=user_netID, user_type='faculty')
->>>>>>> 0a63197efc368d7fe88d11eac3435a29d7342729
+#                user = Faculty(netID=user_netID, user_type='faculty')
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
             validateNewUser(self, user)
