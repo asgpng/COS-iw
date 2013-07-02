@@ -1,7 +1,7 @@
 # takes first argument as xls or csv file,
 # then composes a list of users
 
-import xlrd
+#import xlrd
 import csv
 import sys
 
