@@ -5,7 +5,7 @@
 
 <div class="container">
   <label>Choose student by their netID:</label>
-  <form action="/forms/checkpointform" method="post">
+  <form action="/forms/checkpointform" method="get">
     <div>  
       <select name="choose_student"> 
 	{% for student in current_user.student_netIDs %}

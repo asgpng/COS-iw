@@ -143,6 +143,7 @@ class SignupFormPage(webapp2.RequestHandler):
         query = object_query(Faculty, query_params)
         user_faculty = query.get()
         user_faculty.student_netIDs.append(sf.student_netID)
+        user_faculty.student_netIDs.sort
         user_faculty.put()
 
         query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
@@ -166,20 +167,28 @@ class SelectStudent(webapp2.RequestHandler):
             }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
+        getCurrentUser(self).selected_student = True
+        self.redirect('/forms/checkpointform')
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         if getCurrentUser(self).user_type == "faculty":
-            self.redirect('/forms/selectstudent')
-            
+            getCurrentUser(self).selected_student = False
+            if not getCurrentUser(self).selected_student:
+                self.redirect('/forms/selectstudent')
+           
+            else:
+                getCurrentUser(self).selected_student = False
+
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
             }
         template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
-
+        
     def post(self):
         ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
         cpf = None
@@ -194,7 +203,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  )
 ##3# FIX QUERY PARAMS (RIGHT NOW IT ALWAYS GETS THE FIRST OF THE STUDENT NET IDS. IT SHOULD BE THE ONE THEY PICK
         elif getCurrentUser(self).user_type  == "faculty":
-            query_params = {'student_netID': student,'form_type':'checkpoint'}
+            query_params = {'student_netID': self.request.get('student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.fetch(1)[0]
             cpf.meet_more_often = bool(self.request.get('meet_more_often'))
