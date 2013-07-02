@@ -665,6 +665,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_upload', UserUpload),
     ('/administrative/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
+    ('/forms/selectstudent', SelectStudent),
 
 ], debug=True)
 
