@@ -146,7 +146,7 @@ class SignupFormPage(webapp2.RequestHandler):
         
 
         hello = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-        #self.response.write(hello)
+        time.sleep(.1)
         self.redirect('/forms/view?' + urllib.urlencode(hello))
 
 class CheckPointFormPage(webapp2.RequestHandler):
