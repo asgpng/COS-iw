@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
   function proceed() {
-  var proceed =  highlight(year(), radio(), text1(), text2(), text3());
+  var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4());
   if (!proceed) {
   window.alert("Please check highlighted field(s)!");
   }
@@ -12,7 +12,7 @@
   return proceed;
   }
 
-  function highlight(year, radio, text1, text2, text3) {
+  function highlight(year, radio, text1, text2, text3, text4) {
 
   if (year)
   document.getElementById("class_year").style.backgroundColor='#fff';
@@ -39,7 +39,12 @@
   else
   document.getElementById("advisor_name").style.backgroundColor='#fa7f00';
 
-  var checked = year && radio && text1 && text2 && text3;
+  if (text4)
+  document.getElementById("advisor_netID").style.backgroundColor='#fff';
+  else
+  document.getElementById("advisor_netID").style.backgroundColor='#fa7f00';
+
+  var checked = year && radio && text1 && text2 && text3 && text4;
   return checked;
 
   }
@@ -58,35 +63,42 @@
   var OK = false;
 
   for (var i = 0;i<radios.length;i++) {
-	                                  if (radios[i].checked) {
-	                                  OK = true;
-	                                  break; }
-                                      }
-                                      return(OK);
-                                      }
+      if (radios[i].checked) {
+	  OK = true;
+	  break; }
+  }
+  return(OK);
+  }
 
-                                      function text1() {
+function text1() {
 
-                                      var re = /.+/;
-                                      var title = document.getElementById("title").value;
+    var re = /.+/;
+    var title = document.getElementById("title").value;
 
-                                      return re.test(title);
-                                      }
+    return re.test(title);
+}
 
-                                      function text2() {
-                                      var re = /.+/;
-                                      var description = document.getElementById("description").value;
+function text2() {
+    var re = /.+/;
+    var description = document.getElementById("description").value;
 
-                                      return re.test(description);
-                                      }
+    return re.test(description);
+}
 
-                                      function text3() {
-                                      var re = /.+/;
-                                      var advisor_name = document.getElementById("advisor_name").value;
+function text3() {
+    var re = /.+/;
+    var advisor_name = document.getElementById("advisor_name").value;
 
-                                      return re.test(advisor_name);
-                                      }
+    return re.test(advisor_name);
+}
 
+function text4() {
+
+    var re = /.+/;
+    var advisor_netID = document.getElementById("advisor_netID").value;
+
+    return re.test(advisor_netID);
+}
                                       </script>
 
 {% endblock %}
@@ -97,7 +109,7 @@
   <form action="/forms/signupform" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" disabled/>
+	  <input type="text" name="student_netID" value="{{ current_user.netID }}" />
       <div>
         <label>Name:</label>
         <input type="text" name="student_name"disabled/>
@@ -133,6 +145,10 @@
           <label>Advisor's Name:</label>
           <input type="text" name="advisor_name" id="advisor_name"/>
         </div>
+	<div>
+	<label>Advisor's NetID:</label>
+	<input type="text" name="advisor_netID" id="advisor_netID" />
+	</div>
         <div>
           <label>Advisor's Department:</label>
 	      <select name="advisor_department" id="advisor_department">

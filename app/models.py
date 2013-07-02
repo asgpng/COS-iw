@@ -78,6 +78,7 @@ class User(polymodel.PolyModel):
     netID = ndb.StringProperty(required=True)
     email = ndb.StringProperty()
     user_type = ndb.StringProperty()
+   
 
 # for when we get netIDs working
 class Student(User):
@@ -87,6 +88,7 @@ class Student(User):
 
 class Faculty(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
+    hello = ndb.StringProperty(default="testing")
 
 class Administrator(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
