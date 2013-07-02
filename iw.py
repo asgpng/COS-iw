@@ -143,7 +143,7 @@ class SignupFormPage(webapp2.RequestHandler):
         query = object_query(Faculty, query_params)
         user_faculty = query.get()
         user_faculty.student_netIDs.append(sf.student_netID)
-        
+        user_faculty.put()
 
         query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
         time.sleep(.1)
@@ -152,12 +152,19 @@ class SignupFormPage(webapp2.RequestHandler):
 class SelectStudent(webapp2.RequestHandler):
 
     def get(self):
-        
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('select_student.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+            }
+        template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
         self.response.write(template.render(template_values))
 
 class CheckPointFormPage(webapp2.RequestHandler):
