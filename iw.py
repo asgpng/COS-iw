@@ -149,10 +149,23 @@ class SignupFormPage(webapp2.RequestHandler):
         time.sleep(.1)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
+class SelectStudent(webapp2.RequestHandler):
+
+    def get(self):
+        
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+        }
+        template = JINJA_ENVIRONMENT.get_template('select_student.html')
+        self.response.write(template.render(template_values))
+
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
-
+        if getCurrentUser(self).user_type == "faculty":
+            self.redirect('/forms/selectstudent')
+            
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -174,7 +187,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  )
 ##3# FIX QUERY PARAMS (RIGHT NOW IT ALWAYS GETS THE FIRST OF THE STUDENT NET IDS. IT SHOULD BE THE ONE THEY PICK
         elif getCurrentUser(self).user_type  == "faculty":
-            query_params = {'student_netID': getCurrentUser(self).student_netIDs[0],'form_type':'checkpoint'}
+            query_params = {'student_netID': student,'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.fetch(1)[0]
             cpf.meet_more_often = bool(self.request.get('meet_more_often'))
@@ -558,6 +571,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/invalid_entry', UserInvalid),
     ('/messages', ViewMessages),
     ('/user_upload', UserUpload),
+    ('/forms/selectstudent', SelectStudent),
 
 ], debug=True)
 
