@@ -469,14 +469,23 @@ class FileViewList(blobstore_handlers.BlobstoreDownloadHandler):
 class FileViewSingle(blobstore_handlers.BlobstoreDownloadHandler):
 
     def get(self):
-        # blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
-        query_params = {'blob_key':self.request.get('blob_key')}
+        query_params = {'blob_prop':str(urllib.unquote(self.request.get('blob_key')))}
         blob = object_query(Blob, query_params).get()
-        self.response.write(blob)
-        blob = BlobInfo.get(blob.blob_key)
+        # self.response.write(blob)
+        # blob = BlobInfo.get(blob.blob_key)
+        blob_reader = blobstore.BlobReader(blob.blob_key)
+        file = blob_reader.read()
+        self.response.write('<br>')
+        text = ''
+
+        # currently, one letter per line. Need to convert!!!
+        for line in file:
+            self.response.write(line)
+            # self.response.write('<br>')
         template_values = {
             'current_user': getCurrentUser(self),
             'blob':blob,
+            'file':file,
         }
         template = JINJA_ENVIRONMENT.get_template('view_files.html')
         self.response.write(template.render(template_values))
@@ -484,9 +493,8 @@ class FileViewSingle(blobstore_handlers.BlobstoreDownloadHandler):
 class FileDelete(webapp2.RequestHandler):
 
     def get(self):
-        query_params = {'blob_key':self.request.get('blob_key')}
-        query = object_query(Blob, query_params)
-        file = query.get()
+        query_params = {'blob_prop':str(urllib.unquote(self.request.get('blob_key')))}
+        file = object_query(Blob, query_params).get()
         blob = BlobInfo(file.blob_key)
         blob.delete()
         file.key.delete()
