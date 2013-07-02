@@ -169,7 +169,7 @@ class SelectStudent(webapp2.RequestHandler):
              #   'current_user': getCurrentUser(self),
               #  'url_linktext': getLoginStatus(self.request.uri)[1],
                # }
-            
+
             getCurrentUser(self).hello = "true"
             self.redirect('/forms/checkpointform')
 
@@ -183,7 +183,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
 #        if current_user.user_type == "faculty":
 #            if current_user.hello == "false":
 #                self.redirect('/forms/selectstudent')
-           
+
 #            else:
 #                current_user.hello = "false"
 
@@ -202,7 +202,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf = CheckpointForm(student_name=self.request.get('student_name'),
                                  form_type= 'checkpoint',
                                  topic_title = self.request.get('topic_title'),
-                                 advisor_name = self.request.get('advisor'),                              
+                                 advisor_name = self.request.get('advisor'),
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
                                  self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
@@ -215,7 +215,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf.meet_more_often = bool(self.request.get('meet_more_often'))
             cpf.student_progress = int(self.request.get('student_progress'))
             cpf.comments = self.request.get('comments')
-                                                                                           
+
         #validateFormSubmission(self, cpf)
         cpf.put()
         query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
@@ -322,7 +322,7 @@ class FormQuery(webapp2.RequestHandler):
         query_params = build_query_params(self)
         self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
 
-class QueryResults(webapp2.RequestHandler):
+class FormQueryResults(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
@@ -358,7 +358,7 @@ class QueryResults(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('query_results.html')
         self.response.write(template.render(template_values))
 
-class QueryView(webapp2.RequestHandler):
+class FormQueryView(webapp2.RequestHandler):
 
     def get(self):
         query_params = build_query_params(self)
@@ -607,7 +607,7 @@ class UserUpload(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_upload.html')
         self.response.write(template.render(template_values))
 
-class ViewMessages(webapp2.RequestHandler):
+class MessageView(webapp2.RequestHandler):
 
     def get(self):
         template_values = {
