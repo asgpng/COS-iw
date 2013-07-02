@@ -19,14 +19,21 @@ function check() {
 <h1>User Administration</h1>
 <h2>User List Upload</h2>
 <p>Use this feature to upload a user list with fields for netID and user_type. Supported formats are xls and csv.</p>
-  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data">
-    <div>
-      Upload File:
-    </div>
-    <input type="file" name="uploadField" id="newFile"/>
-    <div id="submit">
-      <input type="submit" value="Submit">
-    </div>
+  <!-- <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data"> -->
+  <!--   <div> -->
+  <!--     Upload File: -->
+  <!--   </div> -->
+  <!--   <input type="file" name="uploadField" id="newFile"/> -->
+  <!--   <div id="submit"> -->
+  <!--     <input type="submit" value="Submit"> -->
+  <!--   </div> -->
+  <!-- </form> -->
+  <form action="/files/upload" method="post" enctype="multipart/form-data">
+    <div><input type="file" id="fileUpload" name="uploadField"
+                onchange="SplitFile();" /></div>
+    <div><input type="submit" value="Upload" /></div>
+    <input type="hidden" id="fileName"  name="filename" value="" />
+    <input type="hidden" id="fileExt" name="ext" value="" />
   </form>
 
 {% endblock %}

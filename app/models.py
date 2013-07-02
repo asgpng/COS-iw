@@ -1,5 +1,21 @@
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import polymodel
+from google.appengine.ext import blobstore
+
+# for uploaded files
+class Blob(ndb.Model):
+    date = ndb.DateTimeProperty(auto_now_add=True)
+    author_netID = ndb.StringProperty(required=True)
+    blob_prop = ndb.StringProperty()
+    blob_key = ndb.BlobKeyProperty()
+    filename = ndb.StringProperty()
+    extension = ndb.StringProperty()
+
+class File(ndb.Model):
+    filename = ndb.StringProperty()
+    content = ndb.BlobProperty()
+    ext = ndb.StringProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
 
 class Message(ndb.Model):
     author_netID = ndb.StringProperty(required=True)
