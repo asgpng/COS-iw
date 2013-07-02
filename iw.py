@@ -133,9 +133,21 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_department = self.request.get('advisor_department'),
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
+                        )
 
+        sf.put()
 
-        )
+        current_user = getCurrentUser(self)
+        current_user.advisor_netID = sf.advisor_netID
+        query_params = {'netID': sf.advisor_netID}
+        query = object_query(Faculty, query_params)
+        user_faculty = query.get()
+        user_faculty.student_netIDs.append(sf.student_netID)
+        
+
+        hello = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
+        #self.response.write(hello)
+        self.redirect('/forms/view?' + urllib.urlencode(hello))
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -157,12 +169,8 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf = CheckpointForm(student_name=self.request.get('student_name'),
                                  form_type= 'checkpoint',
                                  topic_title = self.request.get('topic_title'),
-                                 advisor_name = self.request.get('advisor'),
-                                 
-
+                                 advisor_name = self.request.get('advisor'),                              
                                  meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
-                                 self_assessment = self.request.get('self_assessment'),                  
-                                 student_netID = self.request.get('student_netID'),                                                             
                                  self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
 
@@ -256,8 +264,8 @@ class FormView(webapp2.RequestHandler):
         # calls helper method
         query_params = build_query_params(self)
         query = object_query(Form, query_params)
-        forms = query.fetch(1)
-        form = forms[0]
+        #forms = query.fetch(1)
+        form = query.get()
         template_values = {
             'form': form,
             'current_user': getCurrentUser(self),
@@ -265,7 +273,7 @@ class FormView(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('view_%s.html' % form.form_type)
         self.response.write(template.render(template_values))
-        self.response.write(getCurrentUser(self).advisor_netID)
+        
 
 class FormQuery(webapp2.RequestHandler):
     # user inputs what he/she wants to query
