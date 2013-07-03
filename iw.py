@@ -521,7 +521,7 @@ class FileDelete(webapp2.RequestHandler):
 class UserProcessUpload(webapp2.RequestHandler):
 
     def get(self):
-        query_params = {'blob_prop':str(urllib.unquote(self.request.get('blob_key')))}
+        query_params = {'extension':'csv'}
         blob = object_query(Blob, query_params).get()
         blob_reader = blobstore.BlobReader(blob.blob_key)
         file = blob_reader.readlines()
@@ -534,7 +534,7 @@ class UserProcessUpload(webapp2.RequestHandler):
         for user in user_list[1:]: # omit header line
             netID = user[0]
             user_type=user[1]
-            if object_query(User, {'netID':netID, 'user_type':user_type}).get()!=None:
+            if object_query(User, {'netID':netID, 'user_type':user_type}).get()==None:
                 new_user = User(netID=netID, user_type=user_type)
                 added_users.append(new_user)
                 new_user.put()
