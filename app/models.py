@@ -41,6 +41,7 @@ class SignupForm(Form):
     student_signature = ndb.BooleanProperty()
     submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
+    signature = ndb.StringProperty()
     # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
 
 class CheckpointForm(Form):
@@ -88,10 +89,12 @@ class Student(User):
     advisor_netID = ndb.StringProperty()
     second_reader_netID = ndb.StringProperty()
     forms_submitted = ndb.StringProperty(repeated=True)  # list of submitted forms
+    advisor_agreement = ndb.BooleanProperty()
+    sr_agreement = ndb.BooleanProperty()
 
 class Faculty(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
-    hello = ndb.BooleanProperty()
+    student_requests = ndb.StringProperty(repeated=True) # list of student requests
 
 class Administrator(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
