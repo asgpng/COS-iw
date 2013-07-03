@@ -230,9 +230,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
                                  )
+            cpf.put()
 ##3# FIX QUERY PARAMS (RIGHT NOW IT ALWAYS GETS THE FIRST OF THE STUDENT NET IDS. IT SHOULD BE THE ONE THEY PICK
         elif getCurrentUser(self).user_type  == "faculty":
-            query_params = {'student_netID': self.request.get('student'),'form_type':'checkpoint'}
+            query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
             cpf.advisor_read_summary = self.request.get('advisor_read_summary')
