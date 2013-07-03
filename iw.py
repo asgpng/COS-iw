@@ -62,7 +62,8 @@ class LoginPage(webapp2.RequestHandler):
         elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
-            # user = User(netID="admin", user_type="administrator")
+            #for hacking purposes only
+            #user = User(netID="admin", user_type="administrator")
             user = query.fetch()[0]
             session['user'] = user
             self.redirect('/')
@@ -177,13 +178,13 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        self.response.write(current_user.hello)
-        if current_user.user_type == "faculty":
-            if not current_user.hello:
-                self.redirect('/forms/selectstudent')
-            else:
-                current_user.hello = False
-                current_user.put()
+        #self.response.write(current_user.hello)
+        #if current_user.user_type == "faculty":
+            #if not current_user.hello:
+            #    self.redirect('/forms/selectstudent')
+           # else:
+            #    current_user.hello = False
+           #     current_user.put()
 
         self.response.write(current_user)
 #        self.response.write(current_user.selected_student)
@@ -218,10 +219,12 @@ class CheckPointFormPage(webapp2.RequestHandler):
         elif getCurrentUser(self).user_type  == "faculty":
             query_params = {'student_netID': self.request.get('student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
-            cpf = query.fetch(1)[0]
-            cpf.meet_more_often = bool(self.request.get('meet_more_often'))
+            cpf = query.get()
+            cpf.advisor_read_summary = self.request.get('advisor_read_summary')
+            cpf.meet_more_often = self.request.get('meet_more_often')
             cpf.student_progress = int(self.request.get('student_progress'))
             cpf.comments = self.request.get('comments')
+            cpf.choose_student = self.request.get('choose_student')
 
         #validateFormSubmission(self, cpf)
         cpf.put()
