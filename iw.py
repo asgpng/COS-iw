@@ -62,7 +62,7 @@ class LoginPage(webapp2.RequestHandler):
         elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
-            # user = User(netID="admin", user_type="administrator")
+        # user = User(netID="admin", user_type="administrator")
             user = query.fetch()[0]
             session['user'] = user
             self.redirect('/')
@@ -542,6 +542,14 @@ class UserView(webapp2.RequestHandler):
             self.redirect('/unauthorized')
         query_params = {} # empty because we want all users
         query = object_query(User, query_params)
+
+        # sort users results (sort_by is a link selected by the user in users.html)
+        sort_by = self.request.get('sort_by')
+        if sort_by == 'user_type':
+            query = query.order(User.user_type)
+        if sort_by == 'netID':
+            query = query.order(User.netID)
+
         users = query.fetch()
         template_values = {
             'users':users,
