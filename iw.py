@@ -435,7 +435,10 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         current_user = getCurrentUser(self)
         blob = Blob(author_netID=current_user.netID,
                     blob_prop=str(blob_info.key()),
-                    blob_key=blob_info.key())
+                    blob_key=blob_info.key(),
+                    filename=self.request.get('filename'),
+                    extension=self.request.get('extension')
+                )
         blob.put()
         time.sleep(TIME_SLEEP)
         # self.redirect('/files/serve/%s' % blob_info.key())
@@ -474,17 +477,13 @@ class FileViewSingle(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self):
         query_params = {'blob_prop':str(urllib.unquote(self.request.get('blob_key')))}
         blob = object_query(Blob, query_params).get()
-        # self.response.write(blob)
-        # blob = BlobInfo.get(blob.blob_key)
         blob_reader = blobstore.BlobReader(blob.blob_key)
-        file = blob_reader.read()
+        file = blob_reader.readlines()
         self.response.write('<br>')
-        text = ''
 
-        # currently, one letter per line. Need to convert!!!
         for line in file:
             self.response.write(line)
-            # self.response.write('<br>')
+            self.response.write('<br>')
         template_values = {
             'current_user': getCurrentUser(self),
             'blob':blob,
@@ -501,26 +500,30 @@ class FileDelete(webapp2.RequestHandler):
         blob = BlobInfo(file.blob_key)
         blob.delete()
         file.key.delete()
+        time.sleep(TIME_SLEEP)
         self.redirect('/files/view_list')
 
 class UserProcessUpload(webapp2.RequestHandler):
 
     def get(self):
-        # blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
-        self.response.write(blob) # debugging
-#        blob = BlobInfo.get(blob.blob_key)
+        query_params = {'blob_prop':str(urllib.unquote(self.request.get('blob_key')))}
+        blob = object_query(Blob, query_params).get()
         blob_reader = blobstore.BlobReader(blob.blob_key)
-        file = blob_reader.read()
+        file = blob_reader.readlines()
         self.response.write('<br>')
         user_list = []
+        added_users = []
 
-        # currently, one letter per line. Need to convert!!!
         for line in file:
-            self.response.write(line)
-            self.response.write('<br>')
-            # user_list.append(line.split(','))
-        # user_list = parse_users_csv(file)
-        # self.response.write(user_list)
+            user_list.append(line.strip().split(','))
+        for user in user_list[1:]: # omit header line
+            netID = user[0]
+            user_type=user[1]
+            if object_query(User, {'netID':netID, 'user_type':user_type}).get()!=None:
+                new_user = User(netID=netID, user_type=user_type)
+                added_users.append(new_user)
+                new_user.put()
+        self.response.write(added_users)
         template_values = {
             'current_user': getCurrentUser(self),
             # 'user_list':user_list
@@ -620,7 +623,7 @@ class UserDeleteConfirmation(webapp2.RequestHandler):
 class UserUpload(webapp2.RequestHandler):
 
     def get(self):
-        upload_url = blobstore.create_upload_url('/upload')
+        upload_url = blobstore.create_upload_url('/files/upload')
         template_values = {
             'upload_url':upload_url,
             'current_user': getCurrentUser(self),
