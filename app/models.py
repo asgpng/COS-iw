@@ -89,8 +89,6 @@ class Student(User):
     advisor_netID = ndb.StringProperty()
     second_reader_netID = ndb.StringProperty()
     forms_submitted = ndb.StringProperty(repeated=True)  # list of submitted forms
-    advisor_agreement = ndb.BooleanProperty()
-    sr_agreement = ndb.BooleanProperty()
 
 class Faculty(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
