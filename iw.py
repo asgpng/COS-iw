@@ -62,12 +62,8 @@ class LoginPage(webapp2.RequestHandler):
         elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
-<<<<<<< HEAD
-        # user = User(netID="admin", user_type="administrator")
-=======
             #for hacking purposes only
             #user = User(netID="admin", user_type="administrator")
->>>>>>> 9ecf941cf16f51a4fd725675e1194f266bfc7c46
             user = query.fetch()[0]
             session['user'] = user
             self.redirect('/')
