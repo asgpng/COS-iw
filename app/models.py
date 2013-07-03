@@ -10,6 +10,7 @@ class Blob(ndb.Model):
     blob_key = ndb.BlobKeyProperty()
     filename = ndb.StringProperty()
     extension = ndb.StringProperty()
+    upload_type = ndb.StringProperty() # for example, user_list
 
 class File(ndb.Model):
     filename = ndb.StringProperty()
@@ -78,7 +79,7 @@ class User(polymodel.PolyModel):
     netID = ndb.StringProperty(required=True)
     email = ndb.StringProperty()
     user_type = ndb.StringProperty()
-   
+
 
 # for when we get netIDs working
 class Student(User):

@@ -437,12 +437,15 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                     blob_prop=str(blob_info.key()),
                     blob_key=blob_info.key(),
                     filename=self.request.get('filename'),
-                    extension=self.request.get('extension')
+                    extension=self.request.get('extension'),
+                    upload_type=self.request.get('upload_type'),
                 )
         blob.put()
         time.sleep(TIME_SLEEP)
-        # self.redirect('/files/serve/%s' % blob_info.key())
-        self.redirect('/files/view_list')
+        if blob.upload_type=='user_list':
+            self.redirect('/administrative/user_process_upload')
+        else:
+            self.redirect('/files/view_list')
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
@@ -506,11 +509,10 @@ class FileDelete(webapp2.RequestHandler):
 class UserProcessUpload(webapp2.RequestHandler):
 
     def get(self):
-        query_params = {'extension':'csv'}
-        blob = object_query(Blob, query_params).get()
+        query_params = {'upload_type':'user_list'}
+        blob = object_query(Blob, query_params).get() #eventually make sure to overwrite old list
         blob_reader = blobstore.BlobReader(blob.blob_key)
         file = blob_reader.readlines()
-        self.response.write('<br>')
         user_list = []
         added_users = []
 
@@ -523,10 +525,10 @@ class UserProcessUpload(webapp2.RequestHandler):
                 new_user = User(netID=netID, user_type=user_type)
                 added_users.append(new_user)
                 new_user.put()
-        self.response.write(added_users)
+        # self.response.write(added_users)
         template_values = {
             'current_user': getCurrentUser(self),
-            # 'user_list':user_list
+            'added_users': added_users
         }
         template = JINJA_ENVIRONMENT.get_template('user_list.html')
         self.response.write(template.render(template_values))
@@ -604,21 +606,21 @@ class UserDeleteConfirmation(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_delete_confirmation.html')
         self.response.write(template.render(template_values))
 
-# class UserView(webapp2.RequestHandler):
-#     # this shows the results of what has been submitted
-#     def get(self):
-#         # calls helper method
-#         query_params = build_query_params(self)
-#         query = object_query(User, query_params)
-#         users = query.fetch(1)
-#         user = users[0]
+class UserViewSingle(webapp2.RequestHandler):
+    # this shows the results of what has been submitted
+    def get(self):
+        # calls helper method
+        query_params = build_query_params(self)
+        query = object_query(User, query_params)
+        users = query.fetch(1)
+        user = users[0]
 
-#         template_values = {
-#             'user': user,
-#             'current_user': getCurrentUser(self),
-#         }
-#         template = JINJA_ENVIRONMENT.get_template('user_view.html')
-#         self.response.write(template.render(template_values))
+        template_values = {
+            'user': user,
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_view.html')
+        self.response.write(template.render(template_values))
 
 class UserUpload(webapp2.RequestHandler):
 
@@ -676,7 +678,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/users', UserView),
     ('/administrative/user_delete', UserDelete),
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
-    # ('/administrative/user_view', UserView),
+    ('/administrative/user_view', UserViewSingle),
     ('/administrative/invalid_entry', UserInvalid),
     ('/administrative/user_upload', UserUpload),
     ('/administrative/user_process_upload', UserProcessUpload),
