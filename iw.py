@@ -117,6 +117,11 @@ class MainPage(webapp2.RequestHandler):
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
+
+        user = getCurrentUser(self)
+        if user.user_type == "faculty":
+            self.redirect('/forms/signupnotallowed')
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -154,6 +159,16 @@ class SignupFormPage(webapp2.RequestHandler):
         query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
         time.sleep(.1)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+class SignUpNotAllowed(webapp2.RequestHandler):
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+        }
+        template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
+        self.response.write(template.render(template_values))
+        
 
 class SelectStudent(webapp2.RequestHandler):
 
@@ -684,6 +699,7 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
     ('/forms/selectstudent', SelectStudent),
+    ('/forms/signupnotallowed', SignUpNotAllowed),
 
 ], debug=True)
 

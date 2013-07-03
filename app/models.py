@@ -47,10 +47,12 @@ class CheckpointForm(Form):
     topic_title = ndb.StringProperty()
     meetings_w_advisor = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
-    advisor_read_summary = ndb.BooleanProperty()
-    meet_more_often = ndb.BooleanProperty()
+    advisor_read_summary = ndb.StringProperty()
+    meet_more_often = ndb.StringProperty()
     student_progress = ndb.IntegerProperty(choices=set([4, 3, 2, 1]))
     comments = ndb.StringProperty()
+    choose_student = ndb.StringProperty()
+
 
 class FebruaryForm(Form):
     title = ndb.StringProperty()
