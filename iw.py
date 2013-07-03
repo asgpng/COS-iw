@@ -231,9 +231,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
                                  )
+            cpf.put()
 ##3# FIX QUERY PARAMS (RIGHT NOW IT ALWAYS GETS THE FIRST OF THE STUDENT NET IDS. IT SHOULD BE THE ONE THEY PICK
         elif getCurrentUser(self).user_type  == "faculty":
-            query_params = {'student_netID': self.request.get('student'),'form_type':'checkpoint'}
+            query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
             cpf.advisor_read_summary = self.request.get('advisor_read_summary')
@@ -588,6 +589,14 @@ class UserView(webapp2.RequestHandler):
             self.redirect('/unauthorized')
         query_params = {} # empty because we want all users
         query = object_query(User, query_params)
+
+        # sort users results (sort_by is a link selected by the user in users.html)
+        sort_by = self.request.get('sort_by')
+        if sort_by == 'user_type':
+            query = query.order(User.user_type)
+        if sort_by == 'netID':
+            query = query.order(User.netID)
+
         users = query.fetch()
         template_values = {
             'users':users,
