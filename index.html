@@ -21,9 +21,17 @@
 	  <li class="forms"><a href="forms/checkpointform">Checkpoint Form</a></li>
 	  <li class="forms"><a href="forms/februaryform">February Progress Form</a></li>(for all 2-semester work)
 	  <li class="forms"><a href="forms/secondreaderform">Second Reader Form</a></li>(for all 2-semester work)
-	</ul>
-  </div>
-  <hr>
+	
   <!-- links: -->
+{% endblock %}
+{% block advisorOnly%}
+<li class="forms"><a href="forms/approve">Approve Students as Advisees</a></li>
+</ul>
 </div>
+<hr>
+{% endblock %}
+{% block studentOnly%}
+</ul>
+</div>
+<hr>
 {% endblock %}

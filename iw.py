@@ -141,19 +141,20 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_name = self.request.get('advisor_name'),
                         advisor_netID = self.request.get('advisor_netID'),
                         advisor_department = self.request.get('advisor_department'),
-                        student_signature = bool(self.request.get('student_signature')),
-                        student_netID = self.request.get('student_netID')
+                        student_netID = self.request.get('student_netID'),
+                        signature = self.request.get('signature'),
                         )
 
         sf.put()
 
         current_user = getCurrentUser(self)
         current_user.advisor_netID = sf.advisor_netID
+
         query_params = {'netID': sf.advisor_netID}
         query = object_query(Faculty, query_params)
         user_faculty = query.get()
-        user_faculty.student_netIDs.append(sf.student_netID)
-        user_faculty.student_netIDs.sort
+        user_faculty.student_requests.append(sf.student_netID)
+        user_faculty.student_requests.sort
         user_faculty.put()
 
         query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
@@ -170,24 +171,24 @@ class SignUpNotAllowed(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
         
 
-class SelectStudent(webapp2.RequestHandler):
+#class SelectStudent(webapp2.RequestHandler):
 
-    def get(self):
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        self.response.write(getCurrentUser(self).hello)
-        getCurrentUser(self).hello = True
-        getCurrentUser(self).put()
-        self.response.write(getCurrentUser(self).hello)
-        template = JINJA_ENVIRONMENT.get_template('select_student.html')
-        self.response.write(template.render(template_values))
+    #def get(self):
+    #    template_values = {
+   #         'current_user': getCurrentUser(self),
+  #          'url_linktext': getLoginStatus(self.request.uri)[1],
+     #   }
+ #       self.response.write(getCurrentUser(self).hello)
+ 
+      #  getCurrentUser(self).put()
+       # self.response.write(getCurrentUser(self).hello)
+        #template = JINJA_ENVIRONMENT.get_template('select_student.html')
+        #self.response.write(template.render(template_values))
 
-    def post(self):
-        getCurrentUser(self).hello = True
-        getCurrentUser(self).put()
-        self.redirect('/forms/checkpointform')
+    #def post(self):
+     #   getCurrentUser(self).hello = True
+      #  getCurrentUser(self).put()
+       # self.redirect('/forms/checkpointform')
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -317,6 +318,28 @@ class FebruaryFormPage(webapp2.RequestHandler):
         query_params2 = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
         time.sleep(.1)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+class ApproveAdvisees(webapp2.RequestHandler):
+    def get(self):
+
+        current_user = getCurrentUser(self)
+        if current_user.user_type == "student":
+            self.redirect('/denied/')
+
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+        }
+        template = JINJA_ENVIRONMENT.get_template('approve.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+
+        hey = self.request.get('final')
+        self.response.write(hey)
+        
+        
+        
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -581,8 +604,7 @@ class UserView(webapp2.RequestHandler):
             if user_type == 'student':
                 user = Student(netID=user_netID, user_type='student')
             elif user_type == 'faculty':
-                user = Faculty(netID=user_netID, user_type='faculty', hello = False)
-#                user = Faculty(netID=user_netID, user_type='faculty')
+                user = Faculty(netID=user_netID, user_type='faculty')
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
             validateNewUser(self, user)
@@ -698,8 +720,9 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_upload', UserUpload),
     ('/administrative/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
-    ('/forms/selectstudent', SelectStudent),
+   # ('/forms/selectstudent', SelectStudent),
     ('/forms/signupnotallowed', SignUpNotAllowed),
+    ('/forms/approve', ApproveAdvisees),
 
 ], debug=True)
 
