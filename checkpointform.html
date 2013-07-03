@@ -5,6 +5,7 @@
 
 function disable() {
 
+document.getElementById('student_netID').disabled=true;
 document.getElementById('project_title').disabled=true;
 document.getElementById('advisor_name').disabled=true;
 document.getElementById('meetings').disabled=true;
@@ -121,7 +122,7 @@ return result;
   <div class="container">
     <div>
 	  <label>Student NetID: </label>
-	  <input type="text" name="student_netID"/>
+	  <input type="text" name="student_netID" id="student_netID"/>
 	</div>
     <div>
       <label>Student Name:</label>
@@ -152,18 +153,28 @@ return result;
 <body onload="disable()">
  <h3>Advisor Section:</h3>
   <div class="container" >
+    <div>  
+      <label>
+	Choose the student for whom you are filling out the form. </label>
+      <select name="choose_student"> 
+	{% for student in current_user.student_netIDs %}
+	<option value="{{student}}">{{student}}</option>
+	{% endfor %}
+      </select>
+      </div>
+    <br>
     <div>
 	  <label id="first">I read the student's 1-page progress summary report</label>
 	  <div class="radio">
-	    <input type="radio" name="advisor_read_summary" value="yes_read"/>yes<br>
+	    <input type="radio" name="advisor_read_summary" value="yes_read" />yes<br>
 	    <input type="radio" name="advisor_read_summary" value="no_read" />no<br>
 	  </div>
     </div>
     <div>
 	  <label id="second">Would you like your student to meet with you more often?</label>
 	  <div class="radio">
-	    <input type="radio" name="meet_more_often" value="yes_meet"/>yes<br>
-	    <input type="radio" name="meet_more_often" value="no_meet"/>no<br>
+	    <input type="radio" name="meet_more_often" value="yes_meet" />yes<br>
+	    <input type="radio" name="meet_more_often" value="no_meet" />no<br>
 	  </div>
     </div>
     <br>
