@@ -10,6 +10,7 @@ class Blob(ndb.Model):
     blob_key = ndb.BlobKeyProperty()
     filename = ndb.StringProperty()
     extension = ndb.StringProperty()
+    upload_type = ndb.StringProperty() # for example, user_list
 
 class File(ndb.Model):
     filename = ndb.StringProperty()
@@ -46,10 +47,12 @@ class CheckpointForm(Form):
     topic_title = ndb.StringProperty()
     meetings_w_advisor = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
-    advisor_read_summary = ndb.BooleanProperty()
-    meet_more_often = ndb.BooleanProperty()
+    advisor_read_summary = ndb.StringProperty()
+    meet_more_often = ndb.StringProperty()
     student_progress = ndb.IntegerProperty(choices=set([4, 3, 2, 1]))
     comments = ndb.StringProperty()
+    choose_student = ndb.StringProperty()
+
 
 class FebruaryForm(Form):
     title = ndb.StringProperty()
@@ -78,7 +81,7 @@ class User(polymodel.PolyModel):
     netID = ndb.StringProperty(required=True)
     email = ndb.StringProperty()
     user_type = ndb.StringProperty()
-   
+
 
 # for when we get netIDs working
 class Student(User):

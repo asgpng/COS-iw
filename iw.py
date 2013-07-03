@@ -62,7 +62,12 @@ class LoginPage(webapp2.RequestHandler):
         elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
+<<<<<<< HEAD
         # user = User(netID="admin", user_type="administrator")
+=======
+            #for hacking purposes only
+            #user = User(netID="admin", user_type="administrator")
+>>>>>>> 9ecf941cf16f51a4fd725675e1194f266bfc7c46
             user = query.fetch()[0]
             session['user'] = user
             self.redirect('/')
@@ -116,6 +121,11 @@ class MainPage(webapp2.RequestHandler):
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
+
+        user = getCurrentUser(self)
+        if user.user_type == "faculty":
+            self.redirect('/forms/signupnotallowed')
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -154,6 +164,16 @@ class SignupFormPage(webapp2.RequestHandler):
         time.sleep(.1)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
+class SignUpNotAllowed(webapp2.RequestHandler):
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+        }
+        template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
+        self.response.write(template.render(template_values))
+        
+
 class SelectStudent(webapp2.RequestHandler):
 
     def get(self):
@@ -177,13 +197,13 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        self.response.write(current_user.hello)
-        if current_user.user_type == "faculty":
-            if not current_user.hello:
-                self.redirect('/forms/selectstudent')
-            else:
-                current_user.hello = False
-                current_user.put()
+        #self.response.write(current_user.hello)
+        #if current_user.user_type == "faculty":
+            #if not current_user.hello:
+            #    self.redirect('/forms/selectstudent')
+           # else:
+            #    current_user.hello = False
+           #     current_user.put()
 
         self.response.write(current_user)
 #        self.response.write(current_user.selected_student)
@@ -218,10 +238,12 @@ class CheckPointFormPage(webapp2.RequestHandler):
         elif getCurrentUser(self).user_type  == "faculty":
             query_params = {'student_netID': self.request.get('student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
-            cpf = query.fetch(1)[0]
-            cpf.meet_more_often = bool(self.request.get('meet_more_often'))
+            cpf = query.get()
+            cpf.advisor_read_summary = self.request.get('advisor_read_summary')
+            cpf.meet_more_often = self.request.get('meet_more_often')
             cpf.student_progress = int(self.request.get('student_progress'))
             cpf.comments = self.request.get('comments')
+            cpf.choose_student = self.request.get('choose_student')
 
         #validateFormSubmission(self, cpf)
         cpf.put()
@@ -432,11 +454,17 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         current_user = getCurrentUser(self)
         blob = Blob(author_netID=current_user.netID,
                     blob_prop=str(blob_info.key()),
-                    blob_key=blob_info.key())
+                    blob_key=blob_info.key(),
+                    filename=self.request.get('filename'),
+                    extension=self.request.get('extension'),
+                    upload_type=self.request.get('upload_type'),
+                )
         blob.put()
         time.sleep(TIME_SLEEP)
-        # self.redirect('/files/serve/%s' % blob_info.key())
-        self.redirect('/files/view_list')
+        if blob.upload_type=='user_list':
+            self.redirect('/administrative/user_process_upload')
+        else:
+            self.redirect('/files/view_list')
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
@@ -471,17 +499,13 @@ class FileViewSingle(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self):
         query_params = {'blob_prop':str(urllib.unquote(self.request.get('blob_key')))}
         blob = object_query(Blob, query_params).get()
-        # self.response.write(blob)
-        # blob = BlobInfo.get(blob.blob_key)
         blob_reader = blobstore.BlobReader(blob.blob_key)
-        file = blob_reader.read()
+        file = blob_reader.readlines()
         self.response.write('<br>')
-        text = ''
 
-        # currently, one letter per line. Need to convert!!!
         for line in file:
             self.response.write(line)
-            # self.response.write('<br>')
+            self.response.write('<br>')
         template_values = {
             'current_user': getCurrentUser(self),
             'blob':blob,
@@ -498,29 +522,32 @@ class FileDelete(webapp2.RequestHandler):
         blob = BlobInfo(file.blob_key)
         blob.delete()
         file.key.delete()
+        time.sleep(TIME_SLEEP)
         self.redirect('/files/view_list')
 
 class UserProcessUpload(webapp2.RequestHandler):
 
     def get(self):
-        # blob = object_query(Blob,{'author_netID':getCurrentUser(self).netID}).get()
-        self.response.write(blob) # debugging
-#        blob = BlobInfo.get(blob.blob_key)
+        query_params = {'upload_type':'user_list'}
+        blob = object_query(Blob, query_params).get() #eventually make sure to overwrite old list
         blob_reader = blobstore.BlobReader(blob.blob_key)
-        file = blob_reader.read()
-        self.response.write('<br>')
+        file = blob_reader.readlines()
         user_list = []
+        added_users = []
 
-        # currently, one letter per line. Need to convert!!!
         for line in file:
-            self.response.write(line)
-            self.response.write('<br>')
-            # user_list.append(line.split(','))
-        # user_list = parse_users_csv(file)
-        # self.response.write(user_list)
+            user_list.append(line.strip().split(','))
+        for user in user_list[1:]: # omit header line
+            netID = user[0]
+            user_type=user[1]
+            if object_query(User, {'netID':netID, 'user_type':user_type}).get()==None:
+                new_user = User(netID=netID, user_type=user_type)
+                added_users.append(new_user)
+                new_user.put()
+        # self.response.write(added_users)
         template_values = {
             'current_user': getCurrentUser(self),
-            # 'user_list':user_list
+            'added_users': added_users
         }
         template = JINJA_ENVIRONMENT.get_template('user_list.html')
         self.response.write(template.render(template_values))
@@ -606,26 +633,26 @@ class UserDeleteConfirmation(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('user_delete_confirmation.html')
         self.response.write(template.render(template_values))
 
-# class UserView(webapp2.RequestHandler):
-#     # this shows the results of what has been submitted
-#     def get(self):
-#         # calls helper method
-#         query_params = build_query_params(self)
-#         query = object_query(User, query_params)
-#         users = query.fetch(1)
-#         user = users[0]
+class UserViewSingle(webapp2.RequestHandler):
+    # this shows the results of what has been submitted
+    def get(self):
+        # calls helper method
+        query_params = build_query_params(self)
+        query = object_query(User, query_params)
+        users = query.fetch(1)
+        user = users[0]
 
-#         template_values = {
-#             'user': user,
-#             'current_user': getCurrentUser(self),
-#         }
-#         template = JINJA_ENVIRONMENT.get_template('user_view.html')
-#         self.response.write(template.render(template_values))
+        template_values = {
+            'user': user,
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('user_view.html')
+        self.response.write(template.render(template_values))
 
 class UserUpload(webapp2.RequestHandler):
 
     def get(self):
-        upload_url = blobstore.create_upload_url('/upload')
+        upload_url = blobstore.create_upload_url('/files/upload')
         template_values = {
             'upload_url':upload_url,
             'current_user': getCurrentUser(self),
@@ -678,12 +705,13 @@ application = webapp2.WSGIApplication([
     ('/administrative/users', UserView),
     ('/administrative/user_delete', UserDelete),
     ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
-    # ('/administrative/user_view', UserView),
+    ('/administrative/user_view', UserViewSingle),
     ('/administrative/invalid_entry', UserInvalid),
     ('/administrative/user_upload', UserUpload),
     ('/administrative/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
     ('/forms/selectstudent', SelectStudent),
+    ('/forms/signupnotallowed', SignUpNotAllowed),
 
 ], debug=True)
 
