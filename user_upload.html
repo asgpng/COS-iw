@@ -3,18 +3,18 @@
 {% block head %}
 <script type="text/javascript">
 
-function test() {
-    alert('hi');
-}
-
 function check() {
-    alert('hi');
-    var file = document.getElementById("fileUpload").value;
+
+    var file = document.getElementById("fileUpload").value.split('\\')[2];
     var extension = file.split('.')[1];
+    // var extension = "xls";
     var filename = file.split('.')[0];
-    if (extension != "xls") || (extension != "csv") {
+    // alert('hello');
+
+    if ((extension != "xls") || (extension != "csv"))
+    if ((false) || (extension == "xls")) {
         alert("You did not select a valid file!");
-	    return false;
+	   return false;
     }
     else {
         document.getElementById("fileName").value = filename;
@@ -25,7 +25,6 @@ function check() {
 </script>
 {% endblock %}
 {% block content %}
-<body onload="test();">
 <h1>User Administration</h1>
 <h2>User List Upload</h2>
 <p>Use this feature to upload a user list with fields for netID and user_type. Supported formats are xls and csv.</p>
@@ -46,6 +45,5 @@ function check() {
     <input type="hidden" id="fileName"  name="filename" value="" />
     <input type="hidden" id="fileExt" name="extension" value="" />
   </form>
-  </body>
 
 {% endblock %}
