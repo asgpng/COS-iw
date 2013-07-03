@@ -1,38 +1,28 @@
 {% extends "base.html" %}
 {% block title %}Approve Students as your Advisees{% endblock %}
 {% block header %}
-<script type="text/javascript">
-
-function check() {
-
-var given = document.getElementById("approve").value;
-document.getElementById("final").value = given;
-alert(document.getElementById("final").value);
-}
-</script>
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
-  <form method="post" onsubmit="check();">
+  <form action="/forms/approve" method="post">
   <div>
     <label>Students by netID</label>
-    <select name="students" id="students">
+    <select name="student">
       {% for student in current_user.student_requests %}
       <option value="{{student}}"> {{ student }} </option>
       {% endfor %}
       </select>
   </div>
   <select name="approve" id="approve">
-    <option value="true">I agree to be this student's advisor.<br>
-    <option value="false">I do not agree to be this student's advisor.<br>
+    <option value="yes">I agree to be this student's advisor.<br>
+    <option value="no">I do not agree to be this student's advisor.<br>
   </select>
   <div>
     <input type="submit" value="Submit"/>
   </div>
   </form>
-<input type="hidden" name="final" id="final" value="">
 </div>
 {% endblock %}
 {% block footer %}

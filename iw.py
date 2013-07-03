@@ -170,47 +170,11 @@ class SignUpNotAllowed(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
         self.response.write(template.render(template_values))
         
-
-#class SelectStudent(webapp2.RequestHandler):
-
-    #def get(self):
-    #    template_values = {
-   #         'current_user': getCurrentUser(self),
-  #          'url_linktext': getLoginStatus(self.request.uri)[1],
-     #   }
- #       self.response.write(getCurrentUser(self).hello)
- 
-      #  getCurrentUser(self).put()
-       # self.response.write(getCurrentUser(self).hello)
-        #template = JINJA_ENVIRONMENT.get_template('select_student.html')
-        #self.response.write(template.render(template_values))
-
-    #def post(self):
-     #   getCurrentUser(self).hello = True
-      #  getCurrentUser(self).put()
-       # self.redirect('/forms/checkpointform')
-
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        #self.response.write(current_user.hello)
-        #if current_user.user_type == "faculty":
-            #if not current_user.hello:
-            #    self.redirect('/forms/selectstudent')
-           # else:
-            #    current_user.hello = False
-           #     current_user.put()
-
         self.response.write(current_user)
-#        self.response.write(current_user.selected_student)
-#        self.response.write(current_user.selected_student)
-#        if current_user.user_type == "faculty":
-#            if current_user.hello == "false":
-#                self.redirect('/forms/selectstudent')
-
-#            else:
-#                current_user.hello = "false"
 
         template_values = {
             'current_user': getCurrentUser(self),
@@ -335,12 +299,16 @@ class ApproveAdvisees(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-
-        hey = self.request.get('final')
-        self.response.write(hey)
+        current_user = getCurrentUser(self)
         
-        
-        
+        approval = self.request.get('approve')
+        student = self.request.get('student')
+        if approval == 'yes':
+            current_user.student_netIDs.append(student)
+       # current_user.student_netIDs.remove(student)
+        current_user.put()
+        #self.redirect('/')
+        self.response.write(current_user.student_netIDs)
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -729,7 +697,6 @@ application = webapp2.WSGIApplication([
     ('/administrative/user_upload', UserUpload),
     ('/administrative/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
-   # ('/forms/selectstudent', SelectStudent),
     ('/forms/signupnotallowed', SignUpNotAllowed),
     ('/forms/approve', ApproveAdvisees),
 
