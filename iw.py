@@ -62,8 +62,9 @@ class LoginPage(webapp2.RequestHandler):
         elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
-            #for hacking purposes only
-            #user = User(netID="admin", user_type="administrator")
+            # # for hacking purposes only
+            # user = User(netID="admin", user_type="administrator")
+            # user.put()
             user = query.fetch()[0]
             session['user'] = user
             self.redirect('/')
@@ -168,7 +169,7 @@ class SignUpNotAllowed(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
         self.response.write(template.render(template_values))
-        
+
 
 class SelectStudent(webapp2.RequestHandler):
 
@@ -458,7 +459,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         blob.put()
         time.sleep(TIME_SLEEP)
         if blob.upload_type=='user_list':
-            self.redirect('/administrative/user_process_upload')
+            self.redirect('/admin/user_process_upload')
         else:
             self.redirect('/files/view_list')
 
@@ -607,7 +608,7 @@ class UserDelete(webapp2.RequestHandler):
         query  = object_query(User, query_params)
         user = query.fetch(1)[0]
         user.key.delete()
-        self.redirect('/administrative/user_delete/confirmation?' + urllib.urlencode(query_params))
+        self.redirect('/admin/user_delete/confirmation?' + urllib.urlencode(query_params))
 
 class UserDeleteConfirmation(webapp2.RequestHandler):
 
@@ -627,8 +628,7 @@ class UserViewSingle(webapp2.RequestHandler):
         # calls helper method
         query_params = build_query_params(self)
         query = object_query(User, query_params)
-        users = query.fetch(1)
-        user = users[0]
+        user = query.get()
 
         template_values = {
             'user': user,
@@ -672,10 +672,10 @@ application = webapp2.WSGIApplication([
     ('/logout', LogoutPage),
     ('/login/unauthorized', LoginUnauthorizedPage),
     ('/unauthorized', Unauthorized),
-    ('/forms/signupform', SignupFormPage),
-    ('/forms/secondreaderform', SecondReaderFormPage),
-    ('/forms/checkpointform', CheckPointFormPage),
-    ('/forms/februaryform', FebruaryFormPage),
+    ('/forms/signup', SignupFormPage),
+    ('/forms/second_reader', SecondReaderFormPage),
+    ('/forms/checkpoint', CheckPointFormPage),
+    ('/forms/february', FebruaryFormPage),
     ('/forms/view', FormView),
     ('/forms/query', FormQuery),
     ('/forms/query_results', FormQueryResults),
@@ -690,13 +690,13 @@ application = webapp2.WSGIApplication([
     ('/files/view_list', FileViewList),
     ('/files/view_single',FileViewSingle),
     ('/files/delete', FileDelete),
-    ('/administrative/users', UserView),
-    ('/administrative/user_delete', UserDelete),
-    ('/administrative/user_delete/confirmation', UserDeleteConfirmation),
-    ('/administrative/user_view', UserViewSingle),
-    ('/administrative/invalid_entry', UserInvalid),
-    ('/administrative/user_upload', UserUpload),
-    ('/administrative/user_process_upload', UserProcessUpload),
+    ('/admin/users', UserView),
+    ('/admin/user_delete', UserDelete),
+    ('/admin/user_delete/confirmation', UserDeleteConfirmation),
+    ('/admin/user_view', UserViewSingle),
+    ('/admin/invalid_entry', UserInvalid),
+    ('/admin/user_upload', UserUpload),
+    ('/admin/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
     ('/forms/selectstudent', SelectStudent),
     ('/forms/signupnotallowed', SignUpNotAllowed),

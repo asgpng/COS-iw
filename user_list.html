@@ -19,12 +19,11 @@
     <!-- potential security issue -->
     <td><a href="user_delete?{{ {'user_type':user.user_type, 'netID':user.netID} | urlencode}}">delete user </a></td>
   </tr>
-</table>
-
 {% endfor %}
+</table>
 {% else %}
 <p>No new users have been added to the user database.</p>
 {% endif %}
 <br>
-<a href="/administrative/users">View Users</a>
+<a href="/admin/users">View Users</a>
 {% endblock %}
