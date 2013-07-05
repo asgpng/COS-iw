@@ -1,7 +1,17 @@
 {% extends "base.html" %}
-{% block title %}{{title}}{% endblock %}
+{% block title %}Thesis and COS IW Forms{% endblock %}
 {% block content %}
 <h2>COS Independent Work Home</h2>
 <p>This is a new site, so not everything is working yet. Apologies for broken links and missing pages.
 </p>
+  <!-- links: -->
+{% endblock %}
+{% block advisorOnly%}
+
+<li class="forms"><a href="forms/approve">Approve Students as Advisees</a></li>
+</div>
+<hr>
+{% endblock %}
+{% block studentOnly%}
+</ul>
 {% endblock %}

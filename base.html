@@ -67,6 +67,31 @@
         <div class="span9">
           {% block content %}
           {% endblock %}
+	  	  {% block header %}
+	      {% endblock %}
+
+    	  {% if current_user.user_type=="student" %}
+ 	      {% block student %}
+    	  {% endblock %}
+	      {% block studentOnly %}
+	      {% endblock %}
+
+	      {% elif current_user.user_type=="faculty" %}
+	      {{ self.student() }}
+	      {% block advisor %}
+	      {% endblock %}
+	      {% block advisorOnly %}
+	      {% endblock %}
+
+    	  {% elif current_user.user_type=="administrator" %}
+	      {% block admin %}
+	      {% endblock %}
+	      {{ self.advisorOnly() }}
+	      {% endif %}
+
+	      {% block submit %}
+	      {% endblock %}
+
         </div><!--/span-->
       </div><!--/row-->
 

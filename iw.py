@@ -150,11 +150,12 @@ class SignupFormPage(webapp2.RequestHandler):
 
         current_user = getCurrentUser(self)
         current_user.advisor_netID = sf.advisor_netID
+
         query_params = {'netID': sf.advisor_netID}
         query = object_query(Faculty, query_params)
         user_faculty = query.get()
-        user_faculty.student_netIDs.append(sf.student_netID)
-        user_faculty.student_netIDs.sort
+        user_faculty.student_requests.append(sf.student_netID)
+        user_faculty.student_requests.sort
         user_faculty.put()
 
         query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
@@ -169,48 +170,12 @@ class SignUpNotAllowed(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
         self.response.write(template.render(template_values))
-
-
-class SelectStudent(webapp2.RequestHandler):
-
-    def get(self):
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        self.response.write(getCurrentUser(self).hello)
-        getCurrentUser(self).hello = True
-        getCurrentUser(self).put()
-        self.response.write(getCurrentUser(self).hello)
-        template = JINJA_ENVIRONMENT.get_template('select_student.html')
-        self.response.write(template.render(template_values))
-
-    def post(self):
-        getCurrentUser(self).hello = True
-        getCurrentUser(self).put()
-        self.redirect('/forms/checkpointform')
-
+        
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        #self.response.write(current_user.hello)
-        #if current_user.user_type == "faculty":
-            #if not current_user.hello:
-            #    self.redirect('/forms/selectstudent')
-           # else:
-            #    current_user.hello = False
-           #     current_user.put()
-
         self.response.write(current_user)
-#        self.response.write(current_user.selected_student)
-#        self.response.write(current_user.selected_student)
-#        if current_user.user_type == "faculty":
-#            if current_user.hello == "false":
-#                self.redirect('/forms/selectstudent')
-
-#            else:
-#                current_user.hello = "false"
 
         template_values = {
             'current_user': getCurrentUser(self),
@@ -231,9 +196,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
                                  )
+            cpf.put()
 ##3# FIX QUERY PARAMS (RIGHT NOW IT ALWAYS GETS THE FIRST OF THE STUDENT NET IDS. IT SHOULD BE THE ONE THEY PICK
         elif getCurrentUser(self).user_type  == "faculty":
-            query_params = {'student_netID': self.request.get('student'),'form_type':'checkpoint'}
+            query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
             cpf.advisor_read_summary = self.request.get('advisor_read_summary')
@@ -318,6 +284,32 @@ class FebruaryFormPage(webapp2.RequestHandler):
         query_params2 = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
         time.sleep(.1)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+class ApproveAdvisees(webapp2.RequestHandler):
+    def get(self):
+
+        current_user = getCurrentUser(self)
+        if current_user.user_type == "student":
+            self.redirect('/denied/')
+
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+        }
+        template = JINJA_ENVIRONMENT.get_template('approve.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        current_user = getCurrentUser(self)
+        
+        approval = self.request.get('approve')
+        student = self.request.get('student')
+        if approval == 'yes':
+            current_user.student_netIDs.append(student)
+       # current_user.student_netIDs.remove(student)
+        current_user.put()
+        #self.redirect('/')
+        self.response.write(current_user.student_netIDs)
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -566,6 +558,14 @@ class UserView(webapp2.RequestHandler):
             self.redirect('/unauthorized')
         query_params = {} # empty because we want all users
         query = object_query(User, query_params)
+
+        # sort users results (sort_by is a link selected by the user in users.html)
+        sort_by = self.request.get('sort_by')
+        if sort_by == 'user_type':
+            query = query.order(User.user_type)
+        if sort_by == 'netID':
+            query = query.order(User.netID)
+
         users = query.fetch()
         template_values = {
             'users':users,
@@ -582,8 +582,7 @@ class UserView(webapp2.RequestHandler):
             if user_type == 'student':
                 user = Student(netID=user_netID, user_type='student')
             elif user_type == 'faculty':
-                user = Faculty(netID=user_netID, user_type='faculty', hello = False)
-#                user = Faculty(netID=user_netID, user_type='faculty')
+                user = Faculty(netID=user_netID, user_type='faculty')
             else: # user_type == 'administrator':
                 user = Administrator(netID=user_netID, user_type='administrator')
             validateNewUser(self, user)
@@ -698,8 +697,8 @@ application = webapp2.WSGIApplication([
     ('/admin/user_upload', UserUpload),
     ('/admin/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
-    ('/forms/selectstudent', SelectStudent),
     ('/forms/signupnotallowed', SignUpNotAllowed),
+    ('/forms/approve', ApproveAdvisees),
 
 ], debug=True)
 

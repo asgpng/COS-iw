@@ -29,8 +29,8 @@ function check() {
 <form action="/admin/users?action=add" method="post">
 <table border="1">
   <tr>
-    <th>User Type:</th>
-    <th>User netID:</th>
+    <th><a href="users?{{ {'sort_by':'user_type'} | urlencode }}">User Type:</a></th>
+    <th><a href="users?{{ {'sort_by':'netID'} | urlencode }}">User netID:</a></th>
     <th>Link:</th>
     <th>Delete:</th>
   </tr>
