@@ -174,7 +174,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        self.response.write(current_user)
+        self.response.write(current_user.student_netIDs)
 
         template_values = {
             'current_user': getCurrentUser(self),
@@ -302,12 +302,14 @@ class ApproveAdvisees(webapp2.RequestHandler):
         current_user = getCurrentUser(self)
         
         approval = self.request.get('approve')
-        student = self.request.get('student')
+        student = self.request.get('chosen_student')
         if approval == 'yes':
             current_user.student_netIDs.append(student)
-       # current_user.student_netIDs.remove(student)
-        current_user.put()
+       
+       
+        current_user.student_requests.remove(student)
         #self.redirect('/')
+        current_user.put()
         self.response.write(current_user.student_netIDs)
 
 class FormView(webapp2.RequestHandler):
