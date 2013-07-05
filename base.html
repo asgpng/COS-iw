@@ -58,9 +58,15 @@
 	          <li class="forms"><a href="/forms/february">February Progress Form</a></li>(for all 2-semester work)
 	          <li class="forms"><a href="/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
               <li><a href="/forms/query">Form Query</a></li>
-              <li class="nav-header">Admin</li>
 
+              <!-- custom user links: -->
+    	      {% if current_user.user_type=="faculty" %}
+              <li class="nav-header">Faculty</li>
+              <li><a href="forms/approve">Approve Students as Advisees</a></li>
+              {% elif current_user.user_type=="administrator" %}
+              <li class="nav-header">Admin</li>
               <li><a href="/admin/users">View Users</a></li>
+              {% endif %}
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
@@ -102,23 +108,5 @@
       </footer>
 
     </div><!--/.fluid-container-->
-
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- <script src="../assets/js/jquery.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-transition.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-alert.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-modal.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-dropdown.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-scrollspy.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-tab.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-tooltip.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-popover.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-button.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-collapse.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-carousel.js"></script> -->
-    <!-- <script src="../assets/js/bootstrap-typeahead.js"></script> -->
-
   </body>
 </html>
