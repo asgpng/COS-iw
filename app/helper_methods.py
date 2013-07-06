@@ -51,9 +51,8 @@ def build_query_params(self):
 def validateFormSubmission(self, form, current_user):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = object_query(Form, query_params)
-    form = query.fetch(1)
+    form = query.fetch(1)[0]
     if current_user.user_type == 'student':
-        # 7/6 1:05 - not working because of boolean problems(tried default)
         if not form.student_submitted:
             alreadySubmitted = False
             form.student_submitted = True
@@ -75,12 +74,9 @@ def validateFormSubmission(self, form, current_user):
             # update student's submitted forms list
             current_user.forms_submitted.append(form.form_type)
             current_user.put()
-        # for signup form, update student's advisor_netID:
-        # if form.form_type == "signup":
-        #     student.advisor_netID = form.advisor_netID
-
         # set the next url using student_netID and form_type
         self.redirect('/forms/view?' + urllib.urlencode(query_params))
+
     else:
         self.redirect('/forms/invalid_entry?' + urllib.urlencode(query_params))
 

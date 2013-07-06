@@ -145,7 +145,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
-
+        # might be able to delete this line b/c its in validate method
         sf.put()
 
         current_user = getCurrentUser(self)
@@ -158,11 +158,8 @@ class SignupFormPage(webapp2.RequestHandler):
         user_faculty.student_requests.sort
         user_faculty.put()
 
-        # 7/6 1:05 not working because of boolean problems (tried default)
         validateFormSubmission(self, sf, current_user)
-#        query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-#        time.sleep(.1)
-#        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
 
 class SignUpNotAllowed(webapp2.RequestHandler):
     def get(self):
@@ -186,7 +183,9 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def post(self):
         cpf = None
-        if getCurrentUser(self).user_type == "student":
+        # get rid of put() methods b/c they're in helper_methods?
+        current_user = getCurrentUser(self)
+        if current_user.user_type == "student":
             cpf = CheckpointForm(student_name=self.request.get('student_name'),
                                  form_type= 'checkpoint',
                                  topic_title = self.request.get('topic_title'),
@@ -197,7 +196,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  )
             cpf.put()
 
-        elif getCurrentUser(self).user_type  == "faculty":
+        elif current_user.user_type  == "faculty":
             query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
@@ -207,11 +206,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf.comments = self.request.get('comments')
             cpf.choose_student = self.request.get('choose_student')
 
-        #validateFormSubmission(self, cpf)
-        cpf.put()
-        query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
-        time.sleep(TIME_SLEEP)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+        validateFormSubmission(self, cpf, current_user)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
@@ -225,6 +220,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
 
     def post(self):
+        current_user = getCurrentUser(self)
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                class_year =int(self.request.get('class_year')),
                                title = self.request.get('title'),
@@ -239,7 +235,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                student_netID = self.request.get('student_netID'),
                                form_type = 'second_reader'
         )
-        validateFormSubmission(self, srf)
+        validateFormSubmission(self, srf, current_user)
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -255,7 +251,8 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
     def post(self):
         ff = None
-        if getCurrentUser(self).user_type == 'student':
+        current_user = getCurrentUser(self)
+        if current_user.user_type == 'student':
             ff = FebruaryForm(student_name = self.request.get('student_name'),
                               title = self.request.get('title'),
                               description = self.request.get('description'),
@@ -267,7 +264,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
                               form_type = 'february'
                               )
 
-        elif getCurrentUser(self).user_type == 'faculty':
+        elif current_user.user_type == 'faculty':
             query_params = {'student_netID': self.request.get('choose_student'), 'form_type':'february_form'}
             query = object_query(Form, query_params)
             ff = query.fetch(1)[0]
@@ -276,11 +273,8 @@ class FebruaryFormPage(webapp2.RequestHandler):
             ff.student_progress_eval = int(self.request.get('student_progress_eval')),
             ff.advisor_comments = self.request.get('advisor_comments')
 
-#        validateFormSubmission(self, ff)
-        ff.put()
-        query_params2 = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
-        time.sleep(.1)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+        validateFormSubmission(self, ff, current_user)
 
 class ApproveAdvisees(webapp2.RequestHandler):
     def get(self):
