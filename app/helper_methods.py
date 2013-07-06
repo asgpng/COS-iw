@@ -48,24 +48,34 @@ def build_query_params(self):
 
 # check if a student has submitted a given form yet
 # in the case of submitted forms, query_params only contains form_type and student_netID
-def validateFormSubmission(self, form):
+def validateFormSubmission(self, form, current_user):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = object_query(Form, query_params)
     form = query.fetch(1)
-    if not form.submitted:
-        alreadySubmitted = False
-        form.submitted = True
-    else:
-        alreadySubmitted = True
+    if current_user.user_type == 'student':
+        # 7/6 1:05 - not working because of boolean problems(tried default)
+        if not form.student_submitted:
+            alreadySubmitted = False
+            form.student_submitted = True
+        else:
+            alreadySubmitted = True
+    elif current_user.user_type == 'faculty':
+        if not form.faculty_submitted:
+            alreadySubmitted = False
+            form.faculty_submitted = True
+        else:
+            alreadySubmitted = True
 
     # update relevant datastore properties
     if not alreadySubmitted:
         # first, add form to database
         form.put()
         time.sleep(0.1) # to allow datastore write before redirect and query
-        # # update student's submitted forms list
-        # student.forms_submitted.append(form.form_type) # when we get users working
-        # # for signup form, update student's advisor_netID:
+        if current_user.user_type == 'student':
+            # update student's submitted forms list
+            current_user.forms_submitted.append(form.form_type)
+            current_user.put()
+        # for signup form, update student's advisor_netID:
         # if form.form_type == "signup":
         #     student.advisor_netID = form.advisor_netID
 

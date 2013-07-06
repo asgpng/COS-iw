@@ -29,9 +29,10 @@ class Form(polymodel.PolyModel):
     student_name = ndb.StringProperty()
     advisor_netID = ndb.StringProperty()
     advisor_name = ndb.StringProperty()
+    student_submitted = ndb.BooleanProperty(default=False)
+    faculty_submitted = ndb.BooleanProperty(default=False)
 
 class SignupForm(Form):
-    # needs form_type, student_name, student_netID, advisor_name, advisor_netID
     class_year = ndb.IntegerProperty()
     coursework = ndb.StringProperty(choices=set(["397", "398", "497", "498", "AB JIW", "AB Senior Thesis", "BSE Senior Thesis"]))
     title = ndb.StringProperty()
@@ -39,7 +40,6 @@ class SignupForm(Form):
     advisor_signature = ndb.BooleanProperty()
     advisor_department = ndb.StringProperty()
     student_signature = ndb.BooleanProperty()
-    submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
     signature = ndb.StringProperty()
     # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
@@ -54,7 +54,6 @@ class CheckpointForm(Form):
     comments = ndb.StringProperty()
     choose_student = ndb.StringProperty()
 
-
 class FebruaryForm(Form):
     title = ndb.StringProperty()
     description = ndb.StringProperty()
@@ -65,7 +64,6 @@ class FebruaryForm(Form):
     advisor_more_meetings = ndb.BooleanProperty()
     student_progress_eval = ndb.IntegerProperty(choices=set([1,2,3]))
     advisor_comments = ndb.StringProperty()
-    submitted = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
 class SecondReaderForm(Form):
@@ -83,8 +81,6 @@ class User(polymodel.PolyModel):
     email = ndb.StringProperty()
     user_type = ndb.StringProperty()
 
-
-# for when we get netIDs working
 class Student(User):
     advisor_netID = ndb.StringProperty()
     second_reader_netID = ndb.StringProperty()

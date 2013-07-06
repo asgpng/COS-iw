@@ -121,7 +121,7 @@ function signature() {
 {% block content %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
-  <form action="/forms/signupform" method="post" onsubmit="return proceed();">
+  <form action="/forms/signup" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID" value="{{ current_user.netID }}" />

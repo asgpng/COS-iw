@@ -112,9 +112,9 @@ return result;
 {% block header %}
 <h2>Princeton CS IW Checkpoint Form</h2>
 {% if current_user.user_type=="student" %}
-<form action="/forms/checkpointform" method="post" onsubmit="return checkStudent();">
+<form action="/forms/checkpoint" method="post" onsubmit="return checkStudent();">
 {% elif current_user.user_type=="faculty" %}
-<form action="/forms/checkpointform" method="post" onsubmit="return checkFaculty();">
+<form action="/forms/checkpoint" method="post" onsubmit="return checkFaculty();">
 {% endif %}
 {% endblock %}
 {% block student %}
