@@ -46,9 +46,9 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   document.getElementById("advisor_netID").style.backgroundColor='#fa7f00';
 
   if (sig)
-  document.getElementById("signature").style.backgroundColor='#fff';
+  document.getElementById("signature").style.color='#fff';
   else
-  document.getElementById("signature").style.backgroundColor='#fa7f00';
+  document.getElementById("signature").style.color='#fa7f00';
 
   var checked = year && radio && text1 && text2 && text3 && text4 && sig;
   return checked;
@@ -106,14 +106,7 @@ function text4() {
 }
 
 function signature() {
-    var name = document.getElementById("student_name").value;
-    var sig = document.getElementById("signature").value;
-    
-    
-    if (name != "")
-	return (sig == name);
-
-    else return false;
+    return document.getElementById("signature").checked;
 }	          
 				      </script>
 
@@ -122,11 +115,11 @@ function signature() {
 {% block content %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
-<<<<<<< HEAD
+
   <form action="/forms/signup" method="post" onsubmit="return proceed(true);">
-=======
+
   <form action="/forms/signup" method="post" onsubmit="return proceed();">
->>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
+
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID" value="{{ current_user.netID }}" />
@@ -210,7 +203,7 @@ function signature() {
         </div>
 	
 	<label>I agree to be responsible for all relevant deadlines. (Electronic Signature)</label>
-	<input type="text" name="signature" id="signature"/>
+	<input type="checkbox" name="signature" id="signature" value="yes"/>
         <div id="submit">
           <input type="submit" value="Submit">
         </div>

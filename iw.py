@@ -62,13 +62,13 @@ class LoginPage(webapp2.RequestHandler):
         # blank submissions are unauthorized
         if len(query_params) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
-        elif len(users) == 0:
-            self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
+       # elif len(users) == 0:
+        #    self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
             # # for hacking purposes only
-            # user = User(netID="admin", user_type="administrator")
+            user = User(netID="admin", user_type="administrator")
             # user.put()
-            user = query.get()
+            #user = query.get()
             session['user'] = user
             self.redirect('/')
 
