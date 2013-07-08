@@ -34,9 +34,12 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
+JINJA_ENVIRONMENT.filters['validateNetID'] = validateNetID
 
 TIME_SLEEP = 0.1 # default lenth of time to wait before redirects
 
+# Fix wrong netID redirect in signupform
+# Fix approval netID issue
 # # maybe use in the future for code simplification
 # class BaseHandler(webapp2.RequestHandler):
 
@@ -63,7 +66,7 @@ class LoginPage(webapp2.RequestHandler):
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
             # # for hacking purposes only
-            # user = User(netID="admin", user_type="administrator")
+            #user = User(netID="admin", user_type="administrator")
             # user.put()
             user = query.get()
             session['user'] = user
@@ -163,20 +166,31 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
+        
+        advisor_verified = validateNetID(sf.advisor_netID)
+        
+        if advisor_verified:
+            sf.put()
+            current_user = getCurrentUser(self)
+            current_user.advisor_netID = sf.advisor_netID
+
+            query_params = {'netID': sf.advisor_netID}
+            query = object_query(Faculty, query_params)
+            user_faculty = query.get()
+            user_faculty.student_requests.append(sf.student_netID)
+            user_faculty.student_requests.sort
+            user_faculty.put()
+
+            query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
+            time.sleep(.1)
+            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+        else:
+            self.redirect('/forms/signup')
         # might be able to delete this line b/c its in validate method
-        sf.put()
-
-        current_user = getCurrentUser(self)
-        current_user.advisor_netID = sf.advisor_netID
-
-        query_params = {'netID': sf.advisor_netID}
-        query = object_query(Faculty, query_params)
-        user_faculty = query.get()
-        user_faculty.student_requests.append(sf.student_netID)
-        user_faculty.student_requests.sort
-        user_faculty.put()
-
-        validateFormSubmission(self, sf, current_user)
+     
+        # IMPORTANT!!
+        #validateFormSubmission(self, sf, current_user)
 
 
 class SignUpNotAllowed(webapp2.RequestHandler):
@@ -192,6 +206,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
+
+
+
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -238,6 +256,24 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
 
     def post(self):
+
+        ###### FIX ADVISOR NAME AND ADVISOR NETID (HARDWIRED) & ALL FORMS RELATED TO SR
+        srf = SecondReaderForm(student_name=self.request.get('student_name'),
+                               class_year =int(self.request.get('class_year')),
+                               title = self.request.get('title'),
+                               description = self.request.get('description'),
+                               advisor_name = "olivia",
+                               advisor_netID = "olivia",
+                               sr_name = self.request.get('sr_name'),
+                               sr_netID = self.request.get('sr_netID'),
+                               sr_department = self.request.get('sr_department'),
+                               sr_agreement =bool(self.request.get('sr_agreement')),
+                               sr_signature = self.request.get('sr_signature'),
+                               student_netID = self.request.get('student_netID'),
+                               form_type = 'second_reader'
+                               )
+        validateFormSubmission(self, srf)
+
         current_user = getCurrentUser(self)
         srf = None
         if current_user.user_type == 'student':
@@ -270,6 +306,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
             srf.sr_signature = self.request.get('sr_signature')
 
         validateFormSubmission(self, srf, current_user)
+
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -312,6 +349,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
 class ApproveAdvisees(webapp2.RequestHandler):
     def get(self):
+        
 
         current_user = getCurrentUser(self)
         if current_user.user_type == "student":
@@ -331,12 +369,14 @@ class ApproveAdvisees(webapp2.RequestHandler):
         student = self.request.get('chosen_student')
         if approval == 'yes':
             current_user.student_netIDs.append(student)
+            current_user.student_requests.remove(student)
+            current_user.put()
 
+        else:
+            current_user.student_requests.remove(student)
+            current_user.put()
 
-        current_user.student_requests.remove(student)
-        #self.redirect('/')
-        current_user.put()
-        self.response.write(current_user.student_netIDs)
+        self.redirect('/logout')  
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -692,6 +732,18 @@ class MessageView(webapp2.RequestHandler):
         time.sleep(TIME_SLEEP)
         self.redirect('messages')
 
+class ErrorPage(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            #'messages': getMessages(self),
+            #'current_user': getCurrentUser(self),
+            }
+        template = JINJA_ENVIRONMENT.get_template('error.html')
+        self.response.write(template.render(template_values))
+
+    
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/about', About),
@@ -728,6 +780,7 @@ application = webapp2.WSGIApplication([
     ('/messages', MessageView),
     ('/forms/signupnotallowed', SignUpNotAllowed),
     ('/forms/approve', ApproveAdvisees),
+    ('/error', ErrorPage)
 
 ], debug=True)
 

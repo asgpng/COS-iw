@@ -52,6 +52,7 @@ def validateFormSubmission(self, form, current_user):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = object_query(Form, query_params)
     form = query.fetch(1)[0]
+    alreadySubmitted = False
     if current_user.user_type == 'student':
         if not form.student_submitted:
             alreadySubmitted = False
@@ -129,3 +130,11 @@ def getMessages(self):
         messages.append(query2.fetch())
 
     return messages
+
+
+
+def validateNetID(advisor_netID):
+     query_params = {'netID': advisor_netID}
+     query = object_query(Faculty, query_params)
+     user_faculty = query.get()
+     return (user_faculty != None)
