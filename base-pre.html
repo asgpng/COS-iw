@@ -1,3 +1,4 @@
+<!-- base-pre.html: for users before they have logged in -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -48,68 +49,18 @@
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">Files</li>
-              <!-- <li class="active"><a href="#">Link</a></li> -->
-              <li><a href="/files/new_file">Upload New File</a></li>
-              <li><a href="/files/view_list">Uploaded Files</a></li>
-              <li class="nav-header">Forms</li>
-	          <li class="forms"><a href="/forms/signup">Signup Form</a></li>
-	          <li class="forms"><a href="/forms/checkpoint">Checkpoint Form</a></li>
-	          <li class="forms"><a href="/forms/february">February Progress Form</a></li>(for all 2-semester work)
-	          <li class="forms"><a href="/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
-              <li><a href="/forms/query">Form Query</a></li>
-
-              <!-- custom user links: -->
-    	      {% if current_user.user_type=="faculty" %}
-              <li class="nav-header">Faculty</li>
-              <li><a href="/forms/approve">Approve Students as Advisees</a></li>
-              {% elif current_user.user_type=="administrator" %}
-              <li class="nav-header">Admin</li>
-              <li><a href="/admin/users">View Users</a></li>
-              <a href="/admin/user_upload">User List Upload</a><br>
-              <a href="/admin/user_process_upload">Process User Upload</a>
-              {% endif %}
-              <li><a href="/messages">Messages</a></li>
-            </ul>
+              <li>Welcome to the Princeton COS Independent Work website. Please login to access the rest of the site.</li>
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
           {% block content %}
           {% endblock %}
-	  	  {% block header %}
-	      {% endblock %}
-
-    	  {% if current_user.user_type=="student" %}
- 	      {% block student %}
-    	  {% endblock %}
-	      {% block studentOnly %}
-	      {% endblock %}
-
-	      {% elif current_user.user_type=="faculty" %}
-	      {{ self.student() }}
-	      {% block advisor %}
-	      {% endblock %}
-	      {% block advisorOnly %}
-	      {% endblock %}
-
-    	  {% elif current_user.user_type=="administrator" %}
-	      {% block admin %}
-	      {% endblock %}
-	      {{ self.advisorOnly() }}
-	      {% endif %}
-
-	      {% block submit %}
-	      {% endblock %}
-
         </div><!--/span-->
       </div><!--/row-->
-
       <hr>
-
       <footer>
         <p>&copy; Princeton University 2013</p>
       </footer>
-
     </div><!--/.fluid-container-->
   </body>
 </html>
