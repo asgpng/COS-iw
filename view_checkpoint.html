@@ -3,18 +3,29 @@
 {% block head %}
 <script type="text/javascript">
 
-function radio(read) {
-alert("yo");
-document.getElementById(read).checked=true;
-//document.getElementById(meet).checked=true;
-//document.getElementById(progress).checked=true;
+
+function radios() {
+
+read = {{form.advisor_read_summary}};
+var radiosR = document.getElementsByName('advisor_read_summary');
+radiosR[read].checked = true;
+
+meet = {{form.meet_more_often}}
+var radiosM = document.getElementsByName('meet_more_often');
+radiosM[meet].checked = true;
+
+progress = {{form.student_progress}};
+var radiosP = document.getElementsByName('student_progress');
+radiosP[progress].checked = true;
+
 }
+
+
 </script>
 
 {% endblock %}
 {% block admin %}
 {% block student %}
-<!-- now that we're using Jinja templating, we shouldn't have multiple <body> tags -->
 
   <h2>Checkpoint Form</h2>
 
@@ -48,46 +59,39 @@ document.getElementById(read).checked=true;
     <div>
 	  <label>Student Self Assessment: </label>
 	  <textarea name="self_assessment" rows="5" cols="60" disabled>{{ form.self_assessment }}</textarea>
-    </div>
-   <!-- <body onload"=radio({{form.advisor_read_summary}}, {{form.meet_more_often}}, {{form.student_progress}});">-->
+    </div>  
 {% endblock %}
+
 {% block advisor %}
-<body onload="radio({{form.advisor_read_summary}});">
+<body onload="radios()">
     <h3>Advisor Section:</h3>
     <div>
 	  <label>I read the student's 1-page summary report:</label>
 	  <div class="radio">
 
-	    <input type="radio" name="advisor_read_summary" id="yes_read" disabled/>yes<br>
-	    <input type="radio" name="advisor_read_summary" id="no_read" disabled/>no<br>
-        {% if form.advisor_read_summary == "yes":   %}
-
-	    <body onload="check('one');"></body>
-        <!--{% else: %}
-            <body onload="check(two);"></body>-->
-
-	    {% endif %}
+	    <input type="radio" name="advisor_read_summary" disabled/>Yes<br>
+	    <input type="radio" name="advisor_read_summary" disabled/>No<br>
       </div>
     </div>
     <div>
-	  <label>Would you like your student to meet with you more often? {{form.meet_more_often }}</label>
+	  <label>Would you like your student to meet with you more often?</label>
 	  <div class="radio">
-	    <input type="radio" name="meet_more_often" id="yes_meet" disabled/>yes<br>
-	    <input type="radio" name="meet_more_often" id="no_meet" disabled/>no<br>
+	    <input type="radio" name="meet_more_often" disabled/>Yes<br>
+	    <input type="radio" name="meet_more_often" disabled/>No<br>
       </div>
     </div>
     <br>
     <div>
 	  <label>Student progress:</label>
 	  <div class="radio">
-        <input type="radio" name="student_progress" id="4f" disabled/>Exceptional<br>
-        <input type="radio" name="student_progress" id="3t" disabled/>Very Good<br>
-        <input type="radio" name="student_progress" id="2t" disabled/>Good<br>
-        <input type="radio" name="student_progress" id="1o" disabled/>Unsatisfactory<br>
+        <input type="radio" name="student_progress"  disabled/>Exceptional<br>
+        <input type="radio" name="student_progress"  disabled/>Very Good<br>
+        <input type="radio" name="student_progress"  disabled/>Good<br>
+        <input type="radio" name="student_progress"  disabled/>Unsatisfactory<br>
       </div>
     </div>
     <div>
-	  <label>Comments: <br> [If student progress is  unsatisfactory, explain what steps they need to take to get on track.]</label>
+	  <label>Comments: <br> [If student progress is unsatisfactory, explain what steps they need to take to get on track.]</label>
 	  <textarea name="comments" rows="4" cols="60" disabled>{{ form.comments }}</textarea>
       <hr>
     </div>
