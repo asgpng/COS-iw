@@ -34,9 +34,12 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 # update jinja filter:
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
+JINJA_ENVIRONMENT.filters['validateNetID'] = validateNetID
 
 TIME_SLEEP = 0.1 # default lenth of time to wait before redirects
 
+# Fix wrong netID redirect in signupform
+# Fix approval netID issue
 # # maybe use in the future for code simplification
 # class BaseHandler(webapp2.RequestHandler):
 
@@ -145,22 +148,28 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
+        
+        advisor_verified = validateNetID(sf.advisor_netID)
+        
+        if advisor_verified:
+            sf.put()
+            current_user = getCurrentUser(self)
+            current_user.advisor_netID = sf.advisor_netID
 
-        sf.put()
+            query_params = {'netID': sf.advisor_netID}
+            query = object_query(Faculty, query_params)
+            user_faculty = query.get()
+            user_faculty.student_requests.append(sf.student_netID)
+            user_faculty.student_requests.sort
+            user_faculty.put()
 
-        current_user = getCurrentUser(self)
-        current_user.advisor_netID = sf.advisor_netID
+            query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
+            time.sleep(.1)
+            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
-        query_params = {'netID': sf.advisor_netID}
-        query = object_query(Faculty, query_params)
-        user_faculty = query.get()
-        user_faculty.student_requests.append(sf.student_netID)
-        user_faculty.student_requests.sort
-        user_faculty.put()
+        else:
+            self.redirect('/forms/signup')
 
-        query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-        time.sleep(.1)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
 class SignUpNotAllowed(webapp2.RequestHandler):
     def get(self):
@@ -175,7 +184,6 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        self.response.write(current_user.student_netIDs)
 
         template_values = {
             'current_user': getCurrentUser(self),
@@ -240,7 +248,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_signature = self.request.get('sr_signature'),
                                student_netID = self.request.get('student_netID'),
                                form_type = 'second_reader'
-        )
+                               )
         validateFormSubmission(self, srf)
 
 class FebruaryFormPage(webapp2.RequestHandler):
@@ -667,6 +675,18 @@ class MessageView(webapp2.RequestHandler):
         time.sleep(TIME_SLEEP)
         self.redirect('messages')
 
+class ErrorPage(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            #'messages': getMessages(self),
+            #'current_user': getCurrentUser(self),
+            }
+        template = JINJA_ENVIRONMENT.get_template('error.html')
+        self.response.write(template.render(template_values))
+
+    
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/login', LoginPage),
@@ -701,6 +721,7 @@ application = webapp2.WSGIApplication([
     ('/messages', MessageView),
     ('/forms/signupnotallowed', SignUpNotAllowed),
     ('/forms/approve', ApproveAdvisees),
+    ('/error', ErrorPage)
 
 ], debug=True)
 

@@ -4,7 +4,8 @@
 <script type="text/javascript">
 
   function proceed() {
-    var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4(), signature());
+
+    var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4(), signature()) ;
     if (!proceed) {
 	window.alert("Please check highlighted field(s)!");
   }
@@ -121,7 +122,7 @@ function signature() {
 {% block content %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
-  <form action="/forms/signupform" method="post" onsubmit="return proceed();">
+  <form action="/forms/signup" method="post" onsubmit="return proceed(true);">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID" value="{{ current_user.netID }}" />
