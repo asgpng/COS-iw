@@ -362,9 +362,6 @@ class ApproveAdvisees(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('approve.html')
         self.response.write(template.render(template_values))
 
-        self.response.write(getCurrentUser(self).student_netIDs)
-        self.response.write(getCurrentUser(self).student_requests)
-
     def post(self):
         current_user = getCurrentUser(self)
 
@@ -380,8 +377,6 @@ class ApproveAdvisees(webapp2.RequestHandler):
             current_user.put()
 
         self.redirect('/logout')  
-        #self.response.write(student)
-        #self.response.write(getCurrentUser(self).student_requests)
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
