@@ -397,6 +397,7 @@ class FormQueryResults(webapp2.RequestHandler):
             forms = query2.fetch()
         elif current_user.user_type == 'faculty':
             query2 = query.filter(Form.advisor_netID == current_user.netID)
+            forms = query2.fetch()
         else:
             forms = query.fetch()
 
