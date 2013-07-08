@@ -257,56 +257,28 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
     def post(self):
 
-        ###### FIX ADVISOR NAME AND ADVISOR NETID (HARDWIRED) & ALL FORMS RELATED TO SR
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
+                               student_netID = self.request.get('student_netID'),
                                class_year =int(self.request.get('class_year')),
                                title = self.request.get('title'),
                                description = self.request.get('description'),
-                               advisor_name = "olivia",
-                               advisor_netID = "olivia",
+                               advisor_name = self.request.get('advisor_name'),
+                               advisor_netID = self.request.get('advisor_netID'),
                                sr_name = self.request.get('sr_name'),
                                sr_netID = self.request.get('sr_netID'),
                                sr_department = self.request.get('sr_department'),
-                               sr_agreement =bool(self.request.get('sr_agreement')),
-                               sr_signature = self.request.get('sr_signature'),
-                               student_netID = self.request.get('student_netID'),
                                form_type = 'second_reader'
                                )
-        validateFormSubmission(self, srf)
-
-        current_user = getCurrentUser(self)
-        srf = None
-        if current_user.user_type == 'student':
-            srf = SecondReaderForm(student_name=self.request.get('student_name'),
-                                   student_netID = self.request.get('student_netID'),
-                                   class_year =int(self.request.get('class_year')),
-                                   title = self.request.get('title'),
-                                   description = self.request.get('description'),
-                                   advisor_name = self.request.get('advisor_name'),
-                                   advisor_netID = self.request.get('advisor_netID'),
-                                   sr_name = self.request.get('sr_name'),
-                                   sr_netID = self.request.get('sr_netID'),
-                                   sr_department = self.request.get('sr_department'),
-                                   form_type = 'second_reader'
-                                   )
-            srf.put()
-            query_params = {'netID': srf.sr_netID}
-            query = object_query(Faculty, query_params)
-            user_faculty = query.get()
-            # Right now we append it to general requests.
-            # IS it worth it to specify? How will we distinguish?
-            user_faculty.student_requests.append(srf.student_netID)
-            user_faculty.put()
-        # Broken because there is no choose_students
-        elif current_user.user_type == 'faculty':
-            query_params = {'student_netID': self.request.get('choose_student'), 'form_type': 'second_reader'}
-            query = object_query(Form, query_params)
-            srf = query.get()
-            srf.sr_agreement = self.request.get('sr_agreement')
-            srf.sr_signature = self.request.get('sr_signature')
-
-        validateFormSubmission(self, srf, current_user)
-
+        srf.put()
+        query_params = {'netID': srf.sr_netID}
+        query = object_query(Faculty, query_params)
+        user_faculty = query.get()
+        
+        
+        user_faculty.second_reader_requests.append(srf.student_netID)
+        user_faculty.put()
+        
+       # validateFormSubmission(self, srf, current_user)
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -376,6 +348,8 @@ class ApproveAdvisees(webapp2.RequestHandler):
             current_user.student_requests.remove(student)
             current_user.put()
 
+        time.sleep(TIME_SLEEP)
+        #self.redirect('/forms/approve')
         self.redirect('/logout')  
 
 class FormView(webapp2.RequestHandler):
