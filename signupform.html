@@ -217,6 +217,9 @@ function signature() {
     <div>
   <label>Which student's form do you want to view?</label>
   <select name="students" onchange="netID()">
+    {% for student in current_user.student_netIDs %}
+    <option value="{{student}}">{{student}}</option>
+    {% endfor %}
     {% for student in current_user.student_requests %}
     <option value="{{student}}">{{student}}</option>
     {% endfor %}
