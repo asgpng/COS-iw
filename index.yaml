@@ -22,3 +22,8 @@ indexes:
   - name: userid
   - name: date
     direction: desc
+
+- kind: Message
+  properties:
+  - name: author_netID
+  - name: date
