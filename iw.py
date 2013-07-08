@@ -170,7 +170,7 @@ class SignUpNotAllowed(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
         self.response.write(template.render(template_values))
-        
+
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
@@ -301,7 +301,7 @@ class ApproveAdvisees(webapp2.RequestHandler):
 
     def post(self):
         current_user = getCurrentUser(self)
-        
+
         approval = self.request.get('approve')
         student = self.request.get('student')
         if approval == 'yes':

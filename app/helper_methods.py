@@ -87,9 +87,9 @@ def validateNewUser(self, user):
         user.put()
         time.sleep(0.1)
         # sets the next url using student_netID and form_type
-        self.redirect('/administrative/users?' + urllib.urlencode(query_params))
+        self.redirect('/admin/users?' + urllib.urlencode(query_params))
     else:
-        self.redirect('/administrative/invalid_entry?' + urllib.urlencode(query_params))
+        self.redirect('/admin/invalid_entry?' + urllib.urlencode(query_params))
 
 def getCurrentUser(self):
     session = get_current_session()
