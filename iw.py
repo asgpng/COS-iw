@@ -66,8 +66,8 @@ class LoginPage(webapp2.RequestHandler):
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
             # # for hacking purposes only
-            #user = User(netID="admin", user_type="administrator")
-            # user.put()
+           # user = User(netID="admin", user_type="administrator")
+           # user.put()
             user = query.get()
             session['user'] = user
             self.redirect('/')
@@ -109,7 +109,7 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         user = getCurrentUser(self)
         if user == None:
-            self.redirect('/login')
+            (self.redirect('/login'))
         else:
             template_values = {
                 'current_user': getCurrentUser(self),
@@ -139,9 +139,6 @@ class Contact(webapp2.RequestHandler):
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
-
-        user = getCurrentUser(self)
-
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -150,10 +147,11 @@ class SignupFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        # get the information entered by user
-        current_user = getCurrentUser(self)
-        if current_user == 'student':
 
+        current_user = getCurrentUser(self)
+        
+        if current_user.user_type == 'student':
+            # get the information entered by user
             sf = SignupForm(student_name=self.request.get('student_name'),
                             form_type= 'signup',
                             class_year = int(self.request.get('class_year')),
@@ -183,7 +181,7 @@ class SignupFormPage(webapp2.RequestHandler):
                 user_faculty.put()
 
                 query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-                time.sleep(TIME_SLEEP)
+                time.sleep(.1)
                 self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
             else:
@@ -193,12 +191,12 @@ class SignupFormPage(webapp2.RequestHandler):
         # IMPORTANT!!
         #validateFormSubmission(self, sf, current_user)
 
-
         elif current_user.user_type == 'faculty':
-            query_params = build_query_params(self)
 
-            #self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
-            
+            student = self.request.get('students')
+            query_params2 = {'student_netID':student, 'form_type':'signup'}
+            time.sleep(.1)
+            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -399,7 +397,6 @@ class FormQueryResults(webapp2.RequestHandler):
             forms = query2.fetch()
         elif current_user.user_type == 'faculty':
             query2 = query.filter(Form.advisor_netID == current_user.netID)
-            forms = query.fetch()
         else:
             forms = query.fetch()
 
