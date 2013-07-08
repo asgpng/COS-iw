@@ -68,7 +68,7 @@ class LoginPage(webapp2.RequestHandler):
             # # for hacking purposes only
             # user = User(netID="admin", user_type="administrator")
             # user.put()
-            user = query.fetch()[0]
+            user = query.get()
             session['user'] = user
             self.redirect('/')
 
@@ -113,10 +113,28 @@ class MainPage(webapp2.RequestHandler):
         else:
             template_values = {
                 'current_user': getCurrentUser(self),
-                'url_linktext': getLoginStatus(self.request.uri)[1],
             }
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
+
+class About(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('about.html')
+        self.response.write(template.render(template_values))
+
+class Contact(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('contact.html')
+        self.response.write(template.render(template_values))
+
 
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
@@ -148,6 +166,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
+<<<<<<< HEAD
         
         advisor_verified = validateNetID(sf.advisor_netID)
         
@@ -170,6 +189,23 @@ class SignupFormPage(webapp2.RequestHandler):
         else:
             self.redirect('/forms/signup')
 
+=======
+        # might be able to delete this line b/c its in validate method
+        sf.put()
+
+        current_user = getCurrentUser(self)
+        current_user.advisor_netID = sf.advisor_netID
+
+        query_params = {'netID': sf.advisor_netID}
+        query = object_query(Faculty, query_params)
+        user_faculty = query.get()
+        user_faculty.student_requests.append(sf.student_netID)
+        user_faculty.student_requests.sort
+        user_faculty.put()
+
+        validateFormSubmission(self, sf, current_user)
+
+>>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
 
 class SignUpNotAllowed(webapp2.RequestHandler):
     def get(self):
@@ -179,12 +215,15 @@ class SignUpNotAllowed(webapp2.RequestHandler):
         }
         template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
         self.response.write(template.render(template_values))
-        
+
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -193,9 +232,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        ##### FIX ADVISOR NET ID (HARDWIRED), ALSO CHANGE ADVISOR IN CHECKPOINT FORMS TO ADVISOR_NAME
         cpf = None
-        if getCurrentUser(self).user_type == "student":
+        # get rid of put() methods b/c they're in helper_methods?
+        current_user = getCurrentUser(self)
+        if current_user.user_type == "student":
             cpf = CheckpointForm(student_name=self.request.get('student_name'),
                                  form_type= 'checkpoint',
                                  topic_title = self.request.get('topic_title'),
@@ -205,8 +245,8 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  student_netID = self.request.get('student_netID'),
                                  )
             cpf.put()
-##3# FIX QUERY PARAMS (RIGHT NOW IT ALWAYS GETS THE FIRST OF THE STUDENT NET IDS. IT SHOULD BE THE ONE THEY PICK
-        elif getCurrentUser(self).user_type  == "faculty":
+
+        elif current_user.user_type  == "faculty":
             query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
@@ -216,11 +256,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf.comments = self.request.get('comments')
             cpf.choose_student = self.request.get('choose_student')
 
-        #validateFormSubmission(self, cpf)
-        cpf.put()
-        query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
-        time.sleep(TIME_SLEEP)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+        validateFormSubmission(self, cpf, current_user)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
@@ -234,6 +270,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
 
     def post(self):
+<<<<<<< HEAD
         ###### FIX ADVISOR NAME AND ADVISOR NETID (HARDWIRED) & ALL FORMS RELATED TO SR
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                class_year =int(self.request.get('class_year')),
@@ -250,6 +287,40 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                form_type = 'second_reader'
                                )
         validateFormSubmission(self, srf)
+=======
+        current_user = getCurrentUser(self)
+        srf = None
+        if current_user.user_type == 'student':
+            srf = SecondReaderForm(student_name=self.request.get('student_name'),
+                                   student_netID = self.request.get('student_netID'),
+                                   class_year =int(self.request.get('class_year')),
+                                   title = self.request.get('title'),
+                                   description = self.request.get('description'),
+                                   advisor_name = self.request.get('advisor_name'),
+                                   advisor_netID = self.request.get('advisor_netID'),
+                                   sr_name = self.request.get('sr_name'),
+                                   sr_netID = self.request.get('sr_netID'),
+                                   sr_department = self.request.get('sr_department'),
+                                   form_type = 'second_reader'
+                                   )
+            srf.put()
+            query_params = {'netID': srf.sr_netID}
+            query = object_query(Faculty, query_params)
+            user_faculty = query.get()
+            # Right now we append it to general requests.
+            # IS it worth it to specify? How will we distinguish?
+            user_faculty.student_requests.append(srf.student_netID)
+            user_faculty.put()
+        # Broken because there is no choose_students
+        elif current_user.user_type == 'faculty':
+            query_params = {'student_netID': self.request.get('choose_student'), 'form_type': 'second_reader'}
+            query = object_query(Form, query_params)
+            srf = query.get()
+            srf.sr_agreement = self.request.get('sr_agreement')
+            srf.sr_signature = self.request.get('sr_signature')
+
+        validateFormSubmission(self, srf, current_user)
+>>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -264,34 +335,31 @@ class FebruaryFormPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
-        ###### FIX ADVISOR_NETID (HARDWIRED)
         ff = None
-        if getCurrentUser(self).user_type == 'student':
+        current_user = getCurrentUser(self)
+        if current_user.user_type == 'student':
             ff = FebruaryForm(student_name = self.request.get('student_name'),
                               title = self.request.get('title'),
                               description = self.request.get('description'),
                               advisor_name = self.request.get('advisor_name'),
-                              advisor_netID = "olivia",
+                              advisor_netID = self.request.get('advisor_netID'),
                               number_of_meetings = int(self.request.get('number_of_meetings')),
                               student_comments = self.request.get('student_comments'),
                               student_netID = self.request.get('student_netID'),
                               form_type = 'february'
                               )
-#### DE-HARDWIRE QUERY PARAMS!!!
-        elif getCurrentUser(self).user_type == 'faculty':
-            query_params = {'student_netID': 'myself', 'form_type':'february_form'}
+
+        elif current_user.user_type == 'faculty':
+            query_params = {'student_netID': self.request.get('choose_student'), 'form_type':'february_form'}
             query = object_query(Form, query_params)
             ff = query.fetch(1)[0]
-            ff. advisor_read = bool(self.request.get('advisor_read')),
-            ff. advisor_more_meetings = bool(self.request.get('advisor_more_meetings')),
-            ff. student_progress_eval = int(self.request.get('student_progress_eval')),
-            ff. advisor_comments = self.request.get('advisor_comments')
+            ff.advisor_read = bool(self.request.get('advisor_read')),
+            ff.advisor_more_meetings = bool(self.request.get('advisor_more_meetings')),
+            ff.student_progress_eval = int(self.request.get('student_progress_eval')),
+            ff.advisor_comments = self.request.get('advisor_comments')
 
-#        validateFormSubmission(self, ff)
-        ff.put()
-        query_params2 = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
-        time.sleep(.1)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+        validateFormSubmission(self, ff, current_user)
 
 class ApproveAdvisees(webapp2.RequestHandler):
     def get(self):
@@ -309,13 +377,13 @@ class ApproveAdvisees(webapp2.RequestHandler):
 
     def post(self):
         current_user = getCurrentUser(self)
-        
+
         approval = self.request.get('approve')
         student = self.request.get('chosen_student')
         if approval == 'yes':
             current_user.student_netIDs.append(student)
-       
-       
+
+
         current_user.student_requests.remove(student)
         #self.redirect('/')
         current_user.put()
@@ -689,6 +757,8 @@ class ErrorPage(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
+    ('/about', About),
+    ('/contact', Contact),
     ('/login', LoginPage),
     ('/logout', LogoutPage),
     ('/login/unauthorized', LoginUnauthorizedPage),

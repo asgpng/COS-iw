@@ -103,45 +103,54 @@ return result;
 <h2>Thesis &amp; IW 2 Semester February Progress Form</h2>
 <div class="container">
 {% if  current_user.user_type=="student" %}
-<form action="/forms/februaryform" method="post" onsubmit ="return checkStudent();">
+<form action="/forms/february" method="post" onsubmit ="return checkStudent();">
 {% elif current_user.user_type=="faculty" %}
-<form action="/forms/februaryform" method="post" onsubmit ="return checkAdvisor();">
+<form action="/forms/february" method="post" onsubmit ="return checkAdvisor();">
 {% endif %}
 {% endblock %}
 
 {% block student %}
   <h3>Student Section:</h3>
 
-	<div>
-	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" id="student_netid" value="{{current_user.netID}}" disabled/>
-	</div>
-    <div>
-      <label>Student Name:</label>
-      <input type="text" name="student_name" id="student_name" disabled/>
-    </div>
-    <div>
-      <label>Title of Project:</label>
-      <textarea name="title" id="project_title" rows="2" cols="23"></textarea>
-    </div>
-    <div>
-      <label>Advisor:</label>
-      <input type="text" name="advisor" id="advisor_name"/>
-    </div>
-    <div>
-      <label>Approximate Number of Meetings with Advisor:</label>
-      <!-- add comment: (1, 2, 3-5, etc.) -->
-      <input type="text" name="number_of_meetings" id="number_of_meetings"/>
-    </div>
-    <br>
-    <div>
-      <label>Student Comments:</label>
-      <textarea name="student_comments" id="comments" rows="2" cols="23"></textarea>
-    </div>
+  <div>
+    <label>Student NetID:</label>
+    <input type="text" name="student_netID" id="student_netid"/>
+  </div>
+  <div>
+    <label>Student Name:</label>
+    <input type="text" name="student_name" id="student_name" disabled/>
+  </div>
+  <div>
+    <label>Title of Project:</label>
+    <textarea name="title" id="project_title" rows="2" cols="23"></textarea>
+  </div>
+  <div>
+    <label>Advisor:</label>
+    <input type="text" name="advisor" id="advisor_name"/>
+  </div>
+  <div>
+    <label>Approximate Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
+    <input type="text" name="number_of_meetings" id="number_of_meetings"/>
+  </div>
+  <br>
+  <div>
+    <label>Student Comments:</label>
+    <textarea name="student_comments" id="comments" rows="2" cols="23"></textarea>
+  </div>
 {% endblock %}
 {% block advisor %}
 <body onload="disable()">
     <h3>Advisor Section:</h3>
+    <div>
+      <label>
+	Choose the student for whom you are filling out the form. </label>
+      <select name="choose_student">
+	{% for student in current_user.student_netIDs %}
+	<option value="{{student}}">{{student}}</option>
+	{% endfor %}
+      </select>
+    </div>
+    <br>
     <div>
       <label id="first">I read the student's 5-page progress research paper:</label>
       <div class="radio">
