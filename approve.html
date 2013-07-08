@@ -9,7 +9,7 @@
   <form action="/forms/approve" method="post">
   <div>
     <label>Students by netID</label>
-    <select name="student">
+    <select name="chosen_student">
       {% for student in current_user.student_requests %}
       <option value="{{student}}"> {{ student }} </option>
       {% endfor %}
