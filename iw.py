@@ -298,14 +298,15 @@ class FebruaryFormPage(webapp2.RequestHandler):
                               student_netID = self.request.get('student_netID'),
                               form_type = 'february'
                               )
+            ff.put()
 
         elif current_user.user_type == 'faculty':
-            query_params = {'student_netID': self.request.get('choose_student'), 'form_type':'february_form'}
+            query_params = {'student_netID': self.request.get('choose_student'), 'form_type':'february'}
             query = object_query(Form, query_params)
-            ff = query.fetch(1)[0]
-            ff.advisor_read = bool(self.request.get('advisor_read')),
-            ff.advisor_more_meetings = bool(self.request.get('advisor_more_meetings')),
-            ff.student_progress_eval = int(self.request.get('student_progress_eval')),
+            ff = query.get()
+            ff.advisor_read = self.request.get('advisor_read')
+            ff.advisor_more_meetings = self.request.get('advisor_more_meetings')
+            ff.student_progress_eval = self.request.get('student_progress_eval')
             ff.advisor_comments = self.request.get('advisor_comments')
 
 

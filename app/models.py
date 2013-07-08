@@ -60,9 +60,9 @@ class FebruaryForm(Form):
     number_of_meetings = ndb.IntegerProperty()
     student_comments = ndb.StringProperty()
     advisor_signature = ndb.BooleanProperty()
-    advisor_read = ndb.BooleanProperty()
-    advisor_more_meetings = ndb.BooleanProperty()
-    student_progress_eval = ndb.IntegerProperty(choices=set([1,2,3]))
+    advisor_read = ndb.StringProperty()
+    advisor_more_meetings = ndb.StringProperty()
+    student_progress_eval = ndb.StringProperty()
     advisor_comments = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
