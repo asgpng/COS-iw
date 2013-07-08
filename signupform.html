@@ -21,9 +21,9 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   document.getElementById("class_year").style.backgroundColor='#fa7f00';
 
   if (radio)
-  document.getElementById("test").style.color='#000';
+  document.getElementById("radioHL").style.color='#000';
   else
-  document.getElementById("test").style.color='#fa7f00';
+  document.getElementById("radioHL").style.color='#fa7f00';
 
   if (text1)
   document.getElementById("project_title").style.backgroundColor='#fff';
@@ -46,9 +46,9 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   document.getElementById("advisor_netID").style.backgroundColor='#fa7f00';
 
   if (sig)
-  document.getElementById("signature").style.color='#fff';
+  document.getElementById("sigHL").style.color='#fff';
   else
-  document.getElementById("signature").style.color='#fa7f00';
+  document.getElementById("sigHL").style.color='#fa7f00';
 
   var checked = year && radio && text1 && text2 && text3 && text4 && sig;
   return checked;
@@ -115,11 +115,7 @@ function signature() {
 {% block content %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
-
-  <form action="/forms/signup" method="post" onsubmit="return proceed(true);">
-
   <form action="/forms/signup" method="post" onsubmit="return proceed();">
-
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID" value="{{ current_user.netID }}" />
@@ -132,7 +128,7 @@ function signature() {
         <input type="text" name="class_year" id="class_year"/>
       </div>
       <div>
-        <label id="test">Please check one:</label>
+        <label id="radioHL">Please check one:</label>
 	  </div>
       <div class = "radio">
         <Input type="radio" name="coursework" value="397">397<br>
@@ -202,7 +198,7 @@ function signature() {
 	      </select>
         </div>
 	
-	<label>I agree to be responsible for all relevant deadlines. (Electronic Signature)</label>
+	<label id="sigHL">I agree to be responsible for all relevant deadlines.</label>
 	<input type="checkbox" name="signature" id="signature" value="yes"/>
         <div id="submit">
           <input type="submit" value="Submit">

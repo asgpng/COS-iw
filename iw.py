@@ -188,19 +188,9 @@ class SignupFormPage(webapp2.RequestHandler):
         else:
             self.redirect('/forms/signup')
         # might be able to delete this line b/c its in validate method
-        sf.put()
-
-        current_user = getCurrentUser(self)
-        current_user.advisor_netID = sf.advisor_netID
-
-        query_params = {'netID': sf.advisor_netID}
-        query = object_query(Faculty, query_params)
-        user_faculty = query.get()
-        user_faculty.student_requests.append(sf.student_netID)
-        user_faculty.student_requests.sort
-        user_faculty.put()
-
-        validateFormSubmission(self, sf, current_user)
+     
+        # IMPORTANT!!
+        #validateFormSubmission(self, sf, current_user)
 
 
 class SignUpNotAllowed(webapp2.RequestHandler):
@@ -359,6 +349,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
 class ApproveAdvisees(webapp2.RequestHandler):
     def get(self):
+        
 
         current_user = getCurrentUser(self)
         if current_user.user_type == "student":
@@ -371,6 +362,9 @@ class ApproveAdvisees(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('approve.html')
         self.response.write(template.render(template_values))
 
+        self.response.write(getCurrentUser(self).student_netIDs)
+        self.response.write(getCurrentUser(self).student_requests)
+
     def post(self):
         current_user = getCurrentUser(self)
 
@@ -378,12 +372,16 @@ class ApproveAdvisees(webapp2.RequestHandler):
         student = self.request.get('chosen_student')
         if approval == 'yes':
             current_user.student_netIDs.append(student)
+            current_user.student_requests.remove(student)
+            current_user.put()
 
+        else:
+            current_user.student_requests.remove(student)
+            current_user.put()
 
-        current_user.student_requests.remove(student)
-        #self.redirect('/')
-        current_user.put()
-        self.response.write(current_user.student_netIDs)
+        self.redirect('/logout')  
+        #self.response.write(student)
+        #self.response.write(getCurrentUser(self).student_requests)
 
 class FormView(webapp2.RequestHandler):
     # this shows the results of what has been submitted
