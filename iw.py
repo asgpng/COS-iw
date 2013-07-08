@@ -166,7 +166,6 @@ class SignupFormPage(webapp2.RequestHandler):
                         student_signature = bool(self.request.get('student_signature')),
                         student_netID = self.request.get('student_netID')
                         )
-<<<<<<< HEAD
         
         advisor_verified = validateNetID(sf.advisor_netID)
         
@@ -188,8 +187,6 @@ class SignupFormPage(webapp2.RequestHandler):
 
         else:
             self.redirect('/forms/signup')
-
-=======
         # might be able to delete this line b/c its in validate method
         sf.put()
 
@@ -205,7 +202,6 @@ class SignupFormPage(webapp2.RequestHandler):
 
         validateFormSubmission(self, sf, current_user)
 
->>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
 
 class SignUpNotAllowed(webapp2.RequestHandler):
     def get(self):
@@ -220,10 +216,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-<<<<<<< HEAD
 
-=======
->>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
+
+
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -270,7 +266,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
 
     def post(self):
-<<<<<<< HEAD
+
         ###### FIX ADVISOR NAME AND ADVISOR NETID (HARDWIRED) & ALL FORMS RELATED TO SR
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                class_year =int(self.request.get('class_year')),
@@ -287,7 +283,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                form_type = 'second_reader'
                                )
         validateFormSubmission(self, srf)
-=======
+
         current_user = getCurrentUser(self)
         srf = None
         if current_user.user_type == 'student':
@@ -320,7 +316,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
             srf.sr_signature = self.request.get('sr_signature')
 
         validateFormSubmission(self, srf, current_user)
->>>>>>> 8d7c4561e8d4d14b6d08f8b1fa987ca8cee160c9
+
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
