@@ -51,7 +51,7 @@ def build_query_params(self):
 def validateFormSubmission(self, form, current_user):
     query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
     query = object_query(Form, query_params)
-    form = query.fetch(1)[0]
+    form = query.get()
     alreadySubmitted = False
     if current_user.user_type == 'student':
         if not form.student_submitted:
