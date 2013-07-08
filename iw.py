@@ -141,8 +141,6 @@ class SignupFormPage(webapp2.RequestHandler):
     def get(self):
 
         user = getCurrentUser(self)
-        if user.user_type == "faculty":
-            self.redirect('/forms/signupnotallowed')
 
         template_values = {
             'current_user': getCurrentUser(self),
@@ -153,63 +151,59 @@ class SignupFormPage(webapp2.RequestHandler):
 
     def post(self):
         # get the information entered by user
-        sf = SignupForm(student_name=self.request.get('student_name'),
-                        form_type= 'signup',
-                        class_year = int(self.request.get('class_year')),
-                        coursework = self.request.get('coursework'),
-                        title = self.request.get('title'),
-                        description = self.request.get('description'),
-                        advisor_signature = bool(self.request.get('advisor_signature')),
-                        advisor_name = self.request.get('advisor_name'),
-                        advisor_netID = self.request.get('advisor_netID'),
-                        advisor_department = self.request.get('advisor_department'),
-                        student_signature = bool(self.request.get('student_signature')),
-                        student_netID = self.request.get('student_netID')
-                        )
+        current_user = getCurrentUser(self)
+        if current_user == 'student':
+
+            sf = SignupForm(student_name=self.request.get('student_name'),
+                            form_type= 'signup',
+                            class_year = int(self.request.get('class_year')),
+                            coursework = self.request.get('coursework'),
+                            title = self.request.get('title'),
+                            description = self.request.get('description'),
+                            advisor_signature = bool(self.request.get('advisor_signature')),
+                            advisor_name = self.request.get('advisor_name'),
+                            advisor_netID = self.request.get('advisor_netID'),
+                            advisor_department = self.request.get('advisor_department'),
+                            student_signature = bool(self.request.get('student_signature')),
+                            student_netID = self.request.get('student_netID')
+                            )
         
-        advisor_verified = validateNetID(sf.advisor_netID)
+            advisor_verified = validateNetID(sf.advisor_netID)
         
-        if advisor_verified:
-            sf.put()
-            current_user = getCurrentUser(self)
-            current_user.advisor_netID = sf.advisor_netID
+            if advisor_verified:
+                sf.put()
+                current_user = getCurrentUser(self)
+                current_user.advisor_netID = sf.advisor_netID
 
-            query_params = {'netID': sf.advisor_netID}
-            query = object_query(Faculty, query_params)
-            user_faculty = query.get()
-            user_faculty.student_requests.append(sf.student_netID)
-            user_faculty.student_requests.sort
-            user_faculty.put()
+                query_params = {'netID': sf.advisor_netID}
+                query = object_query(Faculty, query_params)
+                user_faculty = query.get()
+                user_faculty.student_requests.append(sf.student_netID)
+                user_faculty.student_requests.sort
+                user_faculty.put()
 
-            query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-            time.sleep(.1)
-            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+                query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
+                time.sleep(TIME_SLEEP)
+                self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
-        else:
-            self.redirect('/forms/signup')
+            else:
+                self.redirect('/forms/signup')
         # might be able to delete this line b/c its in validate method
      
         # IMPORTANT!!
         #validateFormSubmission(self, sf, current_user)
 
 
-class SignUpNotAllowed(webapp2.RequestHandler):
-    def get(self):
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        template = JINJA_ENVIRONMENT.get_template('signup_not_allowed.html')
-        self.response.write(template.render(template_values))
+        elif current_user.user_type == 'faculty':
+            query_params = build_query_params(self)
+
+            #self.redirect('/forms/query_results?' + urllib.urlencode(query_params))
+            
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-
-
-
-
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -405,6 +399,7 @@ class FormQueryResults(webapp2.RequestHandler):
             forms = query2.fetch()
         elif current_user.user_type == 'faculty':
             query2 = query.filter(Form.advisor_netID == current_user.netID)
+            forms = query.fetch()
         else:
             forms = query.fetch()
 
@@ -752,7 +747,6 @@ application = webapp2.WSGIApplication([
     ('/admin/user_upload', UserUpload),
     ('/admin/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
-    ('/forms/signupnotallowed', SignUpNotAllowed),
     ('/forms/approve', ApproveAdvisees),
     ('/error', ErrorPage)
 
