@@ -65,7 +65,7 @@ class LoginPage(webapp2.RequestHandler):
             # # for hacking purposes only
             # user = User(netID="admin", user_type="administrator")
             # user.put()
-            user = query.fetch()[0]
+            user = query.get()
             session['user'] = user
             self.redirect('/')
 
@@ -110,10 +110,28 @@ class MainPage(webapp2.RequestHandler):
         else:
             template_values = {
                 'current_user': getCurrentUser(self),
-                'url_linktext': getLoginStatus(self.request.uri)[1],
             }
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
+
+class About(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('about.html')
+        self.response.write(template.render(template_values))
+
+class Contact(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('contact.html')
+        self.response.write(template.render(template_values))
+
 
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
@@ -250,7 +268,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
             srf = query.get()
             srf.sr_agreement = self.request.get('sr_agreement')
             srf.sr_signature = self.request.get('sr_signature')
-            
+
         validateFormSubmission(self, srf, current_user)
 
 class FebruaryFormPage(webapp2.RequestHandler):
@@ -313,8 +331,8 @@ class ApproveAdvisees(webapp2.RequestHandler):
         student = self.request.get('chosen_student')
         if approval == 'yes':
             current_user.student_netIDs.append(student)
-       
-       
+
+
         current_user.student_requests.remove(student)
         #self.redirect('/')
         current_user.put()
@@ -676,6 +694,8 @@ class MessageView(webapp2.RequestHandler):
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
+    ('/about', About),
+    ('/contact', Contact),
     ('/login', LoginPage),
     ('/logout', LogoutPage),
     ('/login/unauthorized', LoginUnauthorizedPage),
