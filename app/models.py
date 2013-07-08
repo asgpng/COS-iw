@@ -50,7 +50,7 @@ class CheckpointForm(Form):
     self_assessment = ndb.StringProperty()
     advisor_read_summary = ndb.StringProperty()
     meet_more_often = ndb.StringProperty()
-    student_progress = ndb.IntegerProperty(choices=set([4, 3, 2, 1]))
+    student_progress = ndb.StringProperty()
     comments = ndb.StringProperty()
     choose_student = ndb.StringProperty()
 

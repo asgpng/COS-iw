@@ -230,7 +230,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             cpf = query.get()
             cpf.advisor_read_summary = self.request.get('advisor_read_summary')
             cpf.meet_more_often = self.request.get('meet_more_often')
-            cpf.student_progress = int(self.request.get('student_progress'))
+            cpf.student_progress = self.request.get('student_progress')
             cpf.comments = self.request.get('comments')
             cpf.choose_student = self.request.get('choose_student')
 
