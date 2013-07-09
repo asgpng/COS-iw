@@ -1,0 +1,15 @@
+{
+  "require":{
+    "silex/silex":"1.*",
+    "symfony/form":"*",
+    "twig/twig":"*",
+    "symfony/translation":"*",
+    "symfony/twig-bridge":"*",
+    "symfony/locale":"*",
+    "symfony/validator":"*",
+    "symfony/security":"*",
+    "monolog/monolog":"*",
+    "symfony/monolog-bridge":"*",
+    "symfony/config":"*"
+    }
+}
