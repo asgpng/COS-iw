@@ -218,10 +218,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
         # get rid of put() methods b/c they're in helper_methods?
         current_user = getCurrentUser(self)
         if current_user.user_type == "student":
-            cpf = CheckpointForm(student_name=self.request.get('student_name'),
-                                 form_type= 'checkpoint',
+            cpf = CheckpointForm(student_name = self.request.get('student_name'),
+                                 form_type = 'checkpoint',
                                  project_title = self.request.get('project_title'),
-                                 advisor_name = self.request.get('advisor'),
+                                 advisor_name = self.request.get('advisor_name'),
                                  number_of_meetings = int(self.request.get('number_of_meetings')),
                                  student_self_assessment = self.request.get('student_self_assessment'),
                                  student_netID = self.request.get('student_netID'),
