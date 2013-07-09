@@ -151,8 +151,9 @@ class SignupFormPage(webapp2.RequestHandler):
 
         invalid_netID = False
        
-        if query_params['failed']:
-            invalid_netID = True
+        if len(query_params) > 0:
+            if query_params['failed']:
+                invalid_netID = True
 
         template_values = {
             'current_user': getCurrentUser(self),
