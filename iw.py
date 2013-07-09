@@ -164,7 +164,7 @@ class SignupFormPage(webapp2.RequestHandler):
                             advisor_netID = self.request.get('advisor_netID'),
                             advisor_department = self.request.get('advisor_department'),
                             student_signature = bool(self.request.get('student_signature')),
-                            student_netID = self.request.get('student_netID')
+                            student_netID = self.request.get('student_netID'),
                             )
         
             advisor_verified = validateNetID(sf.advisor_netID)
@@ -197,7 +197,19 @@ class SignupFormPage(webapp2.RequestHandler):
             student = self.request.get('students')
             query_params2 = {'student_netID':student, 'form_type':'signup'}
             time.sleep(.1)
-            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+            if object_query(Form, query_params2).get() == None:
+                self.redirect('/forms/unsubmitted')
+            else:
+                self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+
+class Unsubmitted(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('unsubmitted.html')
+        self.response.write(template.render(template_values))
 
 class CheckPointFormPage(webapp2.RequestHandler):
 
@@ -234,11 +246,14 @@ class CheckPointFormPage(webapp2.RequestHandler):
             query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
-            cpf.advisor_read_summary = self.request.get('advisor_read_summary')
-            cpf.meet_more_often = self.request.get('meet_more_often')
-            cpf.student_progress = self.request.get('student_progress')
-            cpf.comments = self.request.get('comments')
-            cpf.choose_student = self.request.get('choose_student')
+            if cpf == None:
+                self.redirect('/forms/unsubmitted')
+            else:
+                cpf.advisor_read_summary = self.request.get('advisor_read_summary')
+                cpf.meet_more_often = self.request.get('meet_more_often')
+                cpf.student_progress = self.request.get('student_progress')
+                cpf.comments = self.request.get('comments')
+                cpf.choose_student = self.request.get('choose_student')
 
         validateFormSubmission(self, cpf, current_user)
 
@@ -265,7 +280,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_name = self.request.get('sr_name'),
                                sr_netID = self.request.get('sr_netID'),
                                sr_department = self.request.get('sr_department'),
-                               form_type = 'second_reader'
+                               form_type = 'second_reader',
                                )
         srf.put()
         query_params = {'netID': srf.sr_netID}
@@ -310,7 +325,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
                               number_of_meetings = int(self.request.get('number_of_meetings')),
                               student_comments = self.request.get('student_comments'),
                               student_netID = self.request.get('student_netID'),
-                              form_type = 'february'
+                              form_type = 'february',
                               )
             ff.put()
 
@@ -318,11 +333,14 @@ class FebruaryFormPage(webapp2.RequestHandler):
             query_params = {'student_netID': self.request.get('choose_student'), 'form_type':'february'}
             query = object_query(Form, query_params)
             ff = query.get()
-            ff.advisor_read = self.request.get('advisor_read')
-            ff.advisor_more_meetings = self.request.get('advisor_more_meetings')
-            ff.student_progress_eval = self.request.get('student_progress_eval')
-            ff.advisor_comments = self.request.get('advisor_comments')
-            ff.put()
+            if ff == None:
+                self.redirect('/forms/unsubmitted')
+            else:
+                ff.advisor_read = self.request.get('advisor_read')
+                ff.advisor_more_meetings = self.request.get('advisor_more_meetings')
+                ff.student_progress_eval = self.request.get('student_progress_eval')
+                ff.advisor_comments = self.request.get('advisor_comments')
+                ff.put()
 
 
         validateFormSubmission(self, ff, current_user)
@@ -749,6 +767,7 @@ application = webapp2.WSGIApplication([
     ('/logout', LogoutPage),
     ('/login/unauthorized', LoginUnauthorizedPage),
     ('/unauthorized', Unauthorized),
+    ('/forms/unsubmitted',Unsubmitted), 
     ('/forms/signup', SignupFormPage),
     ('/forms/second_reader', SecondReaderFormPage),
     ('/forms/checkpoint', CheckPointFormPage),
