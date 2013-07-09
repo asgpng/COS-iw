@@ -168,7 +168,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         advisor_name = self.request.get('advisor_name'),
                         advisor_netID = self.request.get('advisor_netID'),
                         advisor_department = self.request.get('advisor_department'),
-                        student_netID = self.request.get('student_netID'),
+                        student_netID = self.request.get('student_netID_hidden'),
                         )
         
         advisor_verified = validateNetID(sf.advisor_netID)
@@ -461,19 +461,7 @@ class FormDelete(webapp2.RequestHandler):
         query  = object_query(Form, query_params)
         form = query.fetch(1)[0]
         form.key.delete()
-        self.redirect('/forms/delete/confirmation')
-
-class FormDeleteConfirmation(webapp2.RequestHandler):
-
-    def get(self):
-        query_params = build_query_params(self)
-        template_values = {
-            'current_user': getCurrentUser(self),
-            # 'student_netID':query_params['student_netID'],
-            # 'form_type':query_params['form_type']
-        }
-        template = JINJA_ENVIRONMENT.get_template('form_delete_confirmation.html')
-        self.response.write(template.render(template_values))
+        self.redirect('/forms/query')
 
 class FormInvalid(webapp2.RequestHandler):
 
@@ -671,19 +659,8 @@ class UserDelete(webapp2.RequestHandler):
         query  = object_query(User, query_params)
         user = query.fetch(1)[0]
         user.key.delete()
-        self.redirect('/admin/user_delete/confirmation?' + urllib.urlencode(query_params))
-
-class UserDeleteConfirmation(webapp2.RequestHandler):
-
-    def get(self):
-        query_params = build_query_params(self)
-        template_values = {
-            'netID': query_params['netID'],
-            'user_type': query_params['user_type'],
-            'current_user': getCurrentUser(self),
-        }
-        template = JINJA_ENVIRONMENT.get_template('user_delete_confirmation.html')
-        self.response.write(template.render(template_values))
+        time.sleep(TIME_SLEEP)
+        self.redirect('/admin/users')
 
 class UserViewSingle(webapp2.RequestHandler):
     # this shows the results of what has been submitted
@@ -773,7 +750,6 @@ application = webapp2.WSGIApplication([
     ('/forms/query_results', FormQueryResults),
     ('/forms/query_view', FormQueryView),
     ('/forms/delete', FormDelete),
-    ('/forms/delete/confirmation', FormDeleteConfirmation),
     ('/forms/invalid_entry', FormInvalid),
     ('/files/new_file', NewFile),
     ('/files/upload', UploadHandler),
@@ -784,7 +760,6 @@ application = webapp2.WSGIApplication([
     ('/files/delete', FileDelete),
     ('/admin/users', UserView),
     ('/admin/user_delete', UserDelete),
-    ('/admin/user_delete/confirmation', UserDeleteConfirmation),
     ('/admin/user_view', UserViewSingle),
     ('/admin/invalid_entry', UserInvalid),
     ('/admin/user_upload', UserUpload),

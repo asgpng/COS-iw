@@ -34,7 +34,7 @@ class Form(polymodel.PolyModel):
 
 class SignupForm(Form):
     class_year = ndb.IntegerProperty()
-    coursework = ndb.StringProperty(choices=set(["397", "398", "497", "498", "AB JIW", "AB Senior Thesis", "BSE Senior Thesis"]))
+    coursework = ndb.StringProperty()
     project_title = ndb.StringProperty()
     description = ndb.StringProperty()
     advisor_signature = ndb.BooleanProperty()

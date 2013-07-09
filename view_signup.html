@@ -6,8 +6,9 @@
 
 <script type="text/javascript">
 
-function radio(id) {
-document.getElementById(id).checked=true;
+function radio(index) {
+radios = document.getElementsByName("coursework");
+radios[index].checked = true;
 }
 
 </script>
@@ -22,7 +23,7 @@ document.getElementById(id).checked=true;
 <div class="containter">
   <div>
 	<label>Student NetID:</label>
-	<input type="text" name="student_netID" value=" {{ form.student_netID }}" />
+	<input type="text" name="student_netID" value=" {{ form.student_netID }}" disabled />
   </div>
   <div>
 	<label>Name:</label>
@@ -33,7 +34,7 @@ document.getElementById(id).checked=true;
 	<input type="text" name="class_year" value=" {{ form.class_year }}" disabled/>
   </div>
   <div>
-	<label id="test">Please check one:</label>
+	<label>Please check one:</label>
   </div>
   <div class="radio">
     <input type="radio" name="coursework" value="397" id="397" disabled/>397<br>
@@ -46,7 +47,7 @@ document.getElementById(id).checked=true;
   </div>
   <div>
 	<label>Title of Project:</label>
-	<textarea name="project_title"  rows="2" cols="23" disabled> {{ form.project_title }}</textarea>
+	<textarea name="project_title"  rows="2" cols="23" disabled>{{ form.project_title }}</textarea>
   </div>
   <div>
 	<label>Description:</label>

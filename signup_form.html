@@ -5,7 +5,7 @@
 
   function proceed() {
 
-    var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4(), signature()); 
+    var proceed =  highlight(year(), radio(), text0(), text1(), text2(), text3(), text4(), signature()); 
     if (!proceed) {
 	window.alert("Please check highlighted field(s)!");
   }
@@ -13,7 +13,7 @@
     return proceed;
   }
 
-function highlight(year, radio, text1, text2, text3, text4, sig) {
+function highlight(year, radio, text0, text1, text2, text3, text4, sig) {
 
   if (year)
   document.getElementById("class_year").style.backgroundColor='#fff';
@@ -24,6 +24,11 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   document.getElementById("radioHL").style.color='#000';
   else
   document.getElementById("radioHL").style.color='#fa7f00';
+
+  if (text0)
+  document.getElementById("student_name").style.backgroundColor='#fff';
+  else
+  document.getElementById("student_name").style.backgroundColor='#fa7f00';
 
   if (text1)
   document.getElementById("project_title").style.backgroundColor='#fff';
@@ -50,7 +55,7 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   else
   document.getElementById("sigHL").style.color='#fa7f00';
 
-  var checked = year && radio && text1 && text2 && text3 && text4 && sig;
+  var checked = year && radio && text0 && text1 && text2 && text3 && text4 && sig;
   return checked;
 
   }
@@ -75,6 +80,13 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   }
   return(OK);
   }
+
+function text0() {
+
+    var re = /.+/;
+    var name = document.getElementById("student_name").value;
+    return re.test(name);
+}
 
 function text1() {
 
@@ -112,14 +124,15 @@ function signature() {
 
 {% endblock %}
 
-{% block studentOnly %}
+{% block student %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
   <form action="/forms/signup" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID" value="{{ current_user.netID }}" disabled />
-      <div>
+	  <input type="hidden" name="student_netID_hidden" value="{{ current_user.netID }}">
+	  <div>
         <label>Name:</label>
         <input type="text" name="student_name" id="student_name">
       </div>
@@ -131,17 +144,17 @@ function signature() {
         <label id="radioHL">Please check one:</label>
 	  </div>
       <div class = "radio">
-        <Input type="radio" name="coursework" value="397">397<br>
-        <input type="radio" name="coursework" value="398">398<br>
-        <input type="radio" name="coursework" value="497">497<br>
-        <input type="radio" name="coursework" value="498">498<br>
-        <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
-        <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
-        <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
+        <Input type="radio" name="coursework" value="0">397<br>
+        <input type="radio" name="coursework" value="1">398<br>
+        <input type="radio" name="coursework" value="2">497<br>
+        <input type="radio" name="coursework" value="3">498<br>
+        <input type="radio" name="coursework" value="4">AB JIW<br>
+        <input type="radio" name="coursework" value="5">AB Senior Thesis<br>
+        <input type="radio" name="coursework" value="6">BSE Senior Thesis<br>
 	  </div>
       <div>
         <label>Title of Project:</label>
-        <textarea name="title" id="project_title"></textarea>
+        <textarea name="project_title" id="project_title"></textarea>
       </div>
       <div>
         <label>Description:</label>
