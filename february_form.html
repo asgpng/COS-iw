@@ -10,20 +10,20 @@ document.getElementById("student_name").disabled=true;
 document.getElementById("project_title").disabled=true;
 document.getElementById("advisor_name").disabled=true;
 document.getElementById("number_of_meetings").disabled=true;
-document.getElementById("comments").disabled=true;
+document.getElementById("student_comments").disabled=true;
 
 }
 
 function checkStudent() {
 
-var title = document.getElementById("project_title").value;
+var project_title = document.getElementById("project_title").value;
 var advisor = document.getElementById("advisor_name").value;
 var meetings = document.getElementById("number_of_meetings").value;
 
 var re = /.+/;
 var re2 = /[0-9]+/;
 
-var OK1 = re.test(title);
+var OK1 = re.test(project_title);
 var OK2 = re.test(advisor);
 var OK3 = re2.test(meetings);
 
@@ -116,7 +116,7 @@ return result;
 
   <div>
     <label>Student NetID:</label>
-    <input type="text" name="student_netID" id="student_netid" value="{{current_user.netID}}"/>
+    <input type="text" name="student_netID" id="student_netID" value="{{current_user.netID}}"/>
   </div>
   <div>
     <label>Student Name:</label>
@@ -124,11 +124,15 @@ return result;
   </div>
   <div>
     <label>Title of Project:</label>
-    <textarea name="title" id="project_title" rows="2" cols="23"></textarea>
+    <textarea name="project_title" id="project_title" rows="2" cols="23"></textarea>
   </div>
   <div>
-    <label>Advisor:</label>
-    <input type="text" name="advisor" id="advisor_name"/>
+    <label>Advisor NetID:</label>
+    <input type="text" name="advisor_netID" id="advisor_netID"/>
+  </div>
+  <div>
+    <label>Advisor Name:</label>
+    <input type="text" name="advisor_name" id="advisor_name"/>
   </div>
   <div>
     <label>Approximate Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
@@ -137,7 +141,7 @@ return result;
   <br>
   <div>
     <label>Student Comments:</label>
-    <textarea name="student_comments" id="comments" rows="2" cols="23"></textarea>
+    <textarea name="student_comments" id="student_comments" rows="2" cols="23"></textarea>
   </div>
 {% endblock %}
 {% block advisor %}
@@ -146,7 +150,7 @@ return result;
 
   <div>
     <label>Student NetID:</label>
-    <input type="text" name="student_netID" id="student_netid" value="{{form.student_netID}}"/>
+    <input type="text" name="student_netID" id="student_netID" value="{{form.student_netID}}"/>
   </div>
   <div>
     <label>Student Name:</label>
@@ -154,8 +158,11 @@ return result;
   </div>
   <div>
     <label>Title of Project:</label>
-    <textarea name="title" id="project_title" rows="2" cols="23">{{form.title}}</textarea>
+    <textarea name="project_title" id="project_title" rows="2" cols="23">{{form.project_title}}</textarea>
   </div>
+  <div>
+    <label>Advisor NetID:</label>
+    <input type="text" name="advisor_netID" id="advisor_netID" value="{{form.advisor_netID}}" />
   <div>
     <label>Advisor:</label>
     <input type="text" name="advisor_name" id="advisor_name" value="{{form.advisor_name}}" />
@@ -167,7 +174,7 @@ return result;
   <br>
   <div>
     <label>Student Comments:</label>
-    <textarea name="student_comments" id="comments" rows="2" cols="23">{{form.student_comments}}</textarea>
+    <textarea name="student_comments" id="student_comments" rows="2" cols="23">{{form.student_comments}}</textarea>
   </div>
     <h3>Advisor Section:</h3>
     <div>
@@ -194,7 +201,7 @@ return result;
       </div>
     </div>
     <div>
-      <label>Comments:</label>
+      <label>Advisor Comments:</label>
       <textarea name="advisor_comments" rows="2" cols="23"></textarea>
     </div>
 </body>
