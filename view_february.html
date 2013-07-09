@@ -6,23 +6,24 @@
 
 function radios() {
 
-advisor_read = {{form.advisor_read}};
+read = {{form.advisor_read}};
 var radiosR = document.getElementsByName('advisor_read');
-radiosR[advisor_read].checked = true;
+radiosR[read].checked = true;
 
-advisor_more_meetings = {{form.advisor_more_meetings}}
+meetings = {{form.advisor_more_meetings}}
 var radiosM = document.getElementsByName('advisor_more_meetings');
-radiosM[advisor_more_meetings].checked = true;
+radiosM[meetings].checked = true;
 
-student_progress_eval = {{form.student_progress_eval}};
+progress = {{form.student_progress_eval}};
 var radiosP = document.getElementsByName('student_progress_eval');
-radiosP[student_progress_eval].checked = true;
+radiosP[progress].checked = true;
 
 }
 
 </script>
 
 {% endblock %}
+
 {% block student %}
 <h2>February Form</h2>
 
@@ -31,7 +32,6 @@ radiosP[student_progress_eval].checked = true;
 <br>
 
 <div class="container">
-
   <h3>Student Section:</h3>
   <div>
 	<label>Student NetID:</label>
@@ -63,6 +63,7 @@ radiosP[student_progress_eval].checked = true;
     <textarea name="student_comments" rows="2" cols="23" disabled>{{ form.student_comments }}</textarea>
   </div>
 {% endblock %}
+
 {% block advisor %}
 <body onload="radios()">
   <h3>Advisor Section:</h3>
