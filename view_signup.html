@@ -6,14 +6,13 @@
 
 <script type="text/javascript">
 
-function radio(check) {
-document.getElementById(check).checked=true;
+function radio(id) {
+document.getElementById(id).checked=true;
 }
 
 </script>
 
 {% endblock %}
-
 {% block content %}
 <body onload="radio({{form.coursework}})">
 <h2>Signup Form</h2>
@@ -23,7 +22,7 @@ document.getElementById(check).checked=true;
 <div class="containter">
   <div>
 	<label>Student NetID:</label>
-	<input type="text" name="student_netID" value=" {{ form.student_netID }}" disabled/>
+	<input type="text" name="student_netID" value=" {{ form.student_netID }}" />
   </div>
   <div>
 	<label>Name:</label>
@@ -47,15 +46,15 @@ document.getElementById(check).checked=true;
   </div>
   <div>
 	<label>Title of Project:</label>
-	<textarea name="title" id="title" rows="2" cols="23" disabled>{{ form.title }}</textarea>
+	<textarea name="project_title"  rows="2" cols="23" disabled> {{ form.project_title }}</textarea>
   </div>
   <div>
 	<label>Description:</label>
-	<textarea name="description" id="description" rows="10" cols="23" disabled>{{ form.description }}</textarea>
+	<textarea name="description" rows="10" cols="23" disabled>{{ form.description }}</textarea>
   </div>
   <div>
 	<label>Advisor Name:</label>
-    <input type="text" name="advisor_name" id="advisor_name" value=" {{ form.advisor_name }}" disabled/>
+    <input type="text" name="advisor_name"  value=" {{ form.advisor_name }}" disabled/>
   </div>
   <div>
     <label> Advisor's NetID:</label>
@@ -63,7 +62,7 @@ document.getElementById(check).checked=true;
 </div>
   <div>
     <label>Advisor Department:</label>
-    <input type="text" name="advisor_department" id="advisor_department" value=" {{ form.advisor_department }}" disabled />
+    <input type="text" name="advisor_department" value=" {{ form.advisor_department }}" disabled />
   </div>
 </body>
 <hr>

@@ -118,7 +118,7 @@ function signature() {
   <form action="/forms/signup" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" id="student_netID" value="{{ current_user.netID }}" />
+	  <input type="text" name="student_netID" value="{{ current_user.netID }}" disabled />
       <div>
         <label>Name:</label>
         <input type="text" name="student_name" id="student_name">

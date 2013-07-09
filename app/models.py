@@ -39,9 +39,7 @@ class SignupForm(Form):
     description = ndb.StringProperty()
     advisor_signature = ndb.BooleanProperty()
     advisor_department = ndb.StringProperty()
-    student_signature = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
-    signature = ndb.StringProperty()
     # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
 
 class CheckpointForm(Form):
@@ -52,14 +50,12 @@ class CheckpointForm(Form):
     advisor_more_meetings = ndb.StringProperty()
     student_progress_eval = ndb.StringProperty()
     advisor_comments = ndb.StringProperty()
-    choose_student = ndb.StringProperty()
 
 class FebruaryForm(Form):
     project_title = ndb.StringProperty()
     description = ndb.StringProperty()
     number_of_meetings = ndb.IntegerProperty()
     student_comments = ndb.StringProperty()
-    advisor_signature = ndb.BooleanProperty()
     advisor_read = ndb.StringProperty()
     advisor_more_meetings = ndb.StringProperty()
     student_progress_eval = ndb.StringProperty()
@@ -73,8 +69,6 @@ class SecondReaderForm(Form):
     sr_name = ndb.StringProperty()
     sr_netID = ndb.StringProperty()
     sr_department = ndb.StringProperty()
-    sr_agreement = ndb.BooleanProperty()
-    sr_signature = ndb.StringProperty()
 
 class User(polymodel.PolyModel):
     netID = ndb.StringProperty(required=True)
@@ -89,7 +83,7 @@ class Student(User):
 class Faculty(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
     student_requests = ndb.StringProperty(repeated=True) # list of student requests
-    second_reader_students = ndb.StringProperty(repeated = True)
+    second_reader_requests = ndb.StringProperty(repeated = True)
 
 class Administrator(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
