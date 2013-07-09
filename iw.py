@@ -144,7 +144,7 @@ class SignupFormPage(webapp2.RequestHandler):
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
-        template = JINJA_ENVIRONMENT.get_template('signupform.html')
+        template = JINJA_ENVIRONMENT.get_template('signup_form.html')
         self.response.write(template.render(template_values))
 
     def post(self):
@@ -212,7 +212,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
             }
-        template = JINJA_ENVIRONMENT.get_template('checkpointform.html')
+        template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
         self.response.write(template.render(template_values))
 
     def post(self):
