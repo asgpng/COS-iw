@@ -186,7 +186,7 @@ class SignupFormPage(webapp2.RequestHandler):
             user_faculty.put()
 
             query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-            time.sleep(.1)
+            time.sleep(TIME_SLEEP)
             self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
         else:
@@ -272,11 +272,11 @@ class FebruaryFormPage(webapp2.RequestHandler):
                               advisor_netID = self.request.get('advisor_netID'),
                               number_of_meetings = int(self.request.get('number_of_meetings')),
                               student_comments = self.request.get('student_comments'),
-                              student_netID = self.request.get('student_netID'),
+                              student_netID = self.request.get('student_netID_hidden'),
                               form_type = 'february',
                               )
             ff.put()
-            validateFormSubmission(self, ff, current_user)
+            #validateFormSubmission(self, ff, current_user)
 
         elif current_user.user_type == 'faculty':
             query_params = {'student_netID': self.request.get('student_netID_hidden'), 'form_type':'february'}
@@ -288,7 +288,11 @@ class FebruaryFormPage(webapp2.RequestHandler):
             ff.advisor_comments = self.request.get('advisor_comments')
             ff.put()
        # IMPORTANT!
-        validateFormSubmission(self, ff, current_user)
+        
+        query_params2 = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
+        time.sleep(TIME_SLEEP)
+        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+        #validateFormSubmission(self, ff, current_user)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
