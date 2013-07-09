@@ -45,7 +45,7 @@ class SignupForm(Form):
 class CheckpointForm(Form):
     project_title = ndb.StringProperty()
     number_of_meetings = ndb.IntegerProperty()
-    self_assessment = ndb.StringProperty()
+    student_self_assessment = ndb.StringProperty()
     advisor_read = ndb.StringProperty()
     advisor_more_meetings = ndb.StringProperty()
     student_progress_eval = ndb.StringProperty()

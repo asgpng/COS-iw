@@ -205,13 +205,13 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
-
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-            }
-        template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
-        self.response.write(template.render(template_values))
+        else:
+            template_values = {
+                'current_user': getCurrentUser(self),
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+                }
+            template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
+            self.response.write(template.render(template_values))
 
     def post(self):
         cpf = None
@@ -223,22 +223,22 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  project_title = self.request.get('project_title'),
                                  advisor_name = self.request.get('advisor'),
                                  number_of_meetings = int(self.request.get('number_of_meetings')),
-                                 self_assessment = self.request.get('self_assessment'),
+                                 student_self_assessment = self.request.get('student_self_assessment'),
                                  student_netID = self.request.get('student_netID'),
                                  )
             cpf.put()
 
         elif current_user.user_type  == "faculty":
-            query_params = {'student_netID': self.request.get('choose_student'),'form_type':'checkpoint'}
+            query_params = {'student_netID': self.request.get('student_netID_hidden'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
             if cpf == None:
                 self.redirect('/forms/unsubmitted')
             else:
                 cpf.advisor_read = self.request.get('advisor_read')
-                cpf.advisor_more_meetings = self.request.get('meet_more_often')
+                cpf.advisor_more_meetings = self.request.get('advisor_more_meetings')
                 cpf.student_progress_eval = self.request.get('student_progress_eval')
-                cpf.comments = self.request.get('comments')
+                cpf.advisor_comments = self.request.get('advisor_comments')
 
         validateFormSubmission(self, cpf, current_user)
 
