@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Second Reader Form{% endblock %}
+{% block title %}Sign Up Form{% endblock %}
 {% block head %}
 <script type="text/javascript">
 
   function proceed() {
 
-    var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4(), signature()) ;
+    var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4(), signature()); 
     if (!proceed) {
 	window.alert("Please check highlighted field(s)!");
   }
@@ -118,7 +118,7 @@ function signature() {
   <form action="/forms/signup" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" value="{{ current_user.netID }}" />
+	  <input type="text" name="student_netID" id="student_netID" value="{{ current_user.netID }}" />
       <div>
         <label>Name:</label>
         <input type="text" name="student_name" id="student_name">
@@ -146,11 +146,7 @@ function signature() {
       <div>
         <label>Description:</label>
         <textarea name="description" id="description" rows="10" cols="23"></textarea>
-        <!-- <div> -->
-        <!--   <label>Faculty Approval:</label> -->
-        <!--   <input type="checkbox" name="faculty_signature" value="facultySignature"/>Faculty Approval -->
-        <!-- </div> -->
-        <div>
+                <div>
           <label>Advisor's Name:</label>
           <input type="text" name="advisor_name" id="advisor_name"/>
         </div>
@@ -160,7 +156,7 @@ function signature() {
 	</div>
         <div>
           <label>Advisor's Department:</label>
-	      <select name="advisor_department" id="advisor_department">
+	      <select name="advisor_department">
 	        <option value="ANT">Anthropology</option>
 	        <option value="ARC">Architecture</option>
 	        <option value="ART">Art and Archaeology</option>
@@ -197,9 +193,8 @@ function signature() {
 	        <option value="WWS">Woodrow Wilson School</option>
 	      </select>
         </div>
-	
 	<label id="sigHL">I agree to be responsible for all relevant deadlines.</label>
-	<input type="checkbox" name="signature" id="signature" value="yes"/>
+	<input type="checkbox" name="signature" id="signature"/>
         <div id="submit">
           <input type="submit" value="Submit">
         </div>
@@ -216,15 +211,15 @@ function signature() {
   <form action="/forms/signup" method="post">
     <div>
   <label>Which student's form do you want to view?</label>
-  <select name="students" onchange="netID()">
+  <select name="student_netID">
     {% for student in current_user.student_netIDs %}
-    <option value="{{student}}">{{student}}</option>
+    <option value="{{student}}">{{student}} - Current Advisee</option>
     {% endfor %}
     {% for student in current_user.student_requests %}
-    <option value="{{student}}">{{student}}</option>
+    <option value="{{student}}">{{student}} - Advisor Request Pending</option>
     {% endfor %}
     {% for student in current_user.second_reader_requests %}
-    <option value="{{student}}">{{student}}</option>
+    <option value="{{student}}">{{student}} - Second Reader Request Pending</option>
     {% endfor %}
   </select>
     </div>
