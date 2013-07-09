@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Signup Form{% endblock %}
+
+{% block head %}
+
+<script type="text/javascript">
+
+function radio(check) {
+document.getElementById(check).checked=true;
+}
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+<body onload="radio({{form.coursework}})">
+<h2>Signup Form</h2>
+
+<h3>Your form has been successfully submitted.</h3>
+
+<div class="containter">
+  <div>
+	<label>Student NetID:</label>
+	<input type="text" name="student_netID" value=" {{ form.student_netID }}" disabled/>
+  </div>
+  <div>
+	<label>Name:</label>
+	<input type="text" name="student_name" value=" {{ form.student_name }}" disabled/>
+  </div>
+  <div>
+	<label>Class:</label>
+	<input type="text" name="class_year" value=" {{ form.class_year }}" disabled/>
+  </div>
+  <div>
+	<label id="test">Please check one:</label>
+  </div>
+  <div class="radio">
+    <input type="radio" name="coursework" value="397" id="397" disabled/>397<br>
+    <input type="radio" name="coursework" value="398" id="398" disabled/>398<br>
+    <input type="radio" name="coursework" value="497" id="497" disabled/>497<br>
+    <input type="radio" name="coursework" value="498" id="498" disabled/>498<br>
+    <input type="radio" name="coursework" value="AB JIW" id="AB JIW" disabled/>AB JIW<br>
+    <input type="radio" name="coursework" value="AB Senior Thesis" id="AB Senior Thesis" disabled/>AB Senior Thesis<br>
+    <input type="radio" name="coursework" value="BSE Senior Thesis" id="BSE Senior Thesis" disabled/>BSE Senior Thesis<br>
+  </div>
+  <div>
+	<label>Title of Project:</label>
+	<textarea name="title" id="title" rows="2" cols="23" disabled>{{ form.title }}</textarea>
+  </div>
+  <div>
+	<label>Description:</label>
+	<textarea name="description" id="description" rows="10" cols="23" disabled>{{ form.description }}</textarea>
+  </div>
+  <div>
+	<label>Advisor Name:</label>
+    <input type="text" name="advisor_name" id="advisor_name" value=" {{ form.advisor_name }}" disabled/>
+  </div>
+  <div>
+    <label> Advisor's NetID:</label>
+<input type="text" name="advisor_netID" value =" {{ form.advisor_netID }}" disabled/>
+</div>
+  <div>
+    <label>Advisor Department:</label>
+    <input type="text" name="advisor_department" id="advisor_department" value=" {{ form.advisor_department }}" disabled />
+  </div>
+</body>
+<hr>
+{% endblock %}
