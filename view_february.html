@@ -6,17 +6,17 @@
 
 function radios() {
 
-read = {{form.advisor_read}};
+advisor_read = {{form.advisor_read}};
 var radiosR = document.getElementsByName('advisor_read');
-radiosR[read].checked = true;
+radiosR[advisor_read].checked = true;
 
-meet = {{form.advisor_more_meetings}}
+advisor_more_meetings = {{form.advisor_more_meetings}}
 var radiosM = document.getElementsByName('advisor_more_meetings');
-radiosM[meet].checked = true;
+radiosM[advisor_more_meetings].checked = true;
 
-progress = {{form.student_progress_eval}};
+student_progress_eval = {{form.student_progress_eval}};
 var radiosP = document.getElementsByName('student_progress_eval');
-radiosP[progress].checked = true;
+radiosP[student_progress_eval].checked = true;
 
 }
 
@@ -43,11 +43,15 @@ radiosP[progress].checked = true;
   </div>
   <div>
     <label>Title/Topic:</label>
-    <textarea name="title" rows="2" cols="23" disabled>{{ form.title }}</textarea>
+    <textarea name="project_title" rows="2" cols="23" disabled>{{ form.project_title }}</textarea>
   </div>
   <div>
-    <label>Advisor:</label>
-    <input type="text" name="advisor_id" value=" {{ form.advisor_id }}" disabled/>
+    <label>Advisor NetID:</label>
+    <input type="text" name="advisor_netID" value=" {{ form.advisor_netID }}" disabled/>
+  </div>
+  <div>
+    <label>Advisor Name:</label>
+    <input type="text" name="advisor_name" value=" {{ form.advisor_name }}" disabled/>
   </div>
   <div>
     <label>Approximate Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>

@@ -35,7 +35,7 @@ class Form(polymodel.PolyModel):
 class SignupForm(Form):
     class_year = ndb.IntegerProperty()
     coursework = ndb.StringProperty(choices=set(["397", "398", "497", "498", "AB JIW", "AB Senior Thesis", "BSE Senior Thesis"]))
-    title = ndb.StringProperty()
+    project_title = ndb.StringProperty()
     description = ndb.StringProperty()
     advisor_signature = ndb.BooleanProperty()
     advisor_department = ndb.StringProperty()
@@ -45,17 +45,17 @@ class SignupForm(Form):
     # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
 
 class CheckpointForm(Form):
-    topic_title = ndb.StringProperty()
-    meetings_w_advisor = ndb.IntegerProperty()
+    project_title = ndb.StringProperty()
+    number_of_meetings = ndb.IntegerProperty()
     self_assessment = ndb.StringProperty()
-    advisor_read_summary = ndb.StringProperty()
-    meet_more_often = ndb.StringProperty()
-    student_progress = ndb.StringProperty()
-    comments = ndb.StringProperty()
+    advisor_read = ndb.StringProperty()
+    advisor_more_meetings = ndb.StringProperty()
+    student_progress_eval = ndb.StringProperty()
+    advisor_comments = ndb.StringProperty()
     choose_student = ndb.StringProperty()
 
 class FebruaryForm(Form):
-    title = ndb.StringProperty()
+    project_title = ndb.StringProperty()
     description = ndb.StringProperty()
     number_of_meetings = ndb.IntegerProperty()
     student_comments = ndb.StringProperty()
@@ -68,7 +68,7 @@ class FebruaryForm(Form):
 
 class SecondReaderForm(Form):
     class_year = ndb.IntegerProperty()
-    title = ndb.StringProperty()
+    project_title = ndb.StringProperty()
     description = ndb.StringProperty()
     sr_name = ndb.StringProperty()
     sr_netID = ndb.StringProperty()

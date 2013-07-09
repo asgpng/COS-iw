@@ -68,7 +68,7 @@ class LoginPage(webapp2.RequestHandler):
         else:
             # # for hacking purposes only
             #user = User(netID="admin", user_type="administrator")
-           # user.put()
+            #user.put()
             user = query.get()
             session['user'] = user
             self.redirect('/')
@@ -157,7 +157,7 @@ class SignupFormPage(webapp2.RequestHandler):
                             form_type= 'signup',
                             class_year = int(self.request.get('class_year')),
                             coursework = self.request.get('coursework'),
-                            title = self.request.get('title'),
+                            project_title = self.request.get('project_title'),
                             description = self.request.get('description'),
                             advisor_signature = bool(self.request.get('advisor_signature')),
                             advisor_name = self.request.get('advisor_name'),
@@ -257,23 +257,22 @@ class FebruaryFormPage(webapp2.RequestHandler):
         query_params = {'form_type': 'february'}
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
-
-
-
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-            #'user_type': session["user"].user_type
-        }
-        template = JINJA_ENVIRONMENT.get_template('february_form.html')
-        self.response.write(template.render(template_values))
+        
+        else:
+            template_values = {
+                'current_user': getCurrentUser(self),
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+                #'user_type': session["user"].user_type
+                }
+            template = JINJA_ENVIRONMENT.get_template('february_form.html')
+            self.response.write(template.render(template_values))
 
     def post(self):
         ff = None
         current_user = getCurrentUser(self)
         if current_user.user_type == 'student':
             ff = FebruaryForm(student_name = self.request.get('student_name'),
-                              title = self.request.get('title'),
+                              project_title = self.request.get('project_title'),
                               description = self.request.get('description'),
                               advisor_name = self.request.get('advisor_name'),
                               advisor_netID = self.request.get('advisor_netID'),
@@ -297,7 +296,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
                 ff.advisor_comments = self.request.get('advisor_comments')
                 ff.put()
 
-
+       # IMPORTANT!
         validateFormSubmission(self, ff, current_user)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
