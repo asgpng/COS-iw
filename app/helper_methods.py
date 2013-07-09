@@ -38,7 +38,7 @@ def object_query(object_class, query_params):
     return query
 
 def build_query_params(self):
-    args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID', 'user_type', 'netID']
+    args = ['form_type', 'student_name', 'student_netID', 'advisor_name', 'advisor_netID', 'user_type', 'netID', 'failed']
     query_params = {}
     for arg in args:
         arg_get = self.request.get(arg)

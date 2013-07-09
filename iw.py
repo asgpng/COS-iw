@@ -147,10 +147,18 @@ class SignupFormPage(webapp2.RequestHandler):
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
+        query_params = build_query_params(self)
+
+        invalid_netID = False
+       
+        if query_params['failed']:
+            invalid_netID = True
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
+            'invalid_netID': invalid_netID,
+            }
         template = JINJA_ENVIRONMENT.get_template('signup_form.html')
         self.response.write(template.render(template_values))
 
@@ -190,7 +198,8 @@ class SignupFormPage(webapp2.RequestHandler):
             self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
         else:
-            self.redirect('/forms/signup')
+            query_params = {'failed': True}
+            self.redirect('/forms/signup?' + urllib.urlencode(query_params))
         # might be able to delete this line b/c its in validate method
      
             # IMPORTANT!!
