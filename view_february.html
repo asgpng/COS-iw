@@ -23,7 +23,7 @@ radiosP[progress].checked = true;
 </script>
 
 {% endblock %}
-{% block content %}
+{% block student %}
 <h2>February Form</h2>
 
 
@@ -58,7 +58,8 @@ radiosP[progress].checked = true;
     <label>Student Comments:</label>
     <textarea name="student_comments" rows="2" cols="23" disabled>{{ form.student_comments }}</textarea>
   </div>
-
+{% endblock %}
+{% block advisor %}
 <body onload="radios()">
   <h3>Advisor Section:</h3>
   <div>
