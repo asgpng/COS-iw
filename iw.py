@@ -234,7 +234,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  advisor_name = self.request.get('advisor_name'),
                                  number_of_meetings = int(self.request.get('number_of_meetings')),
                                  student_self_assessment = self.request.get('student_self_assessment'),
-                                 student_netID = self.request.get('student_netID'),
+                                 student_netID = self.request.get('student_netID_hidden'),
                                  )
             cpf.put()
 
@@ -249,8 +249,12 @@ class CheckPointFormPage(webapp2.RequestHandler):
                 cpf.advisor_more_meetings = self.request.get('advisor_more_meetings')
                 cpf.student_progress_eval = self.request.get('student_progress_eval')
                 cpf.advisor_comments = self.request.get('advisor_comments')
+                
 
-        validateFormSubmission(self, cpf, current_user)
+        query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
+        time.sleep(TIME_SLEEP)
+        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+#        validateFormSubmission(self, cpf, current_user)
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
