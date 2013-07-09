@@ -39,9 +39,7 @@ class SignupForm(Form):
     description = ndb.StringProperty()
     advisor_signature = ndb.BooleanProperty()
     advisor_department = ndb.StringProperty()
-    student_signature = ndb.BooleanProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
-    signature = ndb.StringProperty()
     # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
 
 class CheckpointForm(Form):

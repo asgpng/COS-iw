@@ -140,6 +140,13 @@ class Contact(webapp2.RequestHandler):
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
+
+        current_user = getCurrentUser(self)
+        query_params = {'form_type': 'signup'}
+
+        if current_user.user_type == 'faculty':
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -147,61 +154,49 @@ class SignupFormPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('signup_form.html')
         self.response.write(template.render(template_values))
 
+
     def post(self):
 
-        current_user = getCurrentUser(self)
+        # get the information entered by user
+        sf = SignupForm(student_name=self.request.get('student_name'),
+                        form_type= 'signup',
+                        class_year = int(self.request.get('class_year')),
+                        coursework = self.request.get('coursework'),
+                        project_title = self.request.get('project_title'),
+                        description = self.request.get('description'),
+                        advisor_signature = bool(self.request.get('advisor_signature')),
+                        advisor_name = self.request.get('advisor_name'),
+                        advisor_netID = self.request.get('advisor_netID'),
+                        advisor_department = self.request.get('advisor_department'),
+                        student_netID = self.request.get('student_netID'),
+                        )
         
-        if current_user.user_type == 'student':
-            # get the information entered by user
-            sf = SignupForm(student_name=self.request.get('student_name'),
-                            form_type= 'signup',
-                            class_year = int(self.request.get('class_year')),
-                            coursework = self.request.get('coursework'),
-                            project_title = self.request.get('project_title'),
-                            description = self.request.get('description'),
-                            advisor_signature = bool(self.request.get('advisor_signature')),
-                            advisor_name = self.request.get('advisor_name'),
-                            advisor_netID = self.request.get('advisor_netID'),
-                            advisor_department = self.request.get('advisor_department'),
-                            student_signature = bool(self.request.get('student_signature')),
-                            student_netID = self.request.get('student_netID'),
-                            )
+        advisor_verified = validateNetID(sf.advisor_netID)
         
-            advisor_verified = validateNetID(sf.advisor_netID)
-        
-            if advisor_verified:
-                sf.put()
-                current_user = getCurrentUser(self)
-                current_user.advisor_netID = sf.advisor_netID
+        if advisor_verified:
+            sf.put()
+            current_user = getCurrentUser(self)
+            current_user.advisor_netID = sf.advisor_netID
 
-                query_params = {'netID': sf.advisor_netID}
-                query = object_query(Faculty, query_params)
-                user_faculty = query.get()
-                user_faculty.student_requests.append(sf.student_netID)
-                user_faculty.student_requests.sort
-                user_faculty.put()
+            query_params = {'netID': sf.advisor_netID}
+            query = object_query(Faculty, query_params)
+            user_faculty = query.get()
+            user_faculty.student_requests.append(sf.student_netID)
+            user_faculty.student_requests.sort
+            user_faculty.put()
 
-                query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
-                time.sleep(.1)
-                self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+            query_params2 = {'student_netID':sf.student_netID, 'form_type':sf.form_type}
+            time.sleep(.1)
+            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
-            else:
-                self.redirect('/forms/signup')
+        else:
+            self.redirect('/forms/signup')
         # might be able to delete this line b/c its in validate method
      
-        # IMPORTANT!!
+            # IMPORTANT!!
         #validateFormSubmission(self, sf, current_user)
-
-        elif current_user.user_type == 'faculty':
-
-            student = self.request.get('students')
-            query_params2 = {'student_netID':student, 'form_type':'signup'}
-            time.sleep(.1)
-            if object_query(Form, query_params2).get() == None:
-                self.redirect('/forms/unsubmitted')
-            else:
-                self.redirect('/forms/view?' + urllib.urlencode(query_params2))
-
+            
+            
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
@@ -302,8 +297,15 @@ class FebruaryFormPage(webapp2.RequestHandler):
 class SecondReaderFormPage(webapp2.RequestHandler):
 
     def get(self):
+
+        current_user = getCurrentUser(self)
+        query_params = {'form_type': 'second_reader'}
+
+        if current_user.user_type == 'faculty':
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
+        
         template_values = {
-            'current_user': getCurrentUser(self),
+            'current_user': current_user,
             'url_linktext': getLoginStatus(self.request.uri)[1],
         }
         template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
@@ -738,7 +740,7 @@ class StudentSelect(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'current_user': getCurrentUser(self),
-             'form_type': query_params['form_type']
+            'form_type': query_params['form_type']
             }
 
         template = JINJA_ENVIRONMENT.get_template('select.html')
