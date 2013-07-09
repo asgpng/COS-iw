@@ -202,15 +202,6 @@ class SignupFormPage(webapp2.RequestHandler):
             else:
                 self.redirect('/forms/view?' + urllib.urlencode(query_params2))
 
-class Unsubmitted(webapp2.RequestHandler):
-
-    def get(self):
-        template_values = {
-            'current_user': getCurrentUser(self),
-        }
-        template = JINJA_ENVIRONMENT.get_template('unsubmitted.html')
-        self.response.write(template.render(template_values))
-
 class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
@@ -256,42 +247,6 @@ class CheckPointFormPage(webapp2.RequestHandler):
                 cpf.choose_student = self.request.get('choose_student')
 
         validateFormSubmission(self, cpf, current_user)
-
-class SecondReaderFormPage(webapp2.RequestHandler):
-
-    def get(self):
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
-        self.response.write(template.render(template_values))
-
-
-    def post(self):
-
-        srf = SecondReaderForm(student_name=self.request.get('student_name'),
-                               student_netID = self.request.get('student_netID'),
-                               class_year =int(self.request.get('class_year')),
-                               title = self.request.get('title'),
-                               description = self.request.get('description'),
-                               advisor_name = self.request.get('advisor_name'),
-                               advisor_netID = self.request.get('advisor_netID'),
-                               sr_name = self.request.get('sr_name'),
-                               sr_netID = self.request.get('sr_netID'),
-                               sr_department = self.request.get('sr_department'),
-                               form_type = 'second_reader',
-                               )
-        srf.put()
-        query_params = {'netID': srf.sr_netID}
-        query = object_query(Faculty, query_params)
-        user_faculty = query.get()
-        
-        
-        user_faculty.second_reader_requests.append(srf.student_netID)
-        user_faculty.put()
-        
-       # validateFormSubmission(self, srf, current_user)
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -344,6 +299,51 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
 
         validateFormSubmission(self, ff, current_user)
+
+class SecondReaderFormPage(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'url_linktext': getLoginStatus(self.request.uri)[1],
+        }
+        template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
+        self.response.write(template.render(template_values))
+
+
+    def post(self):
+
+        srf = SecondReaderForm(student_name=self.request.get('student_name'),
+                               student_netID = self.request.get('student_netID'),
+                               class_year =int(self.request.get('class_year')),
+                               title = self.request.get('title'),
+                               description = self.request.get('description'),
+                               advisor_name = self.request.get('advisor_name'),
+                               advisor_netID = self.request.get('advisor_netID'),
+                               sr_name = self.request.get('sr_name'),
+                               sr_netID = self.request.get('sr_netID'),
+                               sr_department = self.request.get('sr_department'),
+                               form_type = 'second_reader',
+                               )
+        srf.put()
+        query_params = {'netID': srf.sr_netID}
+        query = object_query(Faculty, query_params)
+        user_faculty = query.get()
+        
+        
+        user_faculty.second_reader_requests.append(srf.student_netID)
+        user_faculty.put()
+        
+       # validateFormSubmission(self, srf, current_user)
+
+class Unsubmitted(webapp2.RequestHandler):
+
+    def get(self):
+        template_values = {
+            'current_user': getCurrentUser(self),
+        }
+        template = JINJA_ENVIRONMENT.get_template('unsubmitted.html')
+        self.response.write(template.render(template_values))
 
 class ApproveAdvisees(webapp2.RequestHandler):
     def get(self):
