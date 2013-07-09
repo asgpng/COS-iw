@@ -220,9 +220,9 @@ class CheckPointFormPage(webapp2.RequestHandler):
         if current_user.user_type == "student":
             cpf = CheckpointForm(student_name=self.request.get('student_name'),
                                  form_type= 'checkpoint',
-                                 topic_title = self.request.get('topic_title'),
+                                 project_title = self.request.get('project_title'),
                                  advisor_name = self.request.get('advisor'),
-                                 meetings_w_advisor = int(self.request.get('meetings_w_advisor')),
+                                 number_of_meetings = int(self.request.get('number_of_meetings')),
                                  self_assessment = self.request.get('self_assessment'),
                                  student_netID = self.request.get('student_netID'),
                                  )
@@ -235,11 +235,10 @@ class CheckPointFormPage(webapp2.RequestHandler):
             if cpf == None:
                 self.redirect('/forms/unsubmitted')
             else:
-                cpf.advisor_read_summary = self.request.get('advisor_read_summary')
-                cpf.meet_more_often = self.request.get('meet_more_often')
-                cpf.student_progress = self.request.get('student_progress')
+                cpf.advisor_read = self.request.get('advisor_read')
+                cpf.advisor_more_meetings = self.request.get('meet_more_often')
+                cpf.student_progress_eval = self.request.get('student_progress_eval')
                 cpf.comments = self.request.get('comments')
-                cpf.choose_student = self.request.get('choose_student')
 
         validateFormSubmission(self, cpf, current_user)
 
@@ -330,7 +329,6 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         query_params = {'netID': srf.sr_netID}
         query = object_query(Faculty, query_params)
         user_faculty = query.get()
-        
         
         user_faculty.second_reader_requests.append(srf.student_netID)
         user_faculty.put()
