@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" type="text/css" href="/iw-php/src/stylesheets/bootstrap.css" />
+    {% block head %}
+    {% if title %}
+    <title>{{title}} - COS IW</title>
+    {% else %}
+    <title>COS IW</title>
+    {% endif %}
+    {% endblock %}
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/silex-test/silex/src/index.php">Princeton COS IW</a>
+          <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+            Logged in as <a href="/iw-php/web/index.php/logout" class="navbar-link">{{app.session.get('user')['netID']}}</a>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="/iw-php/web/index.php">Home</a></li>
+              <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
+              <li><a href="/iw-php/web/index.php/about">About</a></li>
+              <li><a href="/iw-php/web/index.php/contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Files</li>
+              <!-- <li class="active"><a href="#">Link</a></li> -->
+              <li><a href="/iw-php/web/index.php/files/upload">Upload New File</a></li>
+              <li><a href="/iw-php/web/index.php/files/uploads_view">Uploaded Files</a></li>
+              <li class="nav-header">Forms</li>
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/signup">Signup Form</a></li>
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/checkpoint">Checkpoint Form</a></li>
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/february">February Progress Form</a></li>(for all 2-semester work)
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
+              <li class="nav-header">Admin</li>
+              <li><a href="/iw-php/web/index.php/forms/query">Form Query</a></li>
+              <li><a href="/iw-php/web/index.php/admin/user_view">View Users</a></li>
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          {% block content %}
+          {% endblock %}
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Princeton University 2013</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="../assets/js/jquery.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-transition.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-alert.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-modal.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-dropdown.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-scrollspy.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-tab.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-tooltip.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-popover.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-button.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-collapse.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-carousel.js"></script> -->
+    <!-- <script src="../assets/js/bootstrap-typeahead.js"></script> -->
+
+  </body>
+</html>

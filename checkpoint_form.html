@@ -16,35 +16,47 @@ document.getElementById('student_self_assessment').disabled=true;
 
 function checkStudent() {
 
+var student_name = document.getElementById("student_name").value;
+var project_title = document.getElementById("project_title").value;
+var advisor = document.getElementById("advisor_name").value;
+var meetings = document.getElementById("number_of_meetings").value;
+var self_assessment = document.getElementById("student_self_assessment").value;
+
 var re = /.+/;
 var re2 = /[0-9]+/;
 
-var title = re.test(document.getElementById('project_title').value);
-var advisor_name =  re.test(document.getElementById('advisor_name').value);
-var number_of_meetings =  re2.test(document.getElementById('number_of_meetings').value);
-var student_self_assessment =  re.test(document.getElementById('student_self_assessment').value);
+var OK0 = re.test(student_name);
+var OK1 = re.test(project_title);
+var OK2 = re.test(advisor);
+var OK3 = re.test(meetings);
+var OK4 = re.test(self_assessment);
 
-if (title)
-    document.getElementById('project_title').style.backgroundColor = '#fff';
+if (OK0)
+    document.getElementById("student_name").style.backgroundColor = '#fff';
 else
-    document.getElementById('project_title').style.backgroundColor = '#fa7f00';
+    document.getElementById("student_name").style.backgroundColor = '#fa7f00';
 
-if (advisor_name)
-    document.getElementById('advisor_name').style.backgroundColor = '#fff';
+if (OK1)
+    document.getElementById("project_title").style.backgroundColor = '#fff';
 else
-    document.getElementById('advisor_name').style.backgroundColor = '#fa7f00';
+    document.getElementById("project_title").style.backgroundColor = '#fa7f00';
 
-if (meetings)
-    document.getElementById('number_of_meetings').style.backgroundColor = '#fff';
+if (OK2)
+    document.getElementById("advisor_name").style.backgroundColor = '#fff';
 else
-    document.getElementById('number_of_meetings').style.backgroundColor = '#fa7f00';
+    document.getElementById("advisor_name").style.backgroundColor = '#fa7f00';
 
-if (assessment)
-    document.getElementById('student_self_assessment').style.backgroundColor = '#fff';
+if (OK3)
+    document.getElementById("number_of_meetings").style.backgroundColor = '#fff';
 else
-    document.getElementById('student_self_assessment').style.backgroundColor = '#fa7f00';
+    document.getElementById("number_of_meetings").style.backgroundColor = '#fa7f00';
 
-var result = title && advisor_name && number_of_meetings && student_self_assessment;
+if (OK4)
+    document.getElementById("student_self_assessment").style.backgroundColor = '#fff';
+else
+    document.getElementById("student_self_assessment").style.backgroundColor = '#fa7f00';
+
+var result = OK0 && OK1 && OK2 && OK3 && OK4;
 
 if (!result)
     window.alert("Please check highlighted field(s)!");
@@ -52,7 +64,7 @@ if (!result)
 return result;
 }
 
-function checkFaculty() {
+function checkAdvisor() {
 
 var advisor_read = document.getElementsByName('advisor_read');
 var advisor_more_meetings = document.getElementsByName('advisor_more_meetings');
@@ -114,7 +126,7 @@ return result;
 {% if current_user.user_type=="student" %}
 <form action="/forms/checkpoint" method="post" onsubmit="return checkStudent();">
 {% elif current_user.user_type=="faculty" %}
-<form action="/forms/checkpoint" method="post" onsubmit="return checkFaculty();">
+<form action="/forms/checkpoint" method="post" onsubmit="return checkAdvisor();">
 {% endif %}
 {% endblock %}
 {% block studentOnly %}
