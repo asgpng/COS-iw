@@ -3,6 +3,7 @@ import os
 import urllib
 import datetime
 import time
+import re
 
 # web development libraries
 import jinja2
@@ -66,7 +67,7 @@ class LoginPage(webapp2.RequestHandler):
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
             # # for hacking purposes only
-           # user = User(netID="admin", user_type="administrator")
+            #user = User(netID="admin", user_type="administrator")
            # user.put()
             user = query.get()
             session['user'] = user
@@ -202,6 +203,11 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
+        query_params = {'form_type': 'checkpoint'}
+
+        if current_user.user_type == 'faculty':
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -276,6 +282,14 @@ class FebruaryFormPage(webapp2.RequestHandler):
 
     def get(self):
         session = get_current_session()
+        current_user = getCurrentUser(self)
+       
+        query_params = {'form_type': 'february'}
+        if current_user.user_type == 'faculty':
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
+
+
+
         template_values = {
             'current_user': getCurrentUser(self),
             'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -701,17 +715,31 @@ class MessageView(webapp2.RequestHandler):
         time.sleep(TIME_SLEEP)
         self.redirect('messages')
 
-class ErrorPage(webapp2.RequestHandler):
+class StudentSelect(webapp2.RequestHandler):
 
     def get(self):
+        query_params = build_query_params(self)
         template_values = {
-            #'messages': getMessages(self),
-            #'current_user': getCurrentUser(self),
+            'current_user': getCurrentUser(self),
+             'form_type': query_params['form_type']
             }
-        template = JINJA_ENVIRONMENT.get_template('error.html')
+
+        template = JINJA_ENVIRONMENT.get_template('select.html')
         self.response.write(template.render(template_values))
 
-    
+    def post(self):
+        query_params = build_query_params(self)
+        query = object_query(Form, query_params)
+        form = query.get()
+
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'form': form
+            }
+
+        template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
+        self.response.write(template.render(template_values))
+
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -748,7 +776,7 @@ application = webapp2.WSGIApplication([
     ('/admin/user_process_upload', UserProcessUpload),
     ('/messages', MessageView),
     ('/forms/approve', ApproveAdvisees),
-    ('/error', ErrorPage)
+    ('/forms/select?', StudentSelect),
 
 ], debug=True)
 

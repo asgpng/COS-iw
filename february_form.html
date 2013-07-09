@@ -5,6 +5,8 @@
 
 function disable() {
 
+document.getElementById("student_netid").disabled=true;
+document.getElementById("student_name").disabled=true;
 document.getElementById("project_title").disabled=true;
 document.getElementById("advisor_name").disabled=true;
 document.getElementById("number_of_meetings").disabled=true;
@@ -109,7 +111,7 @@ return result;
 {% endif %}
 {% endblock %}
 
-{% block student %}
+{% block studentOnly %}
   <h3>Student Section:</h3>
 
   <div>
@@ -118,7 +120,7 @@ return result;
   </div>
   <div>
     <label>Student Name:</label>
-    <input type="text" name="student_name" id="student_name" disabled/>
+    <input type="text" name="student_name" id="student_name"/>
   </div>
   <div>
     <label>Title of Project:</label>
@@ -140,17 +142,34 @@ return result;
 {% endblock %}
 {% block advisor %}
 <body onload="disable()">
+  <h3>Student Section:</h3>
+
+  <div>
+    <label>Student NetID:</label>
+    <input type="text" name="student_netID" id="student_netid" value="{{form.student_netID}}"/>
+  </div>
+  <div>
+    <label>Student Name:</label>
+    <input type="text" name="student_name" id="student_name" value="{{form.student_name}}" />
+  </div>
+  <div>
+    <label>Title of Project:</label>
+    <textarea name="title" id="project_title" rows="2" cols="23">{{form.title}}</textarea>
+  </div>
+  <div>
+    <label>Advisor:</label>
+    <input type="text" name="advisor_name" id="advisor_name" value="{{form.advisor_name}}" />
+  </div>
+  <div>
+    <label>Approximate Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
+    <input type="text" name="number_of_meetings" id="number_of_meetings" value="{{form.number_of_meetings}}"/>
+  </div>
+  <br>
+  <div>
+    <label>Student Comments:</label>
+    <textarea name="student_comments" id="comments" rows="2" cols="23">{{form.student_comments}}</textarea>
+  </div>
     <h3>Advisor Section:</h3>
-    <div>
-      <label>
-	Choose the student for whom you are filling out the form. </label>
-      <select name="choose_student">
-	{% for student in current_user.student_netIDs %}
-	<option value="{{student}}">{{student}}</option>
-	{% endfor %}
-      </select>
-    </div>
-    <br>
     <div>
       <label id="first">I read the student's 5-page progress research paper:</label>
       <div class="radio">
