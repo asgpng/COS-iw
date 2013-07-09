@@ -276,20 +276,17 @@ class FebruaryFormPage(webapp2.RequestHandler):
                               form_type = 'february',
                               )
             ff.put()
+            validateFormSubmission(self, ff, current_user)
 
         elif current_user.user_type == 'faculty':
-            query_params = {'student_netID': self.request.get('choose_student'), 'form_type':'february'}
+            query_params = {'student_netID': self.request.get('student_netID_hidden'), 'form_type':'february'}
             query = object_query(Form, query_params)
             ff = query.get()
-            if ff == None:
-                self.redirect('/forms/unsubmitted')
-            else:
-                ff.advisor_read = self.request.get('advisor_read')
-                ff.advisor_more_meetings = self.request.get('advisor_more_meetings')
-                ff.student_progress_eval = self.request.get('student_progress_eval')
-                ff.advisor_comments = self.request.get('advisor_comments')
-                ff.put()
-
+            ff.advisor_read = self.request.get('advisor_read')
+            ff.advisor_more_meetings = self.request.get('advisor_more_meetings')
+            ff.student_progress_eval = self.request.get('student_progress_eval')
+            ff.advisor_comments = self.request.get('advisor_comments')
+            ff.put()
        # IMPORTANT!
         validateFormSubmission(self, ff, current_user)
 

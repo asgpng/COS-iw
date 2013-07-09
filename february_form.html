@@ -5,7 +5,7 @@
 
 function disable() {
 
-document.getElementById("student_netid").disabled=true;
+document.getElementById("student_netID").disabled=true;
 document.getElementById("student_name").disabled=true;
 document.getElementById("project_title").disabled=true;
 document.getElementById("advisor_name").disabled=true;
@@ -151,6 +151,7 @@ return result;
   <div>
     <label>Student NetID:</label>
     <input type="text" name="student_netID" id="student_netID" value="{{form.student_netID}}"/>
+    <input type="hidden" name="student_netID_hidden" value="{{form.student_netID}}">
   </div>
   <div>
     <label>Student Name:</label>
