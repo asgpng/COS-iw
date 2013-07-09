@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% block title %}February Form{% endblock %}
-{% block header %}
+{% block head %}
 <script type="text/javascript">
 
 
 function radios() {
-alert("yo");
+
 read = {{form.advisor_read}};
 var radiosR = document.getElementsByName('advisor_read');
 radiosR[read].checked = true;
 
-//meet = {{form.advisor_more_meetings}}
-//var radiosM = document.getElementsByName('advisor_more_meetings');
-//radiosM[meet].checked = true;
+meet = {{form.advisor_more_meetings}}
+var radiosM = document.getElementsByName('advisor_more_meetings');
+radiosM[meet].checked = true;
 
-//progress = {{form.student_progress_eval}};
-//var radiosP = document.getElementsByName('student_progress_eval');
-//radiosP[progress].checked = true;
+progress = {{form.student_progress_eval}};
+var radiosP = document.getElementsByName('student_progress_eval');
+radiosP[progress].checked = true;
 
 }
 

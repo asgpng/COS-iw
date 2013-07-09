@@ -308,6 +308,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
             ff.advisor_more_meetings = self.request.get('advisor_more_meetings')
             ff.student_progress_eval = self.request.get('student_progress_eval')
             ff.advisor_comments = self.request.get('advisor_comments')
+            ff.put()
 
 
         validateFormSubmission(self, ff, current_user)
