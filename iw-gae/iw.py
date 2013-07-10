@@ -37,12 +37,9 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 JINJA_ENVIRONMENT.filters['urlencode'] = do_urlencode
 JINJA_ENVIRONMENT.filters['validateNetID'] = validateNetID
 
-TIME_SLEEP = 0.1 # default lenth of time to wait before redirects
+# default lenth of time to wait before redirects
+TIME_SLEEP = 0.1
 
-# Fix wrong netID redirect in signupform
-# Fix approval netID issue
-# # maybe use in the future for code simplification
-# class BaseHandler(webapp2.RequestHandler):
 
 class LoginPage(webapp2.RequestHandler):
 
@@ -67,8 +64,8 @@ class LoginPage(webapp2.RequestHandler):
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
              # for hacking purposes only
-            user = User(netID="admin", user_type="administrator")
-            user.put()
+            #user = User(netID="admin", user_type="administrator")
+            #user.put()
             user = query.get()
             session['user'] = user
             self.redirect('/')
@@ -140,7 +137,6 @@ class Contact(webapp2.RequestHandler):
 class SignupFormPage(webapp2.RequestHandler):
     # get information from the user
     def get(self):
-
         current_user = getCurrentUser(self)
         query_params = {'form_type': 'signup'}
 
@@ -170,7 +166,6 @@ class SignupFormPage(webapp2.RequestHandler):
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
-
         # get the information entered by user
         sf = SignupForm(student_name=self.request.get('student_name'),
                         form_type= 'signup',
@@ -231,7 +226,6 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def post(self):
         cpf = None
-        # get rid of put() methods b/c they're in helper_methods?
         current_user = getCurrentUser(self)
         if current_user.user_type == "student":
             cpf = CheckpointForm(student_name = self.request.get('student_name'),
@@ -256,7 +250,7 @@ class CheckPointFormPage(webapp2.RequestHandler):
         query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
         time.sleep(TIME_SLEEP)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
-#        validateFormSubmission(self, cpf, current_user)
+
 
 class FebruaryFormPage(webapp2.RequestHandler):
 
@@ -273,7 +267,6 @@ class FebruaryFormPage(webapp2.RequestHandler):
                  template_values = {
                      'current_user': getCurrentUser(self),
                      'url_linktext': getLoginStatus(self.request.uri)[1],
-                     #'user_type': session["user"].user_type
                      }
                  template = JINJA_ENVIRONMENT.get_template('february_form.html')
                  self.response.write(template.render(template_values))
@@ -296,7 +289,6 @@ class FebruaryFormPage(webapp2.RequestHandler):
                               form_type = 'february',
                               )
             ff.put()
-            #validateFormSubmission(self, ff, current_user)
 
         elif current_user.user_type == 'faculty':
             query_params = {'student_netID': self.request.get('student_netID_hidden'), 'form_type':'february'}
@@ -307,17 +299,14 @@ class FebruaryFormPage(webapp2.RequestHandler):
             ff.student_progress_eval = self.request.get('student_progress_eval')
             ff.advisor_comments = self.request.get('advisor_comments')
             ff.put()
-       # IMPORTANT!
         
         query_params2 = {'student_netID':ff.student_netID, 'form_type':ff.form_type}
         time.sleep(TIME_SLEEP)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
-        #validateFormSubmission(self, ff, current_user)
 
 class SecondReaderFormPage(webapp2.RequestHandler):
 
     def get(self):
-
         current_user = getCurrentUser(self)
 
         query_params = {'form_type': 'second_reader'}
@@ -346,7 +335,6 @@ class SecondReaderFormPage(webapp2.RequestHandler):
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
-
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                student_netID = self.request.get('student_netID_hidden'),
                                class_year =int(self.request.get('class_year')),
@@ -414,13 +402,19 @@ class ApproveAdvisees(webapp2.RequestHandler):
         else:
             current_user.student_requests.remove(student)
             current_user.put()
+            query_params = {'student_netID': student}
+            query = object_query(Form, query_params)
+            query = query.fetch()
+            query_length = len(query)
+            for q in range(0, query_length):
+                form = query[q]
+                form.key.delete()
 
         time.sleep(TIME_SLEEP)
-        #self.redirect('/forms/approve')
         self.redirect('/logout')  
 
 class FormView(webapp2.RequestHandler):
-    # this shows the results of what has been submitted
+    # shows the results of what has been submitted
     def get(self):
         # calls helper method
         query_params = build_query_params(self)
@@ -514,7 +508,6 @@ class FormInvalid(webapp2.RequestHandler):
         query_params = build_query_params(self)
         template_values = {
             'current_user': getCurrentUser(self),
-            # 'student_netID': query_params['student_netID'],
             'form_type': query_params['form_type']
         }
         template = JINJA_ENVIRONMENT.get_template('form_invalid.html')
@@ -702,7 +695,16 @@ class UserDelete(webapp2.RequestHandler):
     def get(self):
         query_params = build_query_params(self)
         query  = object_query(User, query_params)
-        user = query.fetch(1)[0]
+        query_params2 = {'student_netID': query_params['netID']}
+        query2 = object_query(Form, query_params2)
+        query2 = query2.fetch()
+        query2_length = len(query2)
+        if query2_length != 0:
+            for q in range(0, query2_length):
+                form = query2[q]
+                form.key.delete()
+
+        user = query.get()
         user.key.delete()
         time.sleep(TIME_SLEEP)
         self.redirect('/admin/users')
