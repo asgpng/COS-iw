@@ -8,7 +8,7 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link rel="stylesheet" type="text/css" href="/src/stylesheets/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/iw-php/src/stylesheets/bootstrap.css" />
     {% block head %}
     {% if title %}
     <title>{{title}} - COS IW</title>
@@ -33,13 +33,13 @@
           <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-            Logged in as <a href="/web/index.php/logout" class="navbar-link">{{app.session.get('user')['netID']}}</a>
+            Logged in as <a href="/iw-php/web/index.php/logout" class="navbar-link">{{app.session.get('user')['netID']}}</a>
             </p>
             <ul class="nav">
               <li class="active"><a href="/index.php">Home</a></li>
               <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
-              <li><a href="/web/index.php/about">About</a></li>
-              <li><a href="/web/index.php/contact">Contact</a></li>
+              <li><a href="/iw-php/web/index.php/about">About</a></li>
+              <li><a href="/iw-php/web/index.php/contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -53,16 +53,16 @@
             <ul class="nav nav-list">
               <li class="nav-header">Files</li>
               <!-- <li class="active"><a href="#">Link</a></li> -->
-              <li><a href="/web/index.php/files/upload">Upload New File</a></li>
-              <li><a href="/web/index.php/files/uploads_view">Uploaded Files</a></li>
+              <li><a href="/iw-php/web/index.php/files/upload">Upload New File</a></li>
+              <li><a href="/iw-php/web/index.php/files/uploads_view">Uploaded Files</a></li>
               <li class="nav-header">Forms</li>
-	          <li class="forms"><a href="/web/index.php/forms/signup">Signup Form</a></li>
-	          <li class="forms"><a href="/web/index.php/forms/checkpoint">Checkpoint Form</a></li>
-	          <li class="forms"><a href="/web/index.php/forms/february">February Progress Form</a></li>(for all 2-semester work)
-	          <li class="forms"><a href="/web/index.php/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/signup">Signup Form</a></li>
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/checkpoint">Checkpoint Form</a></li>
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/february">February Progress Form</a></li>(for all 2-semester work)
+	          <li class="forms"><a href="/iw-php/web/index.php/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
               <li class="nav-header">Admin</li>
-              <li><a href="/web/index.php/forms/query">Form Query</a></li>
-              <li><a href="/web/index.php/admin/user_view">View Users</a></li>
+              <li><a href="/iw-php/web/index.php/forms/query">Form Query</a></li>
+              <li><a href="/iw-php/web/index.php/admin/user_view">View Users</a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
