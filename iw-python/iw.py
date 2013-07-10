@@ -331,7 +331,7 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                student_netID = self.request.get('student_netID'),
                                class_year =int(self.request.get('class_year')),
-                               title = self.request.get('title'),
+                               project_title = self.request.get('project_title'),
                                description = self.request.get('description'),
                                advisor_name = self.request.get('advisor_name'),
                                advisor_netID = self.request.get('advisor_netID'),
@@ -347,6 +347,10 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         
         user_faculty.second_reader_requests.append(srf.student_netID)
         user_faculty.put()
+
+        query_params2 = {'student_netID':srf.student_netID, 'form_type':srf.form_type}
+        time.sleep(TIME_SLEEP)
+        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
         
        # validateFormSubmission(self, srf, current_user)
 
