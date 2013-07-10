@@ -114,7 +114,7 @@ class MainPage(webapp2.RequestHandler):
             }
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
-
+#        self.response.write(user.student_netIDs)
 class About(webapp2.RequestHandler):
 
     def get(self):
@@ -390,28 +390,50 @@ class ApproveAdvisees(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
+       
+
         current_user = getCurrentUser(self)
 
         approval = self.request.get('agreement')
         student = self.request.get('chosen_student')
-        if approval == 'yes':
-            current_user.student_netIDs.append(student)
-            current_user.student_requests.remove(student)
-            current_user.put()
+        
+        if student in current_user.student_netIDs:
+            if approval == 'yes':
+                current_user.student_netIDs.append(student)
+                current_user.student_requests.remove(student)
+                current_user.put()
 
-        else:
-            current_user.student_requests.remove(student)
-            current_user.put()
-            query_params = {'student_netID': student}
-            query = object_query(Form, query_params)
-            query = query.fetch()
-            query_length = len(query)
-            for q in range(0, query_length):
-                form = query[q]
+            else:
+                current_user.student_requests.remove(student)
+                current_user.put()
+                query_params = {'student_netID': student}
+                query = object_query(Form, query_params)
+                query = query.fetch()
+                query_length = len(query)
+                for q in range(0, query_length):
+                    form = query[q]
+                    form.key.delete()
+
+                time.sleep(TIME_SLEEP)
+                self.redirect('/logout')  
+
+        elif student in current_user.second_reader_requests:
+            if approval == 'yes':
+                current_user.second_reader_netIDs.append(student)
+                current_user.second_reader_requests.remove(student)
+                current_user.put()
+
+            else:
+                current_user.second_reader_requests.remove(student)
+                current_user.put()
+                query_params = {'student_netID': student, 'form_type': 'second_reader'}
+                query = object_query(Form, query_params)
+                form = query.get()
                 form.key.delete()
 
         time.sleep(TIME_SLEEP)
         self.redirect('/logout')  
+
 
 class FormView(webapp2.RequestHandler):
     # shows the results of what has been submitted

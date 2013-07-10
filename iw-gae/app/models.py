@@ -83,7 +83,8 @@ class Student(User):
 class Faculty(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
     student_requests = ndb.StringProperty(repeated=True) # list of student requests
+    second_reader_netIDs = ndb.StringProperty(repeated=True) # list of students for which the faculty member is a second reader
     second_reader_requests = ndb.StringProperty(repeated = True)
-
+    
 class Administrator(User):
     student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs

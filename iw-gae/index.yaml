@@ -12,6 +12,11 @@ indexes:
 
 - kind: Form
   properties:
+  - name: student_name
+  - name: student_netID
+
+- kind: Form
+  properties:
   - name: student_netID
   - name: student_name
 
