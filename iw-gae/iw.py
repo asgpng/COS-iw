@@ -352,15 +352,13 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                class_year =int(self.request.get('class_year')),
                                project_title = self.request.get('project_title'),
                                description = self.request.get('description'),
-                               advisor_name = self.request.get('sr_name'),
-                               advisor_netID = self.request.get('sr_netID'),
                                sr_name = self.request.get('sr_name'),
                                sr_netID = self.request.get('sr_netID'),
                                sr_department = self.request.get('sr_department'),
                                form_type = 'second_reader',
                                )
 
-        advisor_verified = validateNetID(srf.advisor_netID)
+        advisor_verified = validateNetID(srf.sr_netID)
         
         if advisor_verified:
             srf.put()
