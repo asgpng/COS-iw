@@ -26,8 +26,16 @@ def index():
 @app.route('/cas-login')
 def cas_login():
     C = CASClient.CASClient()
-    netid = C.Authenticate()
-    return redirect url_for('/')
+    netID = C.Authenticate()
+    user = User.query.filter(User.netID == netID).first()
+    if user != None:
+        current_user = user
+    else:
+        current_user = User(netID=netID, user_type = 'default')
+        db.session.add(current_user)
+        db.session.commit()
+    session['user'] =  current_user
+    return redirect(url_for('/'))
 
 @app.route('/about')
 @template('about.html')
