@@ -1,0 +1,89 @@
+from google.appengine.ext import ndb
+from google.appengine.ext.ndb import polymodel
+from google.appengine.ext import blobstore
+
+# for uploaded files
+class Blob(ndb.Model):
+    date = ndb.DateTimeProperty(auto_now_add=True)
+    author_netID = ndb.StringProperty(required=True)
+    blob_prop = ndb.StringProperty()
+    blob_key = ndb.BlobKeyProperty()
+    filename = ndb.StringProperty()
+    extension = ndb.StringProperty()
+    upload_type = ndb.StringProperty() # for example, user_list
+
+class File(ndb.Model):
+    filename = ndb.StringProperty()
+    content = ndb.BlobProperty()
+    ext = ndb.StringProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
+
+class Message(ndb.Model):
+    author_netID = ndb.StringProperty(required=True)
+    content = ndb.StringProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
+
+class Form(polymodel.PolyModel):
+    form_type = ndb.StringProperty(required=True)
+    student_netID = ndb.StringProperty(required=True)
+    student_name = ndb.StringProperty()
+    advisor_netID = ndb.StringProperty()
+    advisor_name = ndb.StringProperty()
+    student_submitted = ndb.BooleanProperty(default=False)
+    faculty_submitted = ndb.BooleanProperty(default=False)
+
+class SignupForm(Form):
+    class_year = ndb.IntegerProperty()
+    coursework = ndb.StringProperty()
+    project_title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    advisor_signature = ndb.BooleanProperty()
+    advisor_department = ndb.StringProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
+    # consider adding properties = ndb.PickleProperty() which is a list of the properties of each form
+
+class CheckpointForm(Form):
+    project_title = ndb.StringProperty()
+    number_of_meetings = ndb.IntegerProperty()
+    student_self_assessment = ndb.StringProperty()
+    advisor_read = ndb.StringProperty()
+    advisor_more_meetings = ndb.StringProperty()
+    student_progress_eval = ndb.StringProperty()
+    advisor_comments = ndb.StringProperty()
+
+class FebruaryForm(Form):
+    project_title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    number_of_meetings = ndb.IntegerProperty()
+    student_comments = ndb.StringProperty()
+    advisor_read = ndb.StringProperty()
+    advisor_more_meetings = ndb.StringProperty()
+    student_progress_eval = ndb.StringProperty()
+    advisor_comments = ndb.StringProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
+
+class SecondReaderForm(Form):
+    class_year = ndb.IntegerProperty()
+    project_title = ndb.StringProperty()
+    description = ndb.StringProperty()
+    sr_name = ndb.StringProperty()
+    sr_netID = ndb.StringProperty()
+    sr_department = ndb.StringProperty()
+
+class User(polymodel.PolyModel):
+    netID = ndb.StringProperty(required=True)
+    email = ndb.StringProperty()
+    user_type = ndb.StringProperty()
+
+class Student(User):
+    advisor_netID = ndb.StringProperty()
+    second_reader_netID = ndb.StringProperty()
+    forms_submitted = ndb.StringProperty(repeated=True)  # list of submitted forms
+
+class Faculty(User):
+    student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs
+    student_requests = ndb.StringProperty(repeated=True) # list of student requests
+    second_reader_requests = ndb.StringProperty(repeated = True)
+
+class Administrator(User):
+    student_netIDs = ndb.StringProperty(repeated=True)   # list of student netIDs

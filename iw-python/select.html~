@@ -4,16 +4,10 @@
 <div class="container">
   <form action="/forms/select" method="post">
     <div>
-  <label>Please choose a student by netID.</label>
+  <label>Which student's form do you want to view?</label>
   <select name="student_netID" onchange="netID()">
     {% for student in current_user.student_netIDs %}
-    <option value="{{student}}">{{student}} - Current Advisee</option>
-    {% endfor %}
-    {% for student in current_user.student_requests %}
-    <option value="{{student}}">{{student}} - Advisor Request Pending</option>
-    {% endfor %}
-    {% for student in current_user.second_reader_requests %}
-    <option value="{{student}}">{{student}} - Second Reader Request Pending</option>
+    <option value="{{student}}">{{student}}</option>
     {% endfor %}
      </select>
     </div>

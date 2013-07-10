@@ -3,11 +3,6 @@
 {% block header %}
 <script type="text/javascript">
 
-function invalid() {
-
-   alert("The inputted second reader netID was not found on the server!");
-}
-
 function check() {
 
     var proceed =  highlight(year(), text1(), text2(), text3(), text4());
@@ -89,17 +84,13 @@ function text4() {
 {% endblock %}
 
 {% block content %}
-{% if invalid_netID %}
-<body onload=invalid()></body>
-{% endif %}
 <h2> Second Reader Form for IW</h2>
 
 <div class="container">
   <form action="/forms/second_reader" method="post" onsubmit="return check()">
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" value="{{ current_user.netID }}" disabled/>
-	  <input type="hidden" name="student_netID_hidden" value="{{ current_user.netID }}"/>
+	  <input type="text" name="student_netID"/>
 	</div>
     <div>
       <label>Student Name:</label>
