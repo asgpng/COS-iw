@@ -17,3 +17,12 @@ def template(template=None):
             return render_template(template_name, **ctx)
         return decorated_function
     return decorator
+
+def login_user(user):
+    if user != None:
+        current_user = user
+    else:
+        current_user = User(netID=netID, user_type = 'default')
+        db.session.add(current_user)
+        db.session.commit()
+    session['user'] =  current_user

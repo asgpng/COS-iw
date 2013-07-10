@@ -9,10 +9,10 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/iw-flask/app/static/bootstrap.css" />
 
     {% block head %}
-    <title>{% block title %}{% endblock %} - COS IW</title>
+    <title>{{title}} - COS IW</title>
     {% endblock %}
 
   </head>
@@ -31,13 +31,13 @@
           <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-              Logged in as <a href="/logout" class="navbar-link">{{current_user.netID}}</a>
+              Logged in as <a href="/iw-flask/index.cgi/logout" class="navbar-link">{{g.user.netID}}</a>
             </p>
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
+              <li class="active"><a href="/iw-flask/index.cgi/">Home</a></li>
               <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
-              <li><a href="/about">About</a></li>
-              <li><a href="/contact">Contact</a></li>
+              <li><a href="/iw-flask/index.cgi/about">About</a></li>
+              <li><a href="/iw-flask/index.cgi/contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

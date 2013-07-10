@@ -8,13 +8,15 @@ from datetime import datetime
 import time
 import CASClient
 
-current_user = User.query.all()[0] # mock user for debugging
-
 TIME_SLEEP = 0.1
 
 @app.before_request
 def before_request():
-    g.user = current_user
+    if session['user']:
+        user = User.query.filter(netID=session['user'].netID).first()
+    else:
+        user = User(netID='anonymous', user_type='unknown')
+    g.user = user
 
 # general links
 @app.route('/')
@@ -23,11 +25,14 @@ def before_request():
 def index():
     return dict(title = "Home")
 
+# still needs to be debugged (with error logs?)
 @app.route('/cas-login')
 def cas_login():
     C = CASClient.CASClient()
-    netid = C.Authenticate()
-    return redirect url_for('/')
+    netID = C.Authenticate()
+    user = User.query.filter(User.netID == netID).first()
+    login_user(user)
+    return redirect(url_for('/'))
 
 @app.route('/about')
 @template('about.html')
@@ -86,9 +91,13 @@ def form_test():
 
 
 @app.route('/login')
+@template('login.html')
 def login():
-    if g.user is not None:
-        return redirect(url_for('index'))
+    if request.method == 'GET':
+        return dict(title = 'Login',)
+    else:
+        if g.user is not None:
+            return redirect(url_for('index'))
 
 @app.route('/logout')
 @template('logout.html')
