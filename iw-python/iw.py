@@ -149,18 +149,22 @@ class SignupFormPage(webapp2.RequestHandler):
 
         elif current_user.user_type == 'student':
             # alert box if advisor netid does not exist.
-            query_params2 = build_query_params(self)
-            invalid_netID = False
-            if len(query_params2) > 0:
-                if query_params2['failed']:
-                    invalid_netID = True
-            template_values = {
-                'current_user': getCurrentUser(self),
-                'url_linktext': getLoginStatus(self.request.uri)[1],
-                'invalid_netID': invalid_netID,
-            }
-            template = JINJA_ENVIRONMENT.get_template('signup_form.html')
-            self.response.write(template.render(template_values))
+            if not alreadySubmitted(self, current_user.netID, 'signup'):
+                
+                query_params2 = build_query_params(self)
+                invalid_netID = False
+
+                if len(query_params2) > 0:
+                    if query_params2['failed']:
+                        invalid_netID = True
+
+                template_values = {
+                    'current_user': getCurrentUser(self),
+                    'url_linktext': getLoginStatus(self.request.uri)[1],
+                    'invalid_netID': invalid_netID,
+                    }
+                template = JINJA_ENVIRONMENT.get_template('signup_form.html')
+                self.response.write(template.render(template_values))
        
         else:
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
@@ -218,13 +222,14 @@ class CheckPointFormPage(webapp2.RequestHandler):
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
         elif current_user.user_type == 'student':
-            template_values = {
-                'current_user': getCurrentUser(self),
-                'url_linktext': getLoginStatus(self.request.uri)[1],
-                }
-            template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
-            self.response.write(template.render(template_values))
-
+             if not alreadySubmitted(self, current_user.netID, 'checkpoint'):
+                 template_values = {
+                     'current_user': getCurrentUser(self),
+                     'url_linktext': getLoginStatus(self.request.uri)[1],
+                     }
+                 template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
+                 self.response.write(template.render(template_values))
+                 
         else:
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
@@ -268,13 +273,14 @@ class FebruaryFormPage(webapp2.RequestHandler):
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
         
         elif current_user.user_type == 'student':
-            template_values = {
-                'current_user': getCurrentUser(self),
-                'url_linktext': getLoginStatus(self.request.uri)[1],
-                #'user_type': session["user"].user_type
-                }
-            template = JINJA_ENVIRONMENT.get_template('february_form.html')
-            self.response.write(template.render(template_values))
+             if not alreadySubmitted(self, current_user.netID, 'february'):
+                 template_values = {
+                     'current_user': getCurrentUser(self),
+                     'url_linktext': getLoginStatus(self.request.uri)[1],
+                     #'user_type': session["user"].user_type
+                     }
+                 template = JINJA_ENVIRONMENT.get_template('february_form.html')
+                 self.response.write(template.render(template_values))
         
         else:
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
@@ -323,20 +329,21 @@ class SecondReaderFormPage(webapp2.RequestHandler):
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
         elif current_user.user_type == 'student':
-            template_values = {
-                'current_user': current_user,
-                'url_linktext': getLoginStatus(self.request.uri)[1],
-                }
-            template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
-            self.response.write(template.render(template_values))
-
+             if not alreadySubmitted(self, current_user.netID, 'second_reader'):
+                 template_values = {
+                     'current_user': current_user,
+                     'url_linktext': getLoginStatus(self.request.uri)[1],
+                     }
+                 template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
+                 self.response.write(template.render(template_values))
+                 
         else:
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
 
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
-                               student_netID = self.request.get('student_netID'),
+                               student_netID = self.request.get('student_netID_hidden'),
                                class_year =int(self.request.get('class_year')),
                                project_title = self.request.get('project_title'),
                                description = self.request.get('description'),
@@ -809,3 +816,21 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+def alreadySubmitted(self, netID, form_type):
+    query_params = {'student_netID': netID, 'form_type': form_type}
+    query = object_query(Form, query_params)
+    form = query.get()
+    
+    if form == None:
+        return False
+
+    else:
+        template_values = {
+            'current_user': getCurrentUser(self),
+            'form': form
+            }
+
+        template = JINJA_ENVIRONMENT.get_template("view_%s.html" % form.form_type)
+        self.response.write(template.render(template_values))
+        return True
