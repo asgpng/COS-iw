@@ -406,7 +406,7 @@ class ApproveAdvisees(webapp2.RequestHandler):
     def post(self):
         current_user = getCurrentUser(self)
 
-        approval = self.request.get('approve')
+        approval = self.request.get('agreement')
         student = self.request.get('chosen_student')
         if approval == 'yes':
             current_user.student_netIDs.append(student)
