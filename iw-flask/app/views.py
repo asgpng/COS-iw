@@ -101,97 +101,91 @@ def unauthorized():
 # forms
 
 @app.route('/forms/signup')
-@template('form_signup.html')
+@template('forms/signup.html')
 def form_signup():
     return dict(title = 'Signup Form',)
 
 @app.route('/forms/second_reader')
-@template('form_second_reader.html')
+@template('forms/second_reader.html')
 def form_second_reader():
     return dict(title = 'Second Reader Form',)
 
 @app.route('/forms/checkpoint')
-@template('form_second_reader.html')
+@template('forms/second_reader.html')
 def form_checkpoint():
     return dict(title = 'Second Reader Form',)
 
 @app.route('/forms/february')
-@template('form_february.html')
+@template('forms/february.html')
 def form_february():
     return dict(title = 'February Form',)
 
 @app.route('/forms/view/<form_type>')
 def form_view(form_type):
     # need to pass form
-    return render_template('view_%s.html' % form_type,
+    return render_template('forms/view/%s.html' % form_type,
                            title='Form View')
 
 @app.route('/forms/query')
-@template('form_query.html')
+@template('forms/query.html')
 def form_query():
     return dict(title = 'Form Query',)
 
-@app.route('/forms/query/results')
+@app.route('/forms/query/view')
 def form_query_results():
-    return render_template("form_query_results.html",
+    return render_template("forms/view/query.html",
                            title = "Form Query Results",
     )
 
-@app.route('/forms/query/view')
-@template('form_query_view.html')
-def form_query_view():
-    return dict(title = 'Form Query View',)
-
 @app.route('/forms/delete')
-@template('form_delete.html')
+@template('forms/form_delete.html')
 def form_delete():
     return dict(title = 'Form Delete',)
 
 @app.route('/forms/delete/confirmation')
-@template('form_delete_confirmation.html')
+@template('forms/delete_confirmation.html')
 def form_delete_confirmation():
     return dict(title = 'Form Delete Confirmation',)
 
 @app.route('/forms/invalid_entry')
-@template('form_invalid_entry.html')
+@template('forms/invalid.html')
 def form_invalid_entry():
     return dict(title = 'Form Invalid Entry',)
 
-
 @app.route('/forms/signup_not_allowed')
-@template('form_signup_not_allowed.html')
+@template('forms/signup_not_allowed.html')
 def form_signup_not_allowed():
     return dict(title = 'Signup Not Allowed',)
 
 @app.route('/forms/approve_advisees')
-@template('form_approve_advisees.html')
+@template('forms/approve_advisees.html')
 def form_approve_advisees():
     return dict(title = 'Approve Advisees',)
 
 # files
 @app.route('/files/upload')
-@template('files_upload.html')
+@template('files/upload.html')
 def files_upload():
     return dict(title = 'Upload File',)
 
-@app.route('/files/view_list')
-@template('files_view_list.html')
+@app.route('/files/view/list')
+@template('files/view/list.html')
 def files_view_list():
     return dict(title = 'Uploaded Files',)
 
-@app.route('/files/view_single')
-@template('files_view_single.html')
+@app.route('/files/view/single')
+@template('files/view/single.html')
 def files_view_single():
     return dict(title = 'Uploaded File',)
 
 @app.route('/files/delete')
-@template('files_delete.html')
+@template('files/delete.html')
 def files_delete():
     return dict(title = 'Delete Files',)
 
 # admin
 @app.route('/admin/users', methods=['GET', 'POST'])
-@template('users.html')
+@template('admin/users.html')
 def users_view():
     if request.method == 'POST':
         return "hello"
@@ -199,27 +193,27 @@ def users_view():
         return dict(title = 'users',)
 
 @app.route('/admin/user_delete')
-@template('user_delete.html')
+@template('admin/user_delete.html')
 def users_delete():
     return dict(title = 'Delete Users',)
 
 @app.route('/admin/user_delete/confirmation')
-@template('user_delete_confirmation.html')
+@template('admin/user_delete_confirmation.html')
 def users_delete_confirmation():
     return dict(title = 'Delete Users',)
 
 @app.route('/admin/user_view')
-@template('user_view.html')
+@template('admin/user_view.html')
 def users_view_single():
     return dict(title = 'User Profile',)
 
 @app.route('/admin/user_invalid')
-@template('user_invalid.html')
+@template('admin/user_invalid.html')
 def users_invalid():
     return dict(title = 'Invalid User',)
 
 @app.route('/admin/user_upload')
-@template('user_upload.html')
+@template('admin/<user_upload.html')
 def users_upload():
     return dict(title = 'Upload User List',)
 

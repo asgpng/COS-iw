@@ -37,7 +37,7 @@
               Logged in as <a href="/iw-flask/index.cgi/logout" class="navbar-link">{{g.user.netID}}</a>
             </p>
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
+              <li class="active"><a href="/iw-flask/index.cgi/">Home</a></li>
               <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
               <li><a href="/iw-flask/index.cgi/about">About</a></li>
               <li><a href="/iw-flask/index.cgi/contact">Contact</a></li>
@@ -55,13 +55,13 @@
               <li class="nav-header">Files</li>
               <!-- <li class="active"><a href="#">Link</a></li> -->
               <li><a href="/iw-flask/index.cgi/files/upload">Upload New File</a></li>
-              <li><a href="/iw-flask/index.cgi/files/view_list">Uploaded Files</a></li>
+              <li><a href="/iw-flask/index.cgi/files/view/list">Uploaded Files</a></li>
               <li class="nav-header">Forms</li>
 	          <li class="forms"><a href="/iw-flask/index.cgi/forms/signup">Signup Form</a></li>
 	          <li class="forms"><a href="/iw-flask/index.cgi/forms/checkpoint">Checkpoint Form</a></li>
 	          <li class="forms"><a href="/iw-flask/index.cgi/forms/february">February Progress Form</a></li>(for all 2-semester work)
 	          <li class="forms"><a href="/iw-flask/index.cgi/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
-              <li><a href="/forms/query">Form Query</a></li>
+              <li><a href="/iw-flask/index.cgi/forms/query">Form Query</a></li>
 
               <!-- custom user links: -->
     	      {% if g.user.user_type=="faculty" %}
