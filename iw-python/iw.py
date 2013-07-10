@@ -760,8 +760,10 @@ class StudentSelect(webapp2.RequestHandler):
             'current_user': getCurrentUser(self),
             'form': form
             }
-
-        template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
+        if form.form_type == 'checkpoint' or form.form_type == 'february':
+            template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
+        else:
+            template = JINJA_ENVIRONMENT.get_template("view_%s.html" % form.form_type)
         self.response.write(template.render(template_values))
 
 
