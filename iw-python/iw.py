@@ -147,22 +147,23 @@ class SignupFormPage(webapp2.RequestHandler):
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
-        query_params = build_query_params(self)
-
-        invalid_netID = False
-       
-        if len(query_params) > 0:
-            if query_params['failed']:
-                invalid_netID = True
-
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-            'invalid_netID': invalid_netID,
+        elif current_user.user_type == 'student':
+            # alert box if advisor netid does not exist.
+            query_params2 = build_query_params(self)
+            invalid_netID = False
+            if len(query_params2) > 0:
+                if query_params2['failed']:
+                    invalid_netID = True
+            template_values = {
+                'current_user': getCurrentUser(self),
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+                'invalid_netID': invalid_netID,
             }
-        template = JINJA_ENVIRONMENT.get_template('signup_form.html')
-        self.response.write(template.render(template_values))
-
+            template = JINJA_ENVIRONMENT.get_template('signup_form.html')
+            self.response.write(template.render(template_values))
+       
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
 
@@ -211,17 +212,21 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        query_params = {'form_type': 'checkpoint'}
 
+        query_params = {'form_type': 'checkpoint'}
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
-        else:
+
+        elif current_user.user_type == 'student':
             template_values = {
                 'current_user': getCurrentUser(self),
                 'url_linktext': getLoginStatus(self.request.uri)[1],
                 }
             template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
             self.response.write(template.render(template_values))
+
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
         cpf = None
@@ -266,7 +271,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
         
-        else:
+        elif current_user.user_type == 'student':
             template_values = {
                 'current_user': getCurrentUser(self),
                 'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -274,6 +279,9 @@ class FebruaryFormPage(webapp2.RequestHandler):
                 }
             template = JINJA_ENVIRONMENT.get_template('february_form.html')
             self.response.write(template.render(template_values))
+        
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
         ff = None
@@ -313,18 +321,21 @@ class SecondReaderFormPage(webapp2.RequestHandler):
     def get(self):
 
         current_user = getCurrentUser(self)
-        query_params = {'form_type': 'second_reader'}
 
+        query_params = {'form_type': 'second_reader'}
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
-        
-        template_values = {
-            'current_user': current_user,
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
-        self.response.write(template.render(template_values))
 
+        elif current_user.user_type == 'student':
+            template_values = {
+                'current_user': current_user,
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+                }
+            template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
+            self.response.write(template.render(template_values))
+
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
 
