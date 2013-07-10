@@ -206,10 +206,6 @@ class SignupFormPage(webapp2.RequestHandler):
         else:
             query_params = {'failed': True}
             self.redirect('/forms/signup?' + urllib.urlencode(query_params))
-        # might be able to delete this line b/c its in validate method
-     
-            # IMPORTANT!!
-        #validateFormSubmission(self, sf, current_user)
             
             
 class CheckPointFormPage(webapp2.RequestHandler):
@@ -330,9 +326,18 @@ class SecondReaderFormPage(webapp2.RequestHandler):
 
         elif current_user.user_type == 'student':
              if not alreadySubmitted(self, current_user.netID, 'second_reader'):
+                
+                 query_params2 = build_query_params(self)
+                 invalid_netID = False
+
+                 if len(query_params2) > 0:
+                     if query_params2['failed']:
+                         invalid_netID = True
+                 
                  template_values = {
                      'current_user': current_user,
                      'url_linktext': getLoginStatus(self.request.uri)[1],
+                     'invalid_netID': invalid_netID,
                      }
                  template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
                  self.response.write(template.render(template_values))
@@ -354,19 +359,25 @@ class SecondReaderFormPage(webapp2.RequestHandler):
                                sr_department = self.request.get('sr_department'),
                                form_type = 'second_reader',
                                )
-        srf.put()
-        query_params = {'netID': srf.sr_netID}
-        query = object_query(Faculty, query_params)
-        user_faculty = query.get()
-        
-        user_faculty.second_reader_requests.append(srf.student_netID)
-        user_faculty.put()
 
-        query_params2 = {'student_netID':srf.student_netID, 'form_type':srf.form_type}
-        time.sleep(TIME_SLEEP)
-        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+        advisor_verified = validateNetID(srf.advisor_netID)
         
-       # validateFormSubmission(self, srf, current_user)
+        if advisor_verified:
+            srf.put()
+            
+            query_params = {'netID': srf.sr_netID}
+            query = object_query(Faculty, query_params)
+            user_faculty = query.get()
+            user_faculty.second_reader_requests.append(srf.student_netID)
+            user_faculty.put()
+            
+            query_params2 = {'student_netID':srf.student_netID, 'form_type':srf.form_type}
+            time.sleep(TIME_SLEEP)
+            self.redirect('/forms/view?' + urllib.urlencode(query_params2))
+        
+        else:
+            query_params = {'failed': True}
+            self.redirect('/forms/second_reader?' + urllib.urlencode(query_params))
 
 class Unsubmitted(webapp2.RequestHandler):
 

@@ -48,42 +48,6 @@ def build_query_params(self):
     return query_params
 
 
-
-# check if a student has submitted a given form yet
-# in the case of submitted forms, query_params only contains form_type and student_netID
-def validateFormSubmission(self, form, current_user):
-    query_params = {'student_netID':form.student_netID,'form_type':form.form_type}
-    query = object_query(Form, query_params)
-    form = query.get()
-    alreadySubmitted = False
-    if current_user.user_type == 'student':
-        if not form.student_submitted:
-            alreadySubmitted = False
-            form.student_submitted = True
-        else:
-            alreadySubmitted = True
-    elif current_user.user_type == 'faculty':
-        if not form.faculty_submitted:
-            alreadySubmitted = False
-            form.faculty_submitted = True
-        else:
-            alreadySubmitted = True
-
-    # update relevant datastore properties
-    if not alreadySubmitted:
-        # first, add form to database
-        form.put()
-        time.sleep(0.1) # to allow datastore write before redirect and query
-        if current_user.user_type == 'student':
-            # update student's submitted forms list
-            current_user.forms_submitted.append(form.form_type)
-            current_user.put()
-        # set the next url using student_netID and form_type
-        self.redirect('/forms/view?' + urllib.urlencode(query_params))
-
-    else:
-        self.redirect('/forms/invalid_entry?' + urllib.urlencode(query_params))
-
 def validateNewUser(self, user):
     query_params = {'netID':user.netID,'user_type':user.user_type}
     query = object_query(User, query_params)
