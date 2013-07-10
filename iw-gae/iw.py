@@ -397,7 +397,7 @@ class ApproveAdvisees(webapp2.RequestHandler):
         approval = self.request.get('agreement')
         student = self.request.get('chosen_student')
         
-        if student in current_user.student_netIDs:
+        if student in current_user.student_requests:
             if approval == 'yes':
                 current_user.student_netIDs.append(student)
                 current_user.student_requests.remove(student)
@@ -414,8 +414,6 @@ class ApproveAdvisees(webapp2.RequestHandler):
                     form = query[q]
                     form.key.delete()
 
-                time.sleep(TIME_SLEEP)
-                self.redirect('/logout')  
 
         elif student in current_user.second_reader_requests:
             if approval == 'yes':
