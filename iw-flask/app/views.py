@@ -8,13 +8,15 @@ from datetime import datetime
 import time
 import CASClient
 
-
-
 TIME_SLEEP = 0.1
 
 @app.before_request
 def before_request():
-    g.user = User.query.first() # mock user for debugging
+    if session['user']:
+        user = User.query.filter(netID=session['user'].netID).first()
+    else:
+        user = User(netID='anonymous', user_type='unknown')
+    g.user = user
 
 # general links
 @app.route('/')
@@ -29,13 +31,7 @@ def cas_login():
     C = CASClient.CASClient()
     netID = C.Authenticate()
     user = User.query.filter(User.netID == netID).first()
-    if user != None:
-        current_user = user
-    else:
-        current_user = User(netID=netID, user_type = 'default')
-        db.session.add(current_user)
-        db.session.commit()
-    session['user'] =  current_user
+    login_user(user)
     return redirect(url_for('/'))
 
 @app.route('/about')
@@ -100,7 +96,6 @@ def login():
     if request.method == 'GET':
         return dict(title = 'Login',)
     else:
-
         if g.user is not None:
             return redirect(url_for('index'))
 
