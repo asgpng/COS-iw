@@ -66,9 +66,9 @@ class LoginPage(webapp2.RequestHandler):
         elif len(users) == 0:
             self.redirect('login/unauthorized?'+urllib.urlencode(query_params))
         else:
-            # # for hacking purposes only
-            #user = User(netID="admin", user_type="administrator")
-            #user.put()
+             # for hacking purposes only
+            user = User(netID="admin", user_type="administrator")
+            user.put()
             user = query.get()
             session['user'] = user
             self.redirect('/')
@@ -147,22 +147,23 @@ class SignupFormPage(webapp2.RequestHandler):
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
-        query_params = build_query_params(self)
-
-        invalid_netID = False
-       
-        if len(query_params) > 0:
-            if query_params['failed']:
-                invalid_netID = True
-
-        template_values = {
-            'current_user': getCurrentUser(self),
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-            'invalid_netID': invalid_netID,
+        elif current_user.user_type == 'student':
+            # alert box if advisor netid does not exist.
+            query_params2 = build_query_params(self)
+            invalid_netID = False
+            if len(query_params2) > 0:
+                if query_params2['failed']:
+                    invalid_netID = True
+            template_values = {
+                'current_user': getCurrentUser(self),
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+                'invalid_netID': invalid_netID,
             }
-        template = JINJA_ENVIRONMENT.get_template('signup_form.html')
-        self.response.write(template.render(template_values))
-
+            template = JINJA_ENVIRONMENT.get_template('signup_form.html')
+            self.response.write(template.render(template_values))
+       
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
 
@@ -211,17 +212,21 @@ class CheckPointFormPage(webapp2.RequestHandler):
 
     def get(self):
         current_user = getCurrentUser(self)
-        query_params = {'form_type': 'checkpoint'}
 
+        query_params = {'form_type': 'checkpoint'}
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
-        else:
+
+        elif current_user.user_type == 'student':
             template_values = {
                 'current_user': getCurrentUser(self),
                 'url_linktext': getLoginStatus(self.request.uri)[1],
                 }
             template = JINJA_ENVIRONMENT.get_template('checkpoint_form.html')
             self.response.write(template.render(template_values))
+
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
         cpf = None
@@ -236,21 +241,17 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  student_self_assessment = self.request.get('student_self_assessment'),
                                  student_netID = self.request.get('student_netID_hidden'),
                                  )
-            cpf.put()
 
         elif current_user.user_type  == "faculty":
             query_params = {'student_netID': self.request.get('student_netID_hidden'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
-            if cpf == None:
-                self.redirect('/forms/unsubmitted')
-            else:
-                cpf.advisor_read = self.request.get('advisor_read')
-                cpf.advisor_more_meetings = self.request.get('advisor_more_meetings')
-                cpf.student_progress_eval = self.request.get('student_progress_eval')
-                cpf.advisor_comments = self.request.get('advisor_comments')
+            cpf.advisor_read = self.request.get('advisor_read')
+            cpf.advisor_more_meetings = self.request.get('advisor_more_meetings')
+            cpf.student_progress_eval = self.request.get('student_progress_eval')
+            cpf.advisor_comments = self.request.get('advisor_comments')
                 
-
+        cpf.put()
         query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
         time.sleep(TIME_SLEEP)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
@@ -266,7 +267,7 @@ class FebruaryFormPage(webapp2.RequestHandler):
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
         
-        else:
+        elif current_user.user_type == 'student':
             template_values = {
                 'current_user': getCurrentUser(self),
                 'url_linktext': getLoginStatus(self.request.uri)[1],
@@ -274,6 +275,9 @@ class FebruaryFormPage(webapp2.RequestHandler):
                 }
             template = JINJA_ENVIRONMENT.get_template('february_form.html')
             self.response.write(template.render(template_values))
+        
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
         ff = None
@@ -313,25 +317,28 @@ class SecondReaderFormPage(webapp2.RequestHandler):
     def get(self):
 
         current_user = getCurrentUser(self)
-        query_params = {'form_type': 'second_reader'}
 
+        query_params = {'form_type': 'second_reader'}
         if current_user.user_type == 'faculty':
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
-        
-        template_values = {
-            'current_user': current_user,
-            'url_linktext': getLoginStatus(self.request.uri)[1],
-        }
-        template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
-        self.response.write(template.render(template_values))
 
+        elif current_user.user_type == 'student':
+            template_values = {
+                'current_user': current_user,
+                'url_linktext': getLoginStatus(self.request.uri)[1],
+                }
+            template = JINJA_ENVIRONMENT.get_template('second_reader_form.html')
+            self.response.write(template.render(template_values))
+
+        else:
+            self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
 
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                student_netID = self.request.get('student_netID'),
                                class_year =int(self.request.get('class_year')),
-                               title = self.request.get('title'),
+                               project_title = self.request.get('project_title'),
                                description = self.request.get('description'),
                                advisor_name = self.request.get('advisor_name'),
                                advisor_netID = self.request.get('advisor_netID'),
@@ -347,6 +354,10 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         
         user_faculty.second_reader_requests.append(srf.student_netID)
         user_faculty.put()
+
+        query_params2 = {'student_netID':srf.student_netID, 'form_type':srf.form_type}
+        time.sleep(TIME_SLEEP)
+        self.redirect('/forms/view?' + urllib.urlencode(query_params2))
         
        # validateFormSubmission(self, srf, current_user)
 
@@ -745,10 +756,14 @@ class StudentSelect(webapp2.RequestHandler):
             'current_user': getCurrentUser(self),
             'form': form
             }
-
-        template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
-        self.response.write(template.render(template_values))
-
+        if form != None:
+            if form.form_type == 'checkpoint' or form.form_type == 'february':
+                template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
+            else:
+                template = JINJA_ENVIRONMENT.get_template("view_%s.html" % form.form_type)
+            self.response.write(template.render(template_values))
+        else:
+            self.redirect('/forms/unsubmitted')
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
