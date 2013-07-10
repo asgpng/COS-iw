@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}February Form{% endblock %}
+{% block head %}
+<script type="text/javascript">
+
+
+function radios() {
+
+read = {{form.advisor_read}};
+var radiosR = document.getElementsByName('advisor_read');
+radiosR[read].checked = true;
+
+meetings = {{form.advisor_more_meetings}}
+var radiosM = document.getElementsByName('advisor_more_meetings');
+radiosM[meetings].checked = true;
+
+progress = {{form.student_progress_eval}};
+var radiosP = document.getElementsByName('student_progress_eval');
+radiosP[progress].checked = true;
+
+}
+
+</script>
+
+{% endblock %}
+
+{% block student %}
+<h2>February Form</h2>
+
+
+<h3>Your form has been successfully submitted.</h3>
+<br>
+
+<div class="container">
+  <h3>Student Section:</h3>
+  <div>
+	<label>Student NetID:</label>
+	<input type="text" name="student_netID" value=" {{ form.student_netID }}" disabled/>
+  </div>
+  <div>
+    <label>Student Name:</label>
+    <input type="text" name="student_name" value=" {{ form.student_name }}" disabled/>
+  </div>
+  <div>
+    <label>Title of Project:</label>
+    <textarea name="project_title" rows="2" cols="23" disabled>{{ form.project_title }}</textarea>
+  </div>
+  <div>
+    <label>Advisor's Name:</label>
+    <input type="text" name="advisor_name" value=" {{ form.advisor_name }}" disabled/>
+  </div>
+  <div>
+    <label>Approximate Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
+    <input type="text" name="number_of_meetings" value=" {{ form.number_of_meetings }}" disabled />
+  </div>
+  <br>
+  <div>
+    <label>Student Comments:</label>
+    <textarea name="student_comments" rows="2" cols="23" disabled>{{ form.student_comments }}</textarea>
+  </div>
+{% endblock %}
+
+{% block advisor %}
+<body onload="radios()">
+  <h3>Advisor Section:</h3>
+  <div>
+    <label>I read the student's 5-page progress research paper:</label>
+    <div class="radio"> 
+      <input type="radio" name="advisor_read" disabled/>Yes<br>
+      <input type="radio" name="advisor_read" disabled/>No<br>
+    </div>
+    <div>
+      <label>Would you like your student to meet with you more often?</label>
+      <div class="radio">
+        <input type="radio" name="advisor_more_meetings" disabled/>Yes<br>
+        <input type="radio" name="advisor_more_meetings" disabled/>No<br>
+      </div>
+    </div>
+    <br>
+    <div>
+      <label>Student Progress:</label>
+      <div class="radio">
+        <input type="radio" name="student_progress_eval" disabled/>Sensational<br>
+        <input type="radio" name="student_progress_eval" disabled/>Good<br>
+        <input type="radio" name="student_progress_eval" disabled/>Satisfactory<br>
+      </div>
+    </div>
+    <div>
+      <label>Comments:</label>
+      <textarea name="advisor_comments" rows="2" cols="23" disabled>{{ form.advisor_comments }}</textarea>
+    </div>
+  </div>
+
+</body>
+</div>
+<hr>
+{% endblock %}

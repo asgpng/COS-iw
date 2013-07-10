@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link type = "text/css" rel="stylesheet" href="/stylesheets/main.css" />
+<title>Second Reader Form</title>
+</head>
+
+<h1> Second Reader Approval Form for IW</h1>
+
+<p>etc etc etc - approval form</p>
+
+<div class="container">
+<form action="/forms/secondreaderform", method="post">
+<div>
+<label>Student Name:</label>
+<input type="text" name="student_name"/>
+</div>
+<div>
+<label>Class:</label>
+<input type="text" name="class_year" />
+</div>
+<div>
+<label>Title of Project:</label>
+<textarea name="title" rows="2" cols="23"></textarea>
+</div>
+<div>
+<label>Description:</label>
+<textarea name="description" rows="10" cols="23"></textarea>
+</div>
+<div>
+<label>Faculty Name</label>
+<input type="text" name="faculty_name"/>
+</div>
+<div>
+<label>Faculty Department</label>
+<input type="text" name="faculty_department" />
+</div>
+<div>
+<label>I agree to be a second reader</label>
+<input type="checkbox" name="faculty_approval" value="facultyApproval"/>
+</div>
+<div>
+<label>Electronic signature(needed for senior thesis or two semester IW only):</label>
+<input type="text" name="signature"/>
+</div>

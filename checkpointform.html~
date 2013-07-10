@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Checkpoint Form{% endblock %}
+{% block head %}
+<script type = "text/javascript">
+
+function disable() {
+
+document.getElementById('student_netID').disabled=true;
+document.getElementById('project_title').disabled=true;
+document.getElementById('advisor_name').disabled=true;
+document.getElementById('meetings').disabled=true;
+document.getElementById('self_ass.').disabled=true;
+
+}
+
+function checkStudent() {
+
+var re = /.+/;
+var re2 = /[0-9]+/;
+
+var title = re.test(document.getElementById('project_title').value);
+var advisor_name =  re.test(document.getElementById('advisor_name').value);
+var meetings =  re2.test(document.getElementById('meetings').value);
+var assessment =  re.test(document.getElementById('self_ass.').value);
+
+if (title)
+    document.getElementById('project_title').style.backgroundColor = '#fff';
+else
+    document.getElementById('project_title').style.backgroundColor = '#fa7f00';
+
+if (advisor_name)
+    document.getElementById('advisor_name').style.backgroundColor = '#fff';
+else
+    document.getElementById('advisor_name').style.backgroundColor = '#fa7f00';
+
+if (meetings)
+    document.getElementById('meetings').style.backgroundColor = '#fff';
+else
+    document.getElementById('meetings').style.backgroundColor = '#fa7f00';
+
+if (assessment)
+    document.getElementById('self_ass.').style.backgroundColor = '#fff';
+else
+    document.getElementById('self_ass.').style.backgroundColor = '#fa7f00';
+
+var result = title && advisor_name && meetings && assessment;
+
+if (!result)
+    window.alert("Please check highlighted field(s)!");
+
+return result;
+}
+
+function checkFaculty() {
+
+var read = document.getElementsByName('advisor_read_summary');
+var meet = document.getElementsByName('meet_more_often');
+var progress = document.getElementsByName('student_progress');
+var comments = document.getElementById('faculty_comments');
+
+var checks = new Array(read, meet, progress);
+var OK = new Array(false, false, false, true);
+
+for (var i = 0; i < checks.length; i++) {
+    var temp = checks[i];
+    for (var j = 0; j < temp.length; j++) {
+	if (temp[j].checked) {
+	    OK[i] = true;
+	    break;
+	}
+    }
+}
+
+if (document.getElementById('unsatisfactory').checked == true) {
+    var re = /.+/;
+    if (re.test(document.getElementById('faculty_comments').value)) {
+	OK[3] = true;
+	document.getElementById('faculty_comments').style.backgroundColor = "#fff";
+    }
+
+    else {
+	OK[3] = false;
+	document.getElementById('faculty_comments').style.backgroundColor = "#fa7f00";
+    }
+}
+
+if (OK[0])
+    document.getElementById('first').style.color='#000';
+else
+    document.getElementById('first').style.color='#fa7f00';
+
+if (OK[1])
+    document.getElementById('second').style.color='#000';
+else
+    document.getElementById('second').style.color='#fa7f00';
+
+if (OK[2])
+    document.getElementById('third').style.color='#000';
+else
+    document.getElementById('third').style.color='#fa7f00';
+
+var result = OK[0] && OK[1] && OK[2] && OK[3];
+
+if (!result)
+   window.alert("Please check highlighted field(s)!");
+return result;
+}
+
+</script>
+{% endblock %}
+
+{% block header %}
+<h2>Princeton CS IW Checkpoint Form</h2>
+{% if current_user.user_type=="student" %}
+<form action="/forms/checkpointform" method="post" onsubmit="return checkStudent();">
+{% elif current_user.user_type=="faculty" %}
+<form action="/forms/checkpointform" method="post" onsubmit="return checkFaculty();">
+{% endif %}
+{% endblock %}
+{% block student %}
+<h3>Student Section:</h3>
+  <div class="container">
+    <div>
+	  <label>Student NetID: </label>
+	  <input type="text" name="student_netID" id="student_netID"/>
+	</div>
+    <div>
+      <label>Student Name:</label>
+      <input type="text" name="student_name" id="student_name" disabled/>
+    </div>
+    <div>
+      <label>Title of Project:</label>
+      <input type="text" name="topic_title" id="project_title"/>
+    </div>
+    <div>
+      <label>Advisor:</label>
+      <input type="text" name="advisor" id="advisor_name"/>
+    </div>
+    <div>
+      <label>Approx. Number of Meetings with Advisor (0, 1, 2, 3-5, etc.):</label>
+      <!-- consider making parenthetical info a sublabel -->
+      <input type="text" name="meetings_w_advisor" id="meetings" />
+    </div>
+    <br>
+    <div>
+      <label>Student Self Assessment:</label>
+      <textarea name="self_assessment" rows="5" cols="60" id="self_ass."></textarea>
+    </div>
+  </div>
+{% endblock %}
+{% block advisor %}
+<h2>Princeton CS IW Checkpoint Form</h2>
+<body onload="disable()">
+ <h3>Advisor Section:</h3>
+  <div class="container" >
+    <div>  
+      <label>
+	Choose the student for whom you are filling out the form. </label>
+      <select name="choose_student"> 
+	{% for student in current_user.student_netIDs %}
+	<option value="{{student}}">{{student}}</option>
+	{% endfor %}
+      </select>
+      </div>
+    <br>
+    <div>
+	  <label id="first">I read the student's 1-page progress summary report</label>
+	  <div class="radio">
+	    <input type="radio" name="advisor_read_summary" value="yes_read" />yes<br>
+	    <input type="radio" name="advisor_read_summary" value="no_read" />no<br>
+	  </div>
+    </div>
+    <div>
+	  <label id="second">Would you like your student to meet with you more often?</label>
+	  <div class="radio">
+	    <input type="radio" name="meet_more_often" value="yes_meet" />yes<br>
+	    <input type="radio" name="meet_more_often" value="no_meet" />no<br>
+	  </div>
+    </div>
+    <br>
+    <div>
+	  <label id="third">Student Progress:</label>
+	  <div class="radio">
+	    <input type="radio" name="student_progress" value="4"/>Exceptional<br>
+	    <input type="radio" name="student_progress" value="3"/>Very Good<br>
+	    <input type="radio" name="student_progress" value="2"/>Good<br>
+	    <input type="radio" name="student_progress" value="1" id="unsatisfactory" />Unsatisfactory<br>
+	  </div>
+    </div>
+    <div>
+	  <label>Comments: <br> [If student progress is unsatisfactory, explain what steps they need to take to get on track.]</label>
+	  <textarea name="comments" id="faculty_comments" rows="4" cols="60"></textarea>
+	</div>
+</body>
+  {% endblock %}
+  {% block submit %}
+    <div id="submit">
+      <input type="submit" value="Submit">
+    </div>
+
+  </div>
+</form>
+
+<hr>
+{% endblock %}
