@@ -100,8 +100,8 @@ def getMessages(self):
 
 
 
-def validateNetID(advisor_netID):
-     query_params = {'netID': advisor_netID}
+def validateNetID(faculty_netID):
+     query_params = {'netID': faculty_netID}
      query = object_query(Faculty, query_params)
      user_faculty = query.get()
      return (user_faculty != None)
