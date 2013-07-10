@@ -30,11 +30,15 @@ $app->get('/cas-login', function() use ($app) {
     /* if (isset($_REQUEST['logout'])) { */
     /*   phpCAS::logout(); */
     /* } */
-    $app['session']->set('user', array('netID' => phpCAS::getUser()));
+    /* if (isset($_SESSION['user'])) { */
+    /*   unset($_SESSION['user']); */
+    /* } */
+
+    /* $app['session']->set('user', array('netID' => phpCAS::getUser( ))); */
 
     /* $user = $app['session']->get('user'); */
     /* return "Welcome {$user['netID']}!"; */ // to test if it's working
-    return $app->redirect('/iw-php/web/index.php');
+    return $app->redirect('/web/index.php');
   });
 
 
@@ -50,7 +54,7 @@ $app->post('/login', function () use ($app) {
 
     $netID = $_POST['netID'];
     $app['session']->set('user', array('netID' => $netID));
-    return $app->redirect('/iw-php/web/index.php/account');
+    return $app->redirect('/web/index.php/account');
     /* $username = $app['request']->server->get('PHP_AUTH_USER', false);
     /* $password = $app['request']->server->get('PHP_AUTH_PW'); */
 
@@ -67,6 +71,14 @@ $app->get('/account', function () use ($app) {
 
     return "Welcome {$user['netID']}!";
   });
+
+$app->get('/clear-session', function () use ($app) {
+    if (isset($_SESSION['user'])) {
+      /* unset($_SESSION['user']); */
+      session_destroy();
+    }
+    return $app->redirect('/web/index.php');
+});
 
 // global controllers
 $app->get('/', function() use ($app) {

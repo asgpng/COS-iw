@@ -10,6 +10,6 @@ require __DIR__.'/../src/app.php';
 
 require __DIR__.'/../src/controllers.php';
 
-require('../src/CAS.php');
+require __DIR__.'/../src/CAS.php';
 
 $app->run();
