@@ -1,0 +1,177 @@
+* SPE - COS independent work (LAMP)
+- brainstorming
+  - 3 components
+    - student
+      - upload content
+      - viewing feedback
+      - communication
+      - calendar/schedule *
+      - Google Calendar synchronization?
+    - professor
+      - see all students they advise
+      - input grades
+      - calendar/schedule *
+      - diagnostic - easily see progress of all students
+    - CAS login for all involved
+  - existing system:
+    - forms - streamline process (final destination)
+    - grading/feedback
+    - save time, work
+    - checkpoints
+    - poster presentation
+    - final presentation - also make web versions
+    - final evaluation
+    - evaluation
+    - submit pdf/powerpoint (upload) to dropbox
+    - permissions model
+    - security
+    - database content protection
+    - uploading: dropbox -> new system (?)
+    - collating -> report system (automatic reporting)
+  - plan
+    - html form
+    - dynamic content
+    - CAS tutorial - 333
+    - 126 assignments (non-graphics based)
+    - Jinja
+- Offices: 206 (CM) 001a (Madhu)
+Notes:
+- MYSQL:
+  - run as root: "mysql -p -u root"
+- SQLite
+  - Structured Query Language
+  - schema - structure of database system described in a formal language
+  - foreign key - referential constraint between two tables
+  - trigger - procedural code that is automatically executed in response to certain events on a particular table in a database.
+  - view - a dynamic selection of data as a virtual table from a query
+  - transaction - an atomic unit of database operations against the data in one or more databases
+  - result set - set of rows from a database, returned by SELECT statement
+  - index - data structure that improves the seped of data retrieval operations
+- ssh:
+  - asg4@dascpan202l.princeton.edu
+  - asg4@arizona.princeton.edu
+  - asg4@nobel.princeton.edu
+- google app engine:
+  - /opt/
+- Jinja/emacs:
+  - (define-key jinja2-mode-map (kbd "C-c c") 'jinja2-close-tag)
+  - (define-key jinja2-mode-map (kbd "C-c t") 'jinja2-insert-tag)
+  - (define-key jinja2-mode-map (kbd "C-c v") 'jinja2-insert-var)
+  - (define-key jinja2-mode-map (kbd "C-c #") 'jinja2-insert-comment)
+
+- Progress Journal:
+  - [2013-06-10 Mon]:
+    - formed group, talked about project, and brainstormed features.
+    - Began looking into UNIX and python.
+  - [2013-06-11 Tue]:
+    - read tutorials on mysql, python, git, etc.
+    - bomb scare!
+  - [2013-06-12 Wed]:
+    - python, django, mysql, cpan, jinja.
+    - Met with Christopher Moretti and talked about existing system to be replaced.
+    - Madhu gave us email of more things to explore:
+      - Django, hosting (i.e. Heroku, Amazon AWS, Google App Engine), etc.
+  - [2013-06-13 Thu]:
+    - Google App Engine tutorial - python, Jinja, html, css.
+    - cpanel - python and cgi
+    - mysql tutorials with cpanel
+  - [2013-06-14 Fri]:
+    - asg4_test - test1 (cpanel)
+    - test@localhost - test1 (local - my computer)
+    - create user 'test'@'localhost' indentified by 'test1';
+    - look into cgi scripts to fill out forms
+    - attempted to get python and MySQL working together
+      - python 3.3 and 2.7 issues - manually fixing bugs!!!
+      - went back to google app engine - still problematic with MySQL
+  - [2013-06-15 Sat]:
+    - rebuilt OS on computer
+    - got created database user to login correctly!
+  - [2013-06-16 Sun]:
+    - got myql-python working on my own machine
+    - attempted to manually instal mysql-python on cpanel - too difficult
+    - worked on google app engine with java
+  - [2013-06-17 Mon]:
+    - python, google apps engine, tutorial, SQL and datastore
+    - datastore limits:
+      - Maximum entity size 1 megabyte
+      - Maximum transaction size 10 megabytes
+      - Maximum number of index entries for an entity 20000
+      - Maximum number of bytes in composite indexes for an entity 2 megabytes
+    - was able to successfully install mysql-python on cpanel with prefix option
+      - had to set custom PYTHONPATH
+      - python setup.py install --prefix=/NAShomes/publichtmls/mycpanel/asg4/python/lib64/python2.4/site-packages
+      - or lib (not lib64) - for Jinja2
+    - but current choice seems to be Google App Engine
+    - mysql:
+      - user: asg4_me
+        - testy-asg4_me
+
+  - [2013-06-18 Tue]:
+    - google app engine with html form and data persistence
+    - tried to get query to work on guestbook example
+    - became more familiar with Jinja, webapp2, general GAE
+  - [2013-06-19 Wed]:
+    - did basic form, learned about datastore,
+  - [2013-06-20 Thu]:
+    - forms, html, css, formatting, datastore
+    - partially implemented query
+  - [2013-06-21 Fri]:
+    - viewing queries
+    - better html/css
+    - TODO:
+      - make query page where administrator can search all forms
+      - make forms more robust to wrong types of data and forbid multiple submits
+      - generalize form view html
+      - implement users
+      - more content to home page!!!
+        - search
+        - reminders
+        - calendar
+        - student / advisor info
+  - [2013-06-24 Mon]:
+    - dropdown box for department
+    - better queries, results page
+    - TODO: query for student?
+    - fix queries (again)
+    - datastore - uploading content?
+      - ndb.blobproperty()
+    - permissions
+    - add delete form *
+  - [2013-06-25 Tue]:
+    - fixed queries and delete feature
+    - removed html code duplication with base
+    - do not permit multiple forms of same type by same student_netID
+      - add link to view previously submitted form
+    - users and permissions
+      - student submits form first, then advisor
+      - lists of netIDs (advisors, students, administrators, second_reader)
+      - advisor/student link
+        - students with advisor_netID attribute
+        - advisor with list of student advisees
+        - link fields
+      - multiple advisors or second reader?
+      - coordinator? = administrator
+      - administrator can add users
+        - whitelist advisors
+      - classification
+        - LDAP
+        - database administrator uploads list
+      - log - feedback
+      - forms
+        - student has done their part
+        - advisor has done their part
+      - reminders - email
+      - sorting of queries
+- [2013-07-01 Mon]:
+  - tried to configure apache
+  - added message feature
+- [2013-07-03 Wed]:
+  - mysql -h publicdb -u speiw -p "chrismadhu"
+- [2013-07-08 Mon]:
+  - Signup form: signature should be checkbox, fix form validation
+  - prevent filling out of forms in wrong order
+  - reminders?
+  - get write permissions to spe-iw project space
+  - TODO: don't let user access form if it has been submitted
+  - access speiw with Konstantine
+  - PHPUnit

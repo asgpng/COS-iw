@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+<<<<<<< HEAD
+<h2>COS Independent Work Home</h2>
+<p>This is a new site, so not everything is working yet. Apologies for broken links and missing pages.
+</p>
+=======
+<h2>COS Independent Work</h2>
+<div id="wrapper">
+  <div id="top_menu" />
+  <ul>
+    <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
+    <li><a href="forms/query">Form Query</a></li>
+    <li><a href="administrative/users">View Users</a></li>
+    <li><a href="files/new_file">Upload New File</a></li>
+    <li><a href="files/view_list">Uploaded Files</a></li>
+    <li><a href="messages">View Messages</a></li>
+  </ul>
+</div>
+  <div id="menucontainer">
+	<ul id="menulist">
+	  <h3>Forms</h3>
+	  <li class="forms"><a href="forms/signupform">Signup Form</a></li>
+	  <li class="forms"><a href="forms/checkpointform">Checkpoint Form</a></li>
+	  <li class="forms"><a href="forms/februaryform">February Progress Form</a></li>(for all 2-semester work)
+	  <li class="forms"><a href="forms/secondreaderform">Second Reader Form</a></li>(for all 2-semester work)
+	
+  <!-- links: -->
+{% endblock %}
+{% block advisorOnly%}
+<li class="forms"><a href="forms/approve">Approve Students as Advisees</a></li>
+</ul>
+</div>
+<hr>
+{% endblock %}
+{% block studentOnly%}
+</ul>
+</div>
+<hr>
+>>>>>>> d39594454c6cdec41c9ed3f06a5ce1d2b31efd48
+{% endblock %}
