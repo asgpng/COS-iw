@@ -73,7 +73,7 @@ def form_test():
         # return redirect(url_for('index'))
         app.logger.debug(form.errors)
         return redirect(url_for('index'))
-    return render_template("form_test.html",
+    return render_template("forms/test.html",
                                form = form,
                            )
 
