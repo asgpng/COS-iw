@@ -6,6 +6,7 @@ from flask import render_template, request, session, g, redirect, url_for, flash
 from flask.ext.babel import gettext
 from datetime import datetime
 import time
+import CASClient
 
 current_user = User.query.all()[0] # mock user for debugging
 
@@ -21,6 +22,12 @@ def before_request():
 @template('index.html')
 def index():
     return dict(title = "Home")
+
+@app.route('/cas-login')
+def cas_login():
+    C = CASClient.CASClient()
+    netid = C.Authenticate()
+    return redirect url_for('/')
 
 @app.route('/about')
 @template('about.html')
