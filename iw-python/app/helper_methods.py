@@ -13,7 +13,6 @@ from gaesessions import get_current_session
 #       This hack seems to work for our small purposes, but it may not be as
 #       robust as the Jinja library filters.
 
-
 def do_urlencode(dict):
     url = urllib.urlencode(dict)
     return url
@@ -46,8 +45,6 @@ def build_query_params(self):
         if arg_get != '':
             query_params[arg] = arg_get
     return query_params
-
-
 
 # check if a student has submitted a given form yet
 # in the case of submitted forms, query_params only contains form_type and student_netID
