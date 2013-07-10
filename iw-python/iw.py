@@ -241,21 +241,17 @@ class CheckPointFormPage(webapp2.RequestHandler):
                                  student_self_assessment = self.request.get('student_self_assessment'),
                                  student_netID = self.request.get('student_netID_hidden'),
                                  )
-            cpf.put()
 
         elif current_user.user_type  == "faculty":
             query_params = {'student_netID': self.request.get('student_netID_hidden'),'form_type':'checkpoint'}
             query = object_query(Form, query_params)
             cpf = query.get()
-            if cpf == None:
-                self.redirect('/forms/unsubmitted')
-            else:
-                cpf.advisor_read = self.request.get('advisor_read')
-                cpf.advisor_more_meetings = self.request.get('advisor_more_meetings')
-                cpf.student_progress_eval = self.request.get('student_progress_eval')
-                cpf.advisor_comments = self.request.get('advisor_comments')
+            cpf.advisor_read = self.request.get('advisor_read')
+            cpf.advisor_more_meetings = self.request.get('advisor_more_meetings')
+            cpf.student_progress_eval = self.request.get('student_progress_eval')
+            cpf.advisor_comments = self.request.get('advisor_comments')
                 
-
+        cpf.put()
         query_params2 = {'student_netID':cpf.student_netID, 'form_type':cpf.form_type}
         time.sleep(TIME_SLEEP)
         self.redirect('/forms/view?' + urllib.urlencode(query_params2))
@@ -760,12 +756,14 @@ class StudentSelect(webapp2.RequestHandler):
             'current_user': getCurrentUser(self),
             'form': form
             }
-        if form.form_type == 'checkpoint' or form.form_type == 'february':
-            template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
+        if form != None:
+            if form.form_type == 'checkpoint' or form.form_type == 'february':
+                template = JINJA_ENVIRONMENT.get_template("%s_form.html" %form.form_type)
+            else:
+                template = JINJA_ENVIRONMENT.get_template("view_%s.html" % form.form_type)
+            self.response.write(template.render(template_values))
         else:
-            template = JINJA_ENVIRONMENT.get_template("view_%s.html" % form.form_type)
-        self.response.write(template.render(template_values))
-
+            self.redirect('/forms/unsubmitted')
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
