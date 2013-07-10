@@ -8,13 +8,13 @@ from datetime import datetime
 import time
 import CASClient
 
-current_user = User.query.all()[0] # mock user for debugging
+
 
 TIME_SLEEP = 0.1
 
 @app.before_request
 def before_request():
-    g.user = current_user
+    g.user = User.query.first() # mock user for debugging
 
 # general links
 @app.route('/')
