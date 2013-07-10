@@ -10,6 +10,11 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Form
+  properties:
+  - name: student_netID
+  - name: student_name
+
 - kind: Greeting
   ancestor: yes
   properties:
