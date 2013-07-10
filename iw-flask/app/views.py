@@ -23,6 +23,7 @@ def before_request():
 def index():
     return dict(title = "Home")
 
+# still needs to be debugged (with error logs?)
 @app.route('/cas-login')
 def cas_login():
     C = CASClient.CASClient()
@@ -94,9 +95,14 @@ def form_test():
 
 
 @app.route('/login')
+@template('login.html')
 def login():
-    if g.user is not None:
-        return redirect(url_for('index'))
+    if request.method == 'GET':
+        return dict(title = 'Login',)
+    else:
+
+        if g.user is not None:
+            return redirect(url_for('index'))
 
 @app.route('/logout')
 @template('logout.html')
