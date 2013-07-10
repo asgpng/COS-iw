@@ -10,7 +10,7 @@
   <div>
     <label>Students by netID</label>
     <select name="student">
-      {% for student in g.user.student_requests %}
+      {% for student in current_user.student_requests %}
       <option value="{{student}}"> {{ student }} </option>
       {% endfor %}
       </select>

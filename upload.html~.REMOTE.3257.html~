@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %} Upload New File{% endblock %}
+{% block head %}
+<script type="text/javascript">
+    
+    function check() {
+    var check = document.getElementById("newFile").value;
+    if (check == "") {
+	window.alert("You did not select a file!");
+	return false;
+    }
+    else
+	  return true;
+}
+</script>
+
+{% endblock %}
+{% block content %}
+<h1> Upload New File</h1>
+
+<div class="container">
+  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data"> 
+    <input type="file" name="uploadField" id="newFile"/>
+    <div id="submit">
+      <input type="submit" value="Submit">
+    </div>
+  </form>
+</div>
+{% endblock %}

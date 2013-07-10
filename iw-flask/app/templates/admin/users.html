@@ -38,7 +38,7 @@ function check() {
   <tr>
     <td>{{ user.user_type }}</td>
     <td>{{ user.netID }}</td>
-    <td><a href="user_view?{{ {'user_type':user.user_type, 'user_netID':user.netID} | urlencode}}">View complete result </a></td>
+    <td><a href="user_view?{{ {'user_type':user.user_type, 'user_netID':user.netID} | urlencode}}">View User</a></td>
     <!-- make it so you don't need to refresh to view changes -->
     <!-- potential security issue -->
     <td><a href="user_delete?{{ {'user_type':user.user_type, 'netID':user.netID} | urlencode}}">delete user </a></td>
@@ -65,6 +65,4 @@ function check() {
 
 </table>
 </form>
-
-
 {% endblock %}

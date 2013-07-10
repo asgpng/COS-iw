@@ -1,18 +1,24 @@
 {% extends "base.html" %}
-{% block title %}Second Reader Form{% endblock %}
+{% block title %}Sign Up Form{% endblock %}
 {% block head %}
 <script type="text/javascript">
 
+    function invalid() {
+
+    alert("The inputted faculty netID was not found on the server!");
+}
+
   function proceed() {
-    var proceed =  highlight(year(), radio(), text1(), text2(), text3(), text4(), signature());
+
+    var proceed =  highlight(year(), radio(), text0(), text1(), text2(), text3(), text4(), signature()); 
     if (!proceed) {
 	window.alert("Please check highlighted field(s)!");
   }
-
+    
     return proceed;
   }
 
-function highlight(year, radio, text1, text2, text3, text4, sig) {
+function highlight(year, radio, text0, text1, text2, text3, text4, sig) {
 
   if (year)
   document.getElementById("class_year").style.backgroundColor='#fff';
@@ -20,9 +26,14 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   document.getElementById("class_year").style.backgroundColor='#fa7f00';
 
   if (radio)
-  document.getElementById("test").style.color='#000';
+  document.getElementById("radioHL").style.color='#000';
   else
-  document.getElementById("test").style.color='#fa7f00';
+  document.getElementById("radioHL").style.color='#fa7f00';
+
+  if (text0)
+  document.getElementById("student_name").style.backgroundColor='#fff';
+  else
+  document.getElementById("student_name").style.backgroundColor='#fa7f00';
 
   if (text1)
   document.getElementById("project_title").style.backgroundColor='#fff';
@@ -45,11 +56,11 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   document.getElementById("advisor_netID").style.backgroundColor='#fa7f00';
 
   if (sig)
-  document.getElementById("signature").style.backgroundColor='#fff';
+  document.getElementById("sigHL").style.color='#fff';
   else
-  document.getElementById("signature").style.backgroundColor='#fa7f00';
+  document.getElementById("sigHL").style.color='#fa7f00';
 
-  var checked = year && radio && text1 && text2 && text3 && text4 && sig;
+  var checked = year && radio && text0 && text1 && text2 && text3 && text4 && sig;
   return checked;
 
   }
@@ -74,6 +85,13 @@ function highlight(year, radio, text1, text2, text3, text4, sig) {
   }
   return(OK);
   }
+
+function text0() {
+
+    var re = /.+/;
+    var name = document.getElementById("student_name").value;
+    return re.test(name);
+}
 
 function text1() {
 
@@ -105,27 +123,24 @@ function text4() {
 }
 
 function signature() {
-    var name = document.getElementById("student_name").value;
-    var sig = document.getElementById("signature").value;
-
-
-    if (name != "")
-	return (sig == name);
-
-    else return false;
-}
+    return document.getElementById("signature").checked;
+}	          
 				      </script>
 
 {% endblock %}
 
-{% block content %}
+{% block student %}
+{% if invalid_netID %}
+<body onload=invalid()> </body>
+{% endif %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
-  <form action="/forms/signupform" method="post" onsubmit="return proceed();">
+  <form action="/forms/signup" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
-	  <input type="text" name="student_netID" value="{{ g.user.netID }}" />
-      <div>
+	  <input type="text" name="student_netID" value="{{ current_user.netID }}" disabled />
+	  <input type="hidden" name="student_netID_hidden" value="{{ current_user.netID }}">
+	  <div>
         <label>Name:</label>
         <input type="text" name="student_name" id="student_name">
       </div>
@@ -134,29 +149,25 @@ function signature() {
         <input type="text" name="class_year" id="class_year"/>
       </div>
       <div>
-        <label id="test">Please check one:</label>
+        <label id="radioHL">Please check one:</label>
 	  </div>
       <div class = "radio">
-        <Input type="radio" name="coursework" value="397">397<br>
-        <input type="radio" name="coursework" value="398">398<br>
-        <input type="radio" name="coursework" value="497">497<br>
-        <input type="radio" name="coursework" value="498">498<br>
-        <input type="radio" name="coursework" value="AB JIW">AB JIW<br>
-        <input type="radio" name="coursework" value="AB Senior Thesis">AB Senior Thesis<br>
-        <input type="radio" name="coursework" value="BSE Senior Thesis">BSE Senior Thesis<br>
+        <Input type="radio" name="coursework" value="0">397<br>
+        <input type="radio" name="coursework" value="1">398<br>
+        <input type="radio" name="coursework" value="2">497<br>
+        <input type="radio" name="coursework" value="3">498<br>
+        <input type="radio" name="coursework" value="4">AB JIW<br>
+        <input type="radio" name="coursework" value="5">AB Senior Thesis<br>
+        <input type="radio" name="coursework" value="6">BSE Senior Thesis<br>
 	  </div>
       <div>
         <label>Title of Project:</label>
-        <textarea name="title" id="project_title"></textarea>
+        <textarea name="project_title" id="project_title"></textarea>
       </div>
       <div>
         <label>Description:</label>
         <textarea name="description" id="description" rows="10" cols="23"></textarea>
-        <!-- <div> -->
-        <!--   <label>Faculty Approval:</label> -->
-        <!--   <input type="checkbox" name="faculty_signature" value="facultySignature"/>Faculty Approval -->
-        <!-- </div> -->
-        <div>
+                <div>
           <label>Advisor's Name:</label>
           <input type="text" name="advisor_name" id="advisor_name"/>
         </div>
@@ -166,7 +177,7 @@ function signature() {
 	</div>
         <div>
           <label>Advisor's Department:</label>
-	      <select name="advisor_department" id="advisor_department">
+	      <select name="advisor_department">
 	        <option value="ANT">Anthropology</option>
 	        <option value="ARC">Architecture</option>
 	        <option value="ART">Art and Archaeology</option>
@@ -203,9 +214,8 @@ function signature() {
 	        <option value="WWS">Woodrow Wilson School</option>
 	      </select>
         </div>
-
-	<label>I agree to be responsible for all relevant deadlines. (Electronic Signature)</label>
-	<input type="text" name="signature" id="signature"/>
+	<label id="sigHL">I agree to be responsible for all relevant deadlines.</label>
+	<input type="checkbox" name="signature" id="signature"/>
         <div id="submit">
           <input type="submit" value="Submit">
         </div>
@@ -215,3 +225,30 @@ function signature() {
 </div>
 <hr>
 {% endblock %}
+
+{% block advisor %}
+<h2>Princeton CS IW & Thesis Signup Form</h2>
+<div class="container">
+  <form action="/forms/signup" method="post">
+    <div>
+  <label>Which student's form do you want to view?</label>
+  <select name="student_netID">
+    {% for student in current_user.student_netIDs %}
+    <option value="{{student}}">{{student}} - Current Advisee</option>
+    {% endfor %}
+    {% for student in current_user.student_requests %}
+    <option value="{{student}}">{{student}} - Advisor Request Pending</option>
+    {% endfor %}
+    {% for student in current_user.second_reader_requests %}
+    <option value="{{student}}">{{student}} - Second Reader Request Pending</option>
+    {% endfor %}
+  </select>
+    </div>
+    <div>
+      <input type="submit" value="Submit" />
+    </div>
+  </form>
+</div>
+<hr>
+{% endblock %}
+
