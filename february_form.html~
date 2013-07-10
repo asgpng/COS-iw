@@ -16,7 +16,6 @@ document.getElementById("student_comments").disabled=true;
 
 function checkStudent() {
 
-var student_name = document.getElementById("student_name").value;
 var project_title = document.getElementById("project_title").value;
 var advisor = document.getElementById("advisor_name").value;
 var meetings = document.getElementById("number_of_meetings").value;
@@ -24,15 +23,9 @@ var meetings = document.getElementById("number_of_meetings").value;
 var re = /.+/;
 var re2 = /[0-9]+/;
 
-var OK0 = re.test(student_name);
 var OK1 = re.test(project_title);
 var OK2 = re.test(advisor);
 var OK3 = re2.test(meetings);
-
-if (OK0)
-    document.getElementById("student_name").style.backgroundColor='#fff';
-else
-    document.getElementById("student_name").style.backgroundColor='#fa7f00';
 
 if (OK1)
     document.getElementById("project_title").style.backgroundColor = '#fff';
@@ -44,13 +37,13 @@ if (OK2)
 else
     document.getElementById("advisor_name").style.backgroundColor = '#fa7f00';
 
-if (OK3)
+if (OK1)
     document.getElementById("number_of_meetings").style.backgroundColor = '#fff';
 else
     document.getElementById("number_of_meetings").style.backgroundColor = '#fa7f00';
 
 
-var result = OK0 && OK1 && OK2 && OK3;
+var result = OK1 && OK2 && OK3;
 
 if (!result)
     window.alert("Please check highlighted field(s)!");
@@ -94,6 +87,7 @@ if (OK[2])
 else
     document.getElementById("third").style.color='#fa7f00';
 
+
 var result = OK[0] && OK[1] && OK[2];
 
 if (!result)
@@ -122,8 +116,7 @@ return result;
 
   <div>
     <label>Student NetID:</label>
-    <input type="text" name="student_netID" id="student_netID" value="{{current_user.netID}}" disabled/>
-    <input type="hidden" name="student_netID_hidden" value="{{current_user.netID}}">
+    <input type="text" name="student_netID" id="student_netID" value="{{current_user.netID}}"/>
   </div>
   <div>
     <label>Student Name:</label>
@@ -133,7 +126,11 @@ return result;
     <label>Title of Project:</label>
     <textarea name="project_title" id="project_title" rows="2" cols="23"></textarea>
   </div>
-    <div>
+  <div>
+    <label>Advisor NetID:</label>
+    <input type="text" name="advisor_netID" id="advisor_netID"/>
+  </div>
+  <div>
     <label>Advisor Name:</label>
     <input type="text" name="advisor_name" id="advisor_name"/>
   </div>
@@ -156,13 +153,17 @@ return result;
     <input type="text" name="student_netID" id="student_netID" value="{{form.student_netID}}"/>
     <input type="hidden" name="student_netID_hidden" value="{{form.student_netID}}">
   </div>
-      <label>Student Name:</label>
+  <div>
+    <label>Student Name:</label>
     <input type="text" name="student_name" id="student_name" value="{{form.student_name}}" />
   </div>
   <div>
     <label>Title of Project:</label>
     <textarea name="project_title" id="project_title" rows="2" cols="23">{{form.project_title}}</textarea>
   </div>
+  <div>
+    <label>Advisor NetID:</label>
+    <input type="text" name="advisor_netID" id="advisor_netID" value="{{form.advisor_netID}}" />
   <div>
     <label>Advisor:</label>
     <input type="text" name="advisor_name" id="advisor_name" value="{{form.advisor_name}}" />
@@ -197,7 +198,7 @@ return result;
       <div class="radio">
         <input type="radio" name="student_progress_eval" value="0">Sensational<br>
         <input type="radio" name="student_progress_eval" value="1">Good<br>
-        <input type="radio" name="student_progress_eval" value="2">Unsatisfactory<br>
+        <input type="radio" name="student_progress_eval" value="2">Satisfactory<br>
       </div>
     </div>
     <div>

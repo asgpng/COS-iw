@@ -3,11 +3,6 @@
 {% block head %}
 <script type="text/javascript">
 
-    function invalid() {
-
-    alert("The inputted faculty netID was not found on the server!");
-}
-
   function proceed() {
 
     var proceed =  highlight(year(), radio(), text0(), text1(), text2(), text3(), text4(), signature()); 
@@ -130,9 +125,6 @@ function signature() {
 {% endblock %}
 
 {% block student %}
-{% if invalid_netID %}
-<body onload=invalid()> </body>
-{% endif %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
   <form action="/forms/signup" method="post" onsubmit="return proceed();">
@@ -225,3 +217,30 @@ function signature() {
 </div>
 <hr>
 {% endblock %}
+
+{% block advisor %}
+<h2>Princeton CS IW & Thesis Signup Form</h2>
+<div class="container">
+  <form action="/forms/signup" method="post">
+    <div>
+  <label>Which student's form do you want to view?</label>
+  <select name="student_netID">
+    {% for student in current_user.student_netIDs %}
+    <option value="{{student}}">{{student}} - Current Advisee</option>
+    {% endfor %}
+    {% for student in current_user.student_requests %}
+    <option value="{{student}}">{{student}} - Advisor Request Pending</option>
+    {% endfor %}
+    {% for student in current_user.second_reader_requests %}
+    <option value="{{student}}">{{student}} - Second Reader Request Pending</option>
+    {% endfor %}
+  </select>
+    </div>
+    <div>
+      <input type="submit" value="Submit" />
+    </div>
+  </form>
+</div>
+<hr>
+{% endblock %}
+

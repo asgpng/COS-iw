@@ -42,11 +42,15 @@ radiosP[progress].checked = true;
     <input type="text" name="student_name" value=" {{ form.student_name }}" disabled/>
   </div>
   <div>
-    <label>Title of Project:</label>
+    <label>Title/Topic:</label>
     <textarea name="project_title" rows="2" cols="23" disabled>{{ form.project_title }}</textarea>
   </div>
   <div>
-    <label>Advisor's Name:</label>
+    <label>Advisor NetID:</label>
+    <input type="text" name="advisor_netID" value=" {{ form.advisor_netID }}" disabled/>
+  </div>
+  <div>
+    <label>Advisor Name:</label>
     <input type="text" name="advisor_name" value=" {{ form.advisor_name }}" disabled/>
   </div>
   <div>
@@ -82,7 +86,7 @@ radiosP[progress].checked = true;
       <div class="radio">
         <input type="radio" name="student_progress_eval" disabled/>Sensational<br>
         <input type="radio" name="student_progress_eval" disabled/>Good<br>
-        <input type="radio" name="student_progress_eval" disabled/>Unsatisfactory<br>
+        <input type="radio" name="student_progress_eval" disabled/>Satisfactory<br>
       </div>
     </div>
     <div>
