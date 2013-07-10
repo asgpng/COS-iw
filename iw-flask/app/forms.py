@@ -4,7 +4,7 @@ from flask.ext.wtf import Required, Length
 from app.models import User
 
 # class LoginForm(Form):
-#     netID = TextField('netiD', validators = [Required()])
+#     netID = TextField('netID', validators = [Required()])
 #     remember_me = BooleanField('remember_me', default = False)
 
 departments = [

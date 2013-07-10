@@ -2,12 +2,6 @@
 # from google.appengine.ext.ndb import polymodel
 from app import app, db
 
-
-# class Message(ndb.Model):
-#     author_netID = ndb.StringProperty(required=True)
-#     content = ndb.StringProperty()
-#     date = ndb.DateTimeProperty(auto_now_add=True)
-
 class Form(db.Model):
     __tablename__ = 'form'
     id = db.Column(db.Integer, primary_key = True)
@@ -75,20 +69,21 @@ class SecondReader(Form):
     sr_signature = db.Column(db.String())
 
 # class User(db.Model):
-#     netID = db.Column(db.String(20), index=True, unique=True, primary_key = True)
+#     netID = db.Column(db.String(20), primary_key = True)
 #     user_type = db.Column(db.String(20), index=True)
 
-#     def __repr__(self):
-#         return '<User %r>' % (self.netID)
-
-# class Student(User):
-#     advisor_netID = db.Column(db.String(20))
-#     second_reader_netID = db.Column(db.String(20))
-
 class User(db.Model):
-    netID = db.Column(db.Integer, primary_key = True)
-    # nickname = db.Column(db.String(64), unique = True)
-    # email = db.Column(db.String(120), index = True, unique = True)
+    id = db.Column(db.Integer, primary_key = True)
+    netID = db.Column(db.String(20), index=True)
+    user_type = db.Column(db.String(20), index=True)
+
+class Student(User):
+    advisor_netID = db.Column(db.String(20))
+    second_reader_netID = db.Column(db.String(20))
+
+# class Faculty(User):
+    # how to get lists with sqlalchemy?
+
 
 # # for when we get netIDs working
 # class Student(User):
