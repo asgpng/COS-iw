@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Add Users{% endblock %}
+{% block head %}
+<script type="text/javascript">
+
+function check() {
+    var filename = document.getElementById("newFile").value;
+    var extension = filename.split('.').pop()
+    if (extension != "xls") || (extension != "csv") {
+        window.alert("You did not select a valid file!");
+	    return false;
+    }
+    else
+	    return true;
+}
+</script>
+{% endblock %}
+{% block content %}
+<h1>User Administration</h1>
+<p>There
+  {% if users|length != 1 %} are currently
+  {{ users|length }} users.</p>
+{% else %} is currently
+{{ users|length }} user.</p>
+{% endif %}
+
+<h2>Current Users</h2>
+
+<form action="/admin/users?action=add" method="post">
+<table border="1">
+  <tr>
+    <th><a href="users?{{ {'sort_by':'user_type'} | urlencode }}">User Type:</a></th>
+    <th><a href="users?{{ {'sort_by':'netID'} | urlencode }}">User netID:</a></th>
+    <th>Link:</th>
+    <th>Delete:</th>
+  </tr>
+  {% for user in users %}
+  <tr>
+    <td>{{ user.user_type }}</td>
+    <td>{{ user.netID }}</td>
+    <td><a href="user_view?{{ {'user_type':user.user_type, 'user_netID':user.netID} | urlencode}}">View complete result </a></td>
+    <!-- make it so you don't need to refresh to view changes -->
+    <!-- potential security issue -->
+    <td><a href="user_delete?{{ {'user_type':user.user_type, 'netID':user.netID} | urlencode}}">delete user </a></td>
+    </td>
+  </tr>
+
+  {% endfor %}
+<tr>
+  <td>
+    <!-- <input type="text" name="user_type"/> -->
+    <select name="user_type">
+      <option value="student">Student</option>
+      <option value="faculty">Faculty</option>
+      <option value="administrator">Administrator</option>
+    </select>
+  </td>
+  <td>
+    <input type="text" name="user_netID"/>
+  </td>
+  <td>
+    <input type="submit" value="New User">
+  </tr>
+</tr>
+
+</table>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,50 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Princeton CS IW & Thesis Signup Form</h1>
+  <form action="" method="post" name="signup">
+    {{ form.hidden_tag() }}
+    <p>
+      Student NetID:<br>
+      {{form.student_netID}}<br>
+    </p>
+    <p>
+      Student Name:<br>
+      {{form.student_name}}<br>
+    </p>
+    <p>
+      Class:<br>
+      {{form.class_year}}<br>
+    </p>
+    <p>
+      Please check one:
+      {{form.coursework}}
+    </p>
+    <p>
+      Title of Project:<br>
+      {{form.title}}
+    </p>
+    <p>
+      Description:<br>
+      {{form.description}}
+    </p>
+    <p>
+      Advisor Name:<br>
+      {{form.advisor_name}}<br>
+    </p>
+    <p>
+      Advisor NetID:<br>
+      {{form.advisor_netID}}<br>
+    </p>
+    <p>
+      Advisor Department:<br>
+      {{form.advisor_department}}<br>
+    </p>
+    <p>
+      I agree to be responsible for all relevant deadlines. (Electronic Signature)
+      {{form.student_signature}}<br>
+    </p>
+    <p><input type="submit" value="Sign In"></p>
+  </form>
+{% endblock %}
