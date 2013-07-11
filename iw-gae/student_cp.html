@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block student %}
+{% if not_init %}
+<h3>You must fill out the sign-up form to initialize the independent research process for the current semester.</h3>
+{% else %}
+<h1>Student Control Panel</h1>
+<h3>Current Status</h3>
+<div class="container">
+<br>
+<div>
+<label>Current Advisor:
+<b>   {{ advisor_netID}} </b>
+{% if approved %}
+(Approved)
+{% else %}
+(Request Pending)
+{% endif %}
+</div>
+{% endif %}
+{% endblock %}

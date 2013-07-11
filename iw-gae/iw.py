@@ -819,6 +819,51 @@ class StudentSelect(webapp2.RequestHandler):
         else:
             self.redirect('/forms/unsubmitted')
 
+class StudentControlPanel(webapp2.RequestHandler):
+
+    def get(self):
+        current_user = getCurrentUser(self)
+        if current_user.user_type != 'student':
+            self.redirect('/unauthorized')
+
+        query_params = {'student_netID': current_user.netID, 'form_type': 'signup' }
+        query = object_query(Form, query_params)
+        form = query.get()
+        
+        
+
+        not_init = False
+        if form == None:
+            not_init = True
+        
+        advisor_netID = None
+        approved = True
+
+        if not not_init:
+            advisor_netID = form.advisor_netID
+            query_params = {'netID': advisor_netID}
+            query = object_query(Faculty, query_params)
+            advisor = query.get()
+
+            advisor_netID = form.advisor_netID
+
+            if current_user.netID not in advisor.student_netIDs:
+                approved = False
+
+        template_values = {
+            'not_init': not_init,
+            'current_user': current_user,
+            'advisor_netID': advisor_netID,
+            'approved': approved
+            }
+
+
+        template = JINJA_ENVIRONMENT.get_template("student_cp.html")
+        self.response.write(template.render(template_values))
+    
+
+
+
 application = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/about', About),
@@ -854,6 +899,7 @@ application = webapp2.WSGIApplication([
     ('/messages', MessageView),
     ('/forms/approve', ApproveAdvisees),
     ('/forms/select?', StudentSelect),
+    ('/student/cp', StudentControlPanel)
 
 ], debug=True)
 
