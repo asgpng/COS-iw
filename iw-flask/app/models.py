@@ -77,6 +77,9 @@ class User(db.Model):
     netID = db.Column(db.String(20), index=True)
     user_type = db.Column(db.String(20), index=True)
 
+    def __repr__(self):
+        return '<User %r>' % (self.netID)
+
 class Student(User):
     advisor_netID = db.Column(db.String(20))
     second_reader_netID = db.Column(db.String(20))

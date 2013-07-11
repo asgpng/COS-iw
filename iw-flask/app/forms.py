@@ -3,9 +3,9 @@ from flask.ext.wtf import Required, Length
 # from flask.ext.babel import gettext
 from app.models import User
 
-# class LoginForm(Form):
-#     netID = TextField('netID', validators = [Required()])
-#     remember_me = BooleanField('remember_me', default = False)
+class LoginForm(Form):
+    netID = TextField('netID', validators = [Required()])
+    remember_me = BooleanField('remember_me', default = False)
 
 departments = [
 ("ANT","Anthropology"),

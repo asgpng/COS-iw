@@ -1,5 +1,6 @@
 from functools import wraps
-from flask import request, render_template
+from flask import request, render_template, session
+from models import User
 
 def template(template=None):
     def decorator(f):
@@ -18,11 +19,12 @@ def template(template=None):
         return decorated_function
     return decorator
 
-def login_user(user):
+def login_user(user, netID):
     if user != None:
         current_user = user
     else:
-        current_user = User(netID=netID, user_type = 'default')
-        db.session.add(current_user)
-        db.session.commit()
+        # current_user = User(netID=netID, user_type = 'default')
+        # db.session.add(current_user)
+        # db.session.commit()
+        pass
     session['user'] =  current_user

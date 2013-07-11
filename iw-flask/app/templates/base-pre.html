@@ -9,7 +9,7 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link rel="stylesheet" type="text/css" href="/iw-flask/app/static/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap.css')}}"/>
 
     {% block head %}
     <title>{{title}} - COS IW</title>

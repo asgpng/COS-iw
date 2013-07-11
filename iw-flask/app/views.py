@@ -1,6 +1,6 @@
 from app import app, db
 from models import *
-from forms import *
+from forms import LoginForm
 from methods import *
 from flask import render_template, request, session, g, redirect, url_for, flash
 from flask.ext.babel import gettext
@@ -12,11 +12,13 @@ TIME_SLEEP = 0.1
 
 @app.before_request
 def before_request():
-    if session['user']:
-        user = User.query.filter(netID=session['user'].netID).first()
-    else:
+    try:
+        # session['user']
+        user = User.query.filter(User.netID==session['user'].netID).first()
+    except KeyError:
         user = User(netID='anonymous', user_type='unknown')
     g.user = user
+    # session['user'] = user
 
 # general links
 @app.route('/')
@@ -30,8 +32,7 @@ def index():
 def cas_login():
     C = CASClient.CASClient()
     netID = C.Authenticate()
-    user = User.query.filter(User.netID == netID).first()
-    login_user(user)
+    login_user(netID)
     return redirect(url_for('/'))
 
 @app.route('/about')
@@ -44,12 +45,8 @@ def about():
 def contact():
     return dict(title = 'Contact',)
 
-@app.route('/test')
-@template('test/test.html')
-def test():
-    return dict(title = 'test',)
 
-@app.route('/form-test', methods = ['GET', 'POST'])
+@app.route('/form_test', methods = ['GET', 'POST'])
 # @template('form_test.html')
 def form_test():
     # form = SignupForm()
@@ -89,18 +86,41 @@ def form_test():
                                form = form,
                            )
 
+@app.route('/test')
+# @template('test/test.html')
+def test():
+    # return dict(title = 'test',)
+    return url_for('form_test')
 
-@app.route('/login')
+
+@app.route('/login', methods = ['GET', 'POST'])
 @template('login.html')
 def login():
-    if request.method == 'GET':
-        return dict(title = 'Login',)
-    else:
-        if g.user is not None:
-            return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for netID="' + form.netID.data + '"')
+        return redirect('/index')
+    return dict(title = 'Login', form = form)
+
+    # if request.method == 'POST':
+    #     try:
+    #         # netID = request.form['netID']
+
+    #         netID = request.form.get('netID')
+    #         password = request.form.get('password')
+    #         out_text = str(netID) + ' ' + str(password)
+    #         return out_text
+    #         # user = User.query.filter_by(netID = netID).first()
+    #         # session['netID'] = netID
+    #         # login_user(user, netID)
+    #         # return redirect(url_for('index'))
+    #     except KeyError:
+    #         return "invalid request"
+    # else:
+    #     return dict(title = 'Login',)
 
 @app.route('/logout')
-@template('logout.html')
+@template('login.html')
 def logout():
     return dict(title = 'Logout',)
 

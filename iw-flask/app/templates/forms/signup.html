@@ -10,11 +10,11 @@
 
   function proceed() {
 
-    var proceed =  highlight(year(), radio(), text0(), text1(), text2(), text3(), text4(), signature()); 
+    var proceed =  highlight(year(), radio(), text0(), text1(), text2(), text3(), text4(), signature());
     if (!proceed) {
 	window.alert("Please check highlighted field(s)!");
   }
-    
+
     return proceed;
   }
 
@@ -124,7 +124,7 @@ function text4() {
 
 function signature() {
     return document.getElementById("signature").checked;
-}	          
+}
 				      </script>
 
 {% endblock %}
@@ -135,7 +135,7 @@ function signature() {
 {% endif %}
 <h2>Princeton CS IW & Thesis Signup Form</h2>
 <div class="container">
-  <form action="/forms/signup" method="post" onsubmit="return proceed();">
+  <form action="{{url_for('/forms/signup'}}" method="post" onsubmit="return proceed();">
 	<div>
 	  <label>Student NetID:</label>
 	  <input type="text" name="student_netID" value="{{ current_user.netID }}" disabled />
@@ -251,4 +251,3 @@ function signature() {
 </div>
 <hr>
 {% endblock %}
-

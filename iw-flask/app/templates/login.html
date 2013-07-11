@@ -2,20 +2,29 @@
 {% block title %}Thesis and COS IW Forms{% endblock %}
 {% block content %}
 <h1>User Login</h1>
-<p>Please enter or netID and password to log in</p>
-<form action="/login" method="post">
-  <div>
-    <label>NetID:</label>
-    <input type="text" name="netID" />
-  </div>
-  <div>
-    <label>Password:</label>
-    <input type="text" name="password" />
-  </div>
-  <div>
-    <input type="submit" value="Submit" />
-  </div>
+<!-- <form action="/iw-flask/index.cgi/login" method="post"> -->
+<!-- <form action="{{url_for('login')}}" method="post" name="login"> -->
+<!-- <form action="" method="post" name="login"> -->
+<!--   <div> -->
+<!--     <label>NetID:</label> -->
+<!--     <input type="text" name="netID" /> -->
+<!--   </div> -->
+<!--   <div> -->
+<!--     <label>Password:</label> -->
+<!--     <input type="text" name="password" /> -->
+<!--   </div> -->
+<!--   <div> -->
+<!--     <input type="submit" value="Submit" /> -->
+<!--   </div> -->
+<!-- </form> -->
+<form action="" method="post" name="login">
+  {{form.hidden_tag()}}
+  <p>Please enter your netID and password to log in.
+  {{form.netID(size=80)}}<br>
+  {% for error in form.errors.netID %}
+  <span style="color: red;">[{{error}}]</span>
+  {% endfor %}
+  </p>
+  <p><input type="submit" value="Login"></p>
 </form>
-
-
 {% endblock %}
