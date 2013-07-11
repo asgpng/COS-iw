@@ -114,7 +114,7 @@ class MainPage(webapp2.RequestHandler):
             }
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
-
+#        self.response.write(user.student_netIDs)
 class About(webapp2.RequestHandler):
 
     def get(self):
@@ -390,34 +390,61 @@ class ApproveAdvisees(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
     def post(self):
+       
+
         current_user = getCurrentUser(self)
 
         approval = self.request.get('agreement')
         student = self.request.get('chosen_student')
-        if approval == 'yes':
-            current_user.student_netIDs.append(student)
-            current_user.student_requests.remove(student)
-            current_user.put()
+        
+        if student in current_user.student_requests:
+            if approval == 'yes':
+                current_user.student_netIDs.append(student)
+                current_user.student_requests.remove(student)
+                current_user.put()
 
-        else:
-            current_user.student_requests.remove(student)
-            current_user.put()
-            query_params = {'student_netID': student}
-            query = object_query(Form, query_params)
-            query = query.fetch()
-            query_length = len(query)
-            for q in range(0, query_length):
-                form = query[q]
+            else:
+                current_user.student_requests.remove(student)
+                current_user.put()
+                query_params = {'student_netID': student}
+                query = object_query(Form, query_params)
+                query = query.fetch()
+                query_length = len(query)
+                for q in range(0, query_length):
+                    form = query[q]
+                    form.key.delete()
+
+
+        elif student in current_user.second_reader_requests:
+            if approval == 'yes':
+                current_user.second_reader_netIDs.append(student)
+                current_user.second_reader_requests.remove(student)
+                current_user.put()
+
+            else:
+                current_user.second_reader_requests.remove(student)
+                current_user.put()
+                query_params = {'student_netID': student, 'form_type': 'second_reader'}
+                query = object_query(Form, query_params)
+                form = query.get()
                 form.key.delete()
 
         time.sleep(TIME_SLEEP)
         self.redirect('/logout')  
 
+
 class FormView(webapp2.RequestHandler):
     # shows the results of what has been submitted
     def get(self):
         # calls helper method
+        current_user = getCurrentUser(self)
         query_params = build_query_params(self)
+        if current_user.user_type == 'student':
+            if current_user.netID != query_params['student_netID']:
+                self.redirect('/')
+        elif current_user.user_type == 'faculty':
+            if query_params['student_netID'] not in current_user.student_netIDs and query_params['student_netID'] not in current_user.second_reader_netIDs:
+                self.redirect('/unauthorized')
         query = object_query(Form, query_params)
         form = query.get()
         template_values = {
@@ -716,11 +743,21 @@ class UserViewSingle(webapp2.RequestHandler):
         query_params = build_query_params(self)
         query = object_query(User, query_params)
         user = query.get()
+        if user.user_type == 'student':
+            query_params2 = {'student_netID': user.netID}
+            query2 = object_query(Form, query_params2)
+            forms = query2.fetch()
+        elif user.user_type == 'advisor':
+            query_params2 = {'advisor_netID': user.netID}
+            query2 = object_query(Form, query_params2)
+            forms = query2.fetch()
 
         template_values = {
+            'forms': forms,
             'user': user,
             'current_user': getCurrentUser(self),
         }
+#        self.response.write(forms)
         template = JINJA_ENVIRONMENT.get_template('user_view.html')
         self.response.write(template.render(template_values))
 
