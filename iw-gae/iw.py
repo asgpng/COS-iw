@@ -437,7 +437,14 @@ class FormView(webapp2.RequestHandler):
     # shows the results of what has been submitted
     def get(self):
         # calls helper method
+        current_user = getCurrentUser(self)
         query_params = build_query_params(self)
+        if current_user.user_type == 'student':
+            if current_user.netID != query_params['student_netID']:
+                self.redirect('/')
+        elif current_user.user_type == 'faculty':
+            if query_params['student_netID'] not in current_user.student_netIDs and query_params['student_netID'] not in current_user.second_reader_netIDs:
+                self.redirect('/unauthorized')
         query = object_query(Form, query_params)
         form = query.get()
         template_values = {
@@ -736,11 +743,21 @@ class UserViewSingle(webapp2.RequestHandler):
         query_params = build_query_params(self)
         query = object_query(User, query_params)
         user = query.get()
+        if user.user_type == 'student':
+            query_params2 = {'student_netID': user.netID}
+            query2 = object_query(Form, query_params2)
+            forms = query2.fetch()
+        elif user.user_type == 'advisor':
+            query_params2 = {'advisor_netID': user.netID}
+            query2 = object_query(Form, query_params2)
+            forms = query2.fetch()
 
         template_values = {
+            'forms': forms,
             'user': user,
             'current_user': getCurrentUser(self),
         }
+#        self.response.write(forms)
         template = JINJA_ENVIRONMENT.get_template('user_view.html')
         self.response.write(template.render(template_values))
 

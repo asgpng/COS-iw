@@ -9,8 +9,9 @@
   
   <p>User type: {{user.user_type}}</p>
   <p>Forms submitted:</p>
-  <!-- add links to forms submitted -->
-
+  {% for form in forms %}
+  <a href="/forms/view?form_type={{form.form_type}}&student_netID={{user.netID}}">{{form.form_type}}</a> <br>
+  {% endfor %}
 </div>
 <hr>
 {% endblock %}
