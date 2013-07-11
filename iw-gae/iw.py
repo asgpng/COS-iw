@@ -173,7 +173,7 @@ class SignupFormPage(webapp2.RequestHandler):
                         coursework = self.request.get('coursework'),
                         project_title = self.request.get('project_title'),
                         description = self.request.get('description'),
-                        advisor_signature = bool(self.request.get('advisor_signature')),
+
                         advisor_name = self.request.get('advisor_name'),
                         advisor_netID = self.request.get('advisor_netID'),
                         advisor_department = self.request.get('advisor_department'),
@@ -280,7 +280,6 @@ class FebruaryFormPage(webapp2.RequestHandler):
         if current_user.user_type == 'student':
             ff = FebruaryForm(student_name = self.request.get('student_name'),
                               project_title = self.request.get('project_title'),
-                              description = self.request.get('description'),
                               advisor_name = self.request.get('advisor_name'),
                               advisor_netID = self.request.get('advisor_netID'),
                               number_of_meetings = int(self.request.get('number_of_meetings')),
