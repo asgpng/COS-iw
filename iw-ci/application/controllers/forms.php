@@ -27,4 +27,9 @@ class Forms extends CI_Controller {
     $this->twiggy->template('query')->display();
   }
 
+  public function approve() {
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->template('approve')->display();
+  }
+
 }

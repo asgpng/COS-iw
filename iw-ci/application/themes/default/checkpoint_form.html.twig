@@ -1,6 +1,7 @@
 {% extends "base.html.twig" %}
-{% block title %}Checkpoint Form{% endblock %}
 {% block head %}
+
+
 <script type = "text/javascript">
 
 function disable() {
@@ -120,22 +121,20 @@ return result;
 }
 
 </script>
-{% endblock %}
 
-{% block header %}
-{% if current_user.user_type=="student" %}
-<form action="/forms/checkpoint" method="post" onsubmit="return checkStudent();">
-{% elif current_user.user_type=="faculty" %}
-<form action="/forms/checkpoint" method="post" onsubmit="return checkAdvisor();">
-{% endif %}
 {% endblock %}
-{% block studentOnly %}
+{% block content %}
+
+
+<form action="/forms/checkpoint" method="post" onsubmit="return checkAdvisor();">
+
+
 <h3>Student Section:</h3>
   <div class="container">
     <div>
       <label>Student NetID: </label>
-      <input type="text" name="student_netID" id="student_netID" value="{{current_user.netID}}" disabled />
-        <input type="hidden" name="student_netID_hidden" value="{{current_user.netID}}"/>
+      <input type="text" name="student_netID" id="student_netID" value="" disabled />
+        <input type="hidden" name="student_netID_hidden" value=""/>
     </div>
     <div>
       <label>Student Name:</label>
@@ -159,8 +158,8 @@ return result;
       <textarea name="student_self_assessment" rows="5" cols="60" id="student_self_assessment"></textarea>
     </div>
   </div>
-{% endblock %}
-{% block advisor %}
+
+
 <h2>Princeton CS IW Checkpoint Form</h2>
 <body onload="disable()">
 <h3>Student Section:</h3>
@@ -223,8 +222,6 @@ return result;
       <textarea name="advisor_comments" id="advisor_comments" rows="4" cols="60"></textarea>
     </div>
 </body>
-  {% endblock %}
-  {% block submit %}
     <div id="submit">
       <input type="submit" value="Submit">
     </div>
@@ -233,4 +230,5 @@ return result;
 </form>
 
 <hr>
+
 {% endblock %}

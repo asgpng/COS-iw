@@ -1,0 +1,14 @@
+<?php
+
+class Files extends CI_Controller {
+
+  public function new_file() {
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->template('new_file')->display();
+  }
+
+  public function view_list() {
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->template('view_list')->display();
+  }
+}
