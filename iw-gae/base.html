@@ -59,6 +59,9 @@
 	          <li class="forms"><a href="/forms/february">February Progress Form</a></li>(for all 2-semester work)
 	          <li class="forms"><a href="/forms/second_reader">Second Reader Form</a></li>(for all 2-semester work)
 		  {% endif %}
+		  {% if current_user.user_type == "student" %}
+		  <li class="forms"><a href="/student/cp">Student Control Panel</a></li>
+		  {% endif %}
               <li><a href="/forms/query">Form Query</a></li>
 
               <!-- custom user links: -->
