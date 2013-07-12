@@ -185,9 +185,12 @@ class SignupFormPage(webapp2.RequestHandler):
         if advisor_verified:
             sf.put()
             current_user = getCurrentUser(self)
-            current_user.advisor_netID = sf.advisor_netID
 
-            query_params = {'netID': sf.advisor_netID}
+            advisor_netID = sf.advisor_netID
+            current_user.advisor_netID = advisor_netID
+            current_user.put()
+
+            query_params = {'netID': advisor_netID}
             query = object_query(Faculty, query_params)
             user_faculty = query.get()
             user_faculty.student_requests.append(sf.student_netID)
@@ -334,6 +337,8 @@ class SecondReaderFormPage(webapp2.RequestHandler):
             self.redirect('/forms/select?' + urllib.urlencode(query_params))
 
     def post(self):
+
+        current_user = getCurrentUser(self)
         srf = SecondReaderForm(student_name=self.request.get('student_name'),
                                student_netID = self.request.get('student_netID_hidden'),
                                class_year =int(self.request.get('class_year')),
@@ -349,6 +354,9 @@ class SecondReaderFormPage(webapp2.RequestHandler):
         
         if advisor_verified:
             srf.put()
+            
+            current_user.second_reader_netID = srf.sr_netID
+            current_user.put()
             
             query_params = {'netID': srf.sr_netID}
             query = object_query(Faculty, query_params)
@@ -831,8 +839,6 @@ class StudentControlPanel(webapp2.RequestHandler):
         query = object_query(Form, query_params)
         form = query.get()
         
-        
-
         not_init = False
         if form == None:
             not_init = True
@@ -843,13 +849,15 @@ class StudentControlPanel(webapp2.RequestHandler):
         sr_netID = None
         approved_sr = "Approved"
 
+        checkpoint = "Not Submitted"
+        february = "Not Submitted"
+        second_reader = "Not Submitted"
+
         if not not_init:
             advisor_netID = form.advisor_netID
             query_params = {'netID': advisor_netID}
             query = object_query(Faculty, query_params)
             advisor = query.get()
-
-            advisor_netID = form.advisor_netID
 
             if current_user.netID not in advisor.student_netIDs:
                 approved_advisor = False
@@ -860,7 +868,6 @@ class StudentControlPanel(webapp2.RequestHandler):
 
             if sr != None:
                 sr_netID = sr.sr_netID
-                
                 query_params = {'netID': sr_netID}
                 query = object_query(Faculty, query_params)
                 advisor = query.get()
@@ -868,13 +875,37 @@ class StudentControlPanel(webapp2.RequestHandler):
                 if current_user.netID not in advisor.second_reader_netIDs:
                     approved_sr = "Request Pending"
 
+            query_params = {'student_netID': current_user.netID, 'form_type': 'checkpoint'}
+            query = object_query(Form, query_params)
+            query = query.get()
+            if query != None:
+                checkpoint = "Submitted"
+
+            query_params = {'student_netID': current_user.netID, 'form_type': 'february'}
+            query = object_query(Form, query_params)
+            query = query.get()
+            if query != None:
+                february = "Submitted"
+
+            query_params = {'student_netID': current_user.netID, 'form_type': 'second_reader'}
+            query = object_query(Form, query_params)
+            query = query.get()
+            if query != None:
+                second_reader = "Submitted"
+        
+
         template_values = {
             'not_init': not_init,
             'current_user': current_user,
             'advisor_netID': advisor_netID,
             'approved_advisor': approved_advisor,
             'sr_netID': sr_netID,
-            'approved_sr': approved_sr
+            'approved_sr': approved_sr,
+            'signup': 'Submitted',
+            'checkpoint': checkpoint,
+            'february': february,
+            'second_reader': second_reader
+            
             }
 
 
@@ -882,7 +913,92 @@ class StudentControlPanel(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
     
 
+    def post(self):        
+        current_user = getCurrentUser(self)
 
+        advisor_netID = self.request.get("advisors")
+        form_type = self.request.get("forms")
+
+        self.response.write(advisor_netID)
+
+        if advisor_netID != "":
+            query_params = {'netID': advisor_netID}
+            query = object_query(Faculty, query_params)
+            advisor = query.get()
+
+            if current_user.netID in advisor.student_netIDs:
+                advisor.student_netIDs.remove(current_user.netID)
+                query_params = {'student_netID': current_user.netID}
+                query = object_query(Form, query_params)
+                query = query.fetch()
+                query_length = len(query)
+                for q in range(0, query_length):
+                    form = query[q]
+                    form.key.delete()
+
+                current_user.advisor_netID = None
+                current_user.put()
+
+            elif current_user.netID in advisor.student_requests:
+                advisor.student_requests.remove(current_user.netID)
+                query_params = {'student_netID': current_user.netID}
+                query = object_query(Form, query_params)
+                query = query.fetch()
+                query_length = len(query)
+                for q in range(0, query_length):
+                    form = query[q]
+                    form.key.delete()
+
+                current_user.advisor_netID = None
+                current_user.put()
+
+            elif current_user.netID in advisor.second_reader_netIDs:
+                advisor.second_reader_netIDs.remove(current_user.netID)
+                query_params = {'student_netID': current_user.netID, 'form_type': 'second_reader'}
+                query = object_query(Form, query_params)
+                form = query.get()
+                form.key.delete()
+            
+                current_user.second_reader_netID = None
+                current_user.put()
+
+            else:
+                advisor.second_reader_requests.remove(current_user.netID)
+                query_params = {'student_netID': current_user.netID, 'form_type': 'second_reader'}
+                query = object_query(Form, query_params)
+                form = query.get()
+                form.key.delete()
+                
+                current_user.second_reader_netID = None
+                current_user.put()
+
+            advisor.put()
+
+        elif form_type != "":
+
+            query_params = {'student_netID': current_user.netID, 'form_type': form_type }
+            query = object_query(Form, query_params)
+            form = query.get()
+            form.key.delete()
+
+            if form_type == 'second_reader':
+                sr_netID = form.sr_netID
+                query_params = {'netID': sr_netID }
+                query = object_query(Faculty, query_params)
+                sr = query.get()
+                
+                if current_user.netID in sr.second_reader_netIDs:
+                    sr.second_reader_netIDs.remove(current_user.netID)
+                    sr.put()
+
+                else:
+                    sr.second_reader_requests.remove(current_user.netID)
+                    sr.put()
+
+
+        self.redirect('/')
+            
+            
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),

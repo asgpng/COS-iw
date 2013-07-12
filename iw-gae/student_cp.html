@@ -1,29 +1,119 @@
 {% extends "base.html" %}
+{% block title %}Semester Status{% endblock %}
+{% block header %}
+
+<script type="text/javascript">
+
+    function checkRemove() {
+    
+    
+    
+    var radios = document.getElementsByName("advisors");
+   
+    if ((!radios[0].checked) && (!radios[1].checked)) {
+        //alert(radios[0].checked);
+	alert("You did not select an advisor!");
+	return false;
+    }
+
+    else 
+	
+	if ((radios[1].checked) && (radios[1].value == "None")) {
+     	    alert("You do not have a second reader yet. Please fill out the second reader form.");
+	    return false
+	}
+    var result = confirm("Are you sure you want to delete your connection to the selected advisor? Deleting your main advisor will also delete all your forms.");
+    
+    if (result) {
+
+	var other = document.getElementsByName("forms");
+	for (var i = 0; i < other.length; i++)
+	    other[i].checked = false;
+    }
+
+    return result;
+
+}
+
+
+function checkDelete() {
+
+    var radios = document.getElementsByName("forms");
+    var proceed = false;
+
+    //    if (radios[0].checked) {
+    //alert("You cannot delete your signup form. Remove your primary advisor instead to erase all of forms.");
+    //return false;
+    //}
+
+    for (var i = 1; i < radios.length; i++) {
+	if (radios[i].checked) {
+	    proceed = true;
+	    break;
+	}
+    }
+    
+    if (!proceed) {
+	alert("You did not select a form!");
+	return proceed;
+    }
+
+    result = confirm("Are you sure you want to delete this form? You will need to re-submit it.");
+    
+    if (result) {
+	var other = document.getElementsByName("advisors");
+	for (var i = 0; i < other.length; i++)
+	    other[i].checked = false;
+    }
+    return result;
+}    
+	
+
+</script>
+
+
+{% endblock %}
 {% block student %}
 {% if not_init %}
 <h3>You must fill out the sign-up form to initialize the independent research process for the current semester.</h3>
 {% else %}
+
 <h1>Student Control Panel</h1>
 <h3>Current Status</h3>
 <div class="container">
 <br>
+<form action="/student/cp" method="post">
 <div>
-<label>Current Advisor:
+<input type="radio" name="advisors" value="{{ advisor_netID }}">  
+ Current Advisor:
 <b>   {{ advisor_netID}} </b>
 {% if approved_advisor %}
 (Approved)
 {% else %}
 (Request Pending)
 {% endif %}
-</label>
 </div>
-{% endif %}
-
-<label>Current Second Reader:
+<div>
+<input type="radio" name="advisors" value="{{ sr_netID }}">   
+Current Second Reader:
 <b>   {{ sr_netID}} </b>
 {% if sr_netID != None %}
 ({{approved_sr}})
 {% endif %}
-</label>
 </div>
+<br>
+<div>
+<input type="submit" value="Remove" onclick="return checkRemove();">  
+</div>
+<br>
+<br>
+<label>Forms:</label>
+<input type="radio" name="forms" value="signup" disabled> Signup Form: <b> {{ signup }}</b><br>
+<input type="radio" name="forms" value="checkpoint"> Checkpoint Form I: <b> {{ checkpoint }} </b><br>
+<!--Checkpoint Form II:<b> {{ checkpoint }}</b><br>-->
+<input type="radio" name="forms" value="february"> February Progress Form: <b> {{ february }}</b><br>
+<input type="radio" name="forms" value="second_reader"> Second Reader Form: <b> {{ second_reader }}</b><br>
+<input type="submit" value="Delete" onclick="return checkDelete();">
+</div>
+{% endif %}
 {% endblock %}
