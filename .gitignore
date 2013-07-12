@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 *.pyc
 *#
 *.bak
@@ -9,4 +8,5 @@
 /composer.lock
 /iw-php/cache
 /iw-flask/modules
->>>>>>> 4314ba6e8d517ca7d09c48d34487a3d80142de76
+/iw-werk
+/other
