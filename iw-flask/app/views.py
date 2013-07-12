@@ -90,34 +90,34 @@ def form_test():
 # @template('test/test.html')
 def test():
     # return dict(title = 'test',)
-    return url_for('form_test')
+    return url_for('test')
 
 
 @app.route('/login', methods = ['GET', 'POST'])
-@template('login.html')
+# @template('login.html')
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        flash('Login requested for netID="' + form.netID.data + '"')
-        return redirect('/index')
-    return dict(title = 'Login', form = form)
+    # form = LoginForm();
+    # if form.validate_on_submit():
+    #     flash('Login requested for netID="' + form.netID.data + '"')
+    #     return redirect('/index')
+    # return dict(title = 'Login', form = form)
 
-    # if request.method == 'POST':
-    #     try:
-    #         # netID = request.form['netID']
-
-    #         netID = request.form.get('netID')
-    #         password = request.form.get('password')
-    #         out_text = str(netID) + ' ' + str(password)
-    #         return out_text
-    #         # user = User.query.filter_by(netID = netID).first()
-    #         # session['netID'] = netID
-    #         # login_user(user, netID)
-    #         # return redirect(url_for('index'))
-    #     except KeyError:
-    #         return "invalid request"
-    # else:
-    #     return dict(title = 'Login',)
+    if request.method == 'POST':
+        # netID = request.form['netID']
+        # netID = request.form.get('netID')
+        # netID = request.form['netID']
+        # password = request.form.get('password')
+        # out_text = str(netID) + ' ' + str(password)
+        # out_text = str(netID)
+        # print 'debug'
+        return request.form.get('netID')
+        # user = User.query.filter_by(netID = netID).first()
+        # session['netID'] = netID
+        # login_user(user, netID)
+        # return redirect(url_for('index'))
+    else:
+        return render_template('login.html')
+        # return dict(title = 'Login',)
 
 @app.route('/logout')
 @template('login.html')

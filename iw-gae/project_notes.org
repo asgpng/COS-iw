@@ -175,3 +175,10 @@ Notes:
   - TODO: don't let user access form if it has been submitted
   - access speiw with Konstantine
   - PHPUnit
+- [2013-07-11 Thu]
+  - meeting with Adam Finkelstein:
+  - semesters
+  - multiple roles (switching?)
+    - defaults to advisor, but lets you switch if possible
+  - username from LDAP
+  - validation -> submit goes back if wrong (to preserve data)
