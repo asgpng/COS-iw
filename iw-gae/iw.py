@@ -800,6 +800,7 @@ class StudentSelect(webapp2.RequestHandler):
 
         template = JINJA_ENVIRONMENT.get_template('select.html')
         self.response.write(template.render(template_values))
+        self.response.write(getCurrentUser(self).student_requests)
 
     def post(self):
         query_params = build_query_params(self)
@@ -837,7 +838,10 @@ class StudentControlPanel(webapp2.RequestHandler):
             not_init = True
         
         advisor_netID = None
-        approved = True
+        approved_advisor = True
+
+        sr_netID = None
+        approved_sr = "Approved"
 
         if not not_init:
             advisor_netID = form.advisor_netID
@@ -848,13 +852,29 @@ class StudentControlPanel(webapp2.RequestHandler):
             advisor_netID = form.advisor_netID
 
             if current_user.netID not in advisor.student_netIDs:
-                approved = False
+                approved_advisor = False
+
+            query_params = {'student_netID': current_user.netID, 'form_type': 'second_reader' }
+            query = object_query(Form, query_params)
+            sr = query.get()
+
+            if sr != None:
+                sr_netID = sr.sr_netID
+                
+                query_params = {'netID': sr_netID}
+                query = object_query(Faculty, query_params)
+                advisor = query.get()
+
+                if current_user.netID not in advisor.second_reader_netIDs:
+                    approved_sr = "Request Pending"
 
         template_values = {
             'not_init': not_init,
             'current_user': current_user,
             'advisor_netID': advisor_netID,
-            'approved': approved
+            'approved_advisor': approved_advisor,
+            'sr_netID': sr_netID,
+            'approved_sr': approved_sr
             }
 
 

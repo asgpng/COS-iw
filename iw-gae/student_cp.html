@@ -10,11 +10,20 @@
 <div>
 <label>Current Advisor:
 <b>   {{ advisor_netID}} </b>
-{% if approved %}
+{% if approved_advisor %}
 (Approved)
 {% else %}
 (Request Pending)
 {% endif %}
+</label>
 </div>
 {% endif %}
+
+<label>Current Second Reader:
+<b>   {{ sr_netID}} </b>
+{% if sr_netID != None %}
+({{approved_sr}})
+{% endif %}
+</label>
+</div>
 {% endblock %}
