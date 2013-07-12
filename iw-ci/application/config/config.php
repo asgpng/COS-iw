@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= '/iw-ci';
+$config['base_url']	= 'spe-iw.cs.princeton.edu/iw-ci/';
 
 /*
 |--------------------------------------------------------------------------
