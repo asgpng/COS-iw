@@ -41,11 +41,11 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 /* $route['pages'] = 'pages/'; */
-$route['forms'] = 'forms/';
-$route['files'] = 'files/';
+$route['forms'] = 'forms';
+$route['files'] = 'files';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
-$route['default_controller'] = 'pages/';
+$route['pages'] = 'pages';
 /* $route['(:any)'] = 'pages/view/$1'; */
 
 

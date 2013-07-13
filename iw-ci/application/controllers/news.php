@@ -10,16 +10,6 @@ class News extends CI_Controller {
   public function index()
   {
     $data['news'] = $this->news_model->get_news();
-  }
-
-  public function view($slug)
-  {
-    $data['news'] = $this->news_model->get_news($slug);
-  }
-
-  public function index()
-  {
-    $data['news'] = $this->news_model->get_news();
     $data['title'] = 'News archive';
 
     $this->load->view('templates/header', $data);
@@ -44,4 +34,3 @@ class News extends CI_Controller {
   }
 
   }
-
