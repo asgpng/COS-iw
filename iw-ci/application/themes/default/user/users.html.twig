@@ -29,23 +29,23 @@ function check() {
 <form action="/admin/users?action=add" method="post">
 <table border="1">
   <tr>
-    <th><a href="users?{{ {'sort_by':'user_type'} | urlencode }}">User Type:</a></th>
-    <th><a href="users?{{ {'sort_by':'netID'} | urlencode }}">User netID:</a></th>
+    {# <th><a href="users?{{ {'sort_by':'user_type'} | urlencode }}">User Type:</a></th> #}
+    {# <th><a href="users?{{ {'sort_by':'netID'} | urlencode }}">User netID:</a></th> #}
     <th>Link:</th>
     <th>Delete:</th>
   </tr>
-  {% for user in users %}
-  <tr>
-    <td>{{ user.user_type }}</td>
-    <td>{{ user.netID }}</td>
-    <td><a href="user_view?{{ {'user_type':user.user_type, 'user_netID':user.netID} | urlencode}}">View User</a></td>
-    <!-- make it so you don't need to refresh to view changes -->
-    <!-- potential security issue -->
-    <td><a href="user_delete?{{ {'user_type':user.user_type, 'netID':user.netID} | urlencode}}">delete user </a></td>
-    </td>
-  </tr>
+  {# {% for user in users %} #}
+  {# <tr> #}
+  {#   <td>{{ user.user_type }}</td> #}
+  {#   <td>{{ user.netID }}</td> #}
+  {#   <td><a href="user_view?{{ {'user_type':user.user_type, 'user_netID':user.netID} | urlencode}}">View User</a></td> #}
+  {#   <!-- make it so you don't need to refresh to view changes --> #}
+  {#   <!-- potential security issue --> #}
+  {#   <td><a href="user_delete?{{ {'user_type':user.user_type, 'netID':user.netID} | urlencode}}">delete user </a></td> #}
+  {#   </td> #}
+  {# </tr> #}
 
-  {% endfor %}
+  {# {% endfor %} #}
 <tr>
   <td>
     <!-- <input type="text" name="user_type"/> -->

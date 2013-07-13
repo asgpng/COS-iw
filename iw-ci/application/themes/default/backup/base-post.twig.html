@@ -1,0 +1,66 @@
+<!-- base-post.html: for users before after logging out -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" type="text/css" href="/iw-ci/bootstrap.css" />
+
+    {% block head %}
+    <title>{% block title %}{% endblock %} - COS IW</title>
+    {% endblock %}
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/">Princeton COS IW</a>
+          <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              Logged in as <a href="/logout" class="navbar-link">{{current_user.netID}}</a>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li><p>You have been logged out. Thank you for using this site.</p></li>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          {% block content %}
+          {% endblock %}
+        </div><!--/span-->
+      </div><!--/row-->
+      <hr>
+      <footer>
+        <p>&copy; Princeton University 2013</p>
+      </footer>
+    </div><!--/.fluid-container-->
+  </body>
+</html>

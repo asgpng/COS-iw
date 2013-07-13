@@ -14,7 +14,11 @@
 | path to your installation.
 |
 */
+<<<<<<< HEAD
 $config['base_url']	= '/iw-ci/';
+=======
+$config['base_url']	= '/iw-ci';
+>>>>>>> f780a475f58ef2376b2c1da5be547d4520fc47f0
 
 /*
 |--------------------------------------------------------------------------

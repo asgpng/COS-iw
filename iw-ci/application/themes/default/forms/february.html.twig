@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html.twig" %}
 {% block head %}
 <script type = "text/javascript">
 
@@ -112,7 +112,7 @@ return result;
 <div class="container">
 {% if  current_user.user_type=="student" %}
 <form action="/forms/february" method="post" onsubmit ="return checkStudent();">
-{% elif current_user.user_type=="faculty" %}
+{% elseif current_user.user_type=="faculty" %}
 <form action="/forms/february" method="post" onsubmit ="return checkAdvisor();">
 {% endif %}
 {% endblock %}
