@@ -16,15 +16,32 @@ class Pages extends CI_Controller {
 
   public function index()
   {
-    $this->about();
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->title('Home')->display('index');
   }
   public function about() {
     $this->load->spark('Twiggy/0.8.5');
-    $this->twiggy->template('index')->display();
+    $this->twiggy->title('About')->display('about');
   }
 
   public function contact() {
     $this->load->spark('Twiggy/0.8.5');
-    $this->twiggy->template('contact')->display();
+    $this->twiggy->title('Contact')->display('contact');
   }
+
+  public function login() {
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->title('Login')->display('login');
+  }
+
+  public function logout() {
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->title('Logout')->display('logout');
+  }
+
+  public function messages() {
+    $this->load->spark('Twiggy/0.8.5');
+    $this->twiggy->title('Messages')->display('messages');
+  }
+
 }

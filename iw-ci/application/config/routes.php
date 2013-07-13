@@ -38,15 +38,20 @@
 |
 */
 
-$route['default_controller'] = "welcome";
+$route['default_controller'] = 'pages';
 $route['404_override'] = '';
-/* $route['pages'] = 'pages/'; */
 $route['forms'] = 'forms';
 $route['files'] = 'files';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
 $route['pages'] = 'pages';
-/* $route['(:any)'] = 'pages/view/$1'; */
+/* default (base) routes: */
+$route['about'] = 'pages/about';
+$route['contact'] = 'pages/contact';
+$route['login'] = 'pages/login';
+$route['logout'] = 'pages/logout';
+$route['messages'] = 'pages/messages';
+
 
 
 /* End of file routes.php */
