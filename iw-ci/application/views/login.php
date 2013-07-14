@@ -1,7 +1,7 @@
 <h1>User Login</h1>
 <p>Please enter or netID and password to log in</p>
 <b><?php echo validation_errors(); ?></b>
-<?php echo form_open('pages/login'); ?>
+<?php echo form_open('defaults/login'); ?>
 <!-- <form action="/iw-ci/index.php/login" method="post"> -->
   <div>
     <label>NetID:</label>
@@ -9,7 +9,7 @@
   </div>
   <div>
     <label>Password:</label>
-    <input type="text" name="password" value="<?php echo set_value('netID'); ?>"/>
+    <input type="password" name="password" value="<?php echo set_value('netID'); ?>"/>
   </div>
   <div>
     <input type="submit" value="Submit" />

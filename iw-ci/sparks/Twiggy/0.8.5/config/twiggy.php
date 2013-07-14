@@ -3,10 +3,10 @@
 /**
  * Twiggy - Twig template engine implementation for CodeIgniter
  *
- * Twiggy is not just a simple implementation of Twig template engine 
+ * Twiggy is not just a simple implementation of Twig template engine
  * for CodeIgniter. It supports themes, layouts, templates for regular
  * apps and also for apps that use HMVC (module support).
- * 
+ *
  * @package   			CodeIgniter
  * @subpackage			Twiggy
  * @category  			Config
@@ -36,7 +36,7 @@ $config['twiggy']['template_file_ext'] = '.html.twig';
 | Syntax Delimiters
 |--------------------------------------------------------------------------
 |
-| If you don't like the default Twig syntax delimiters or if they collide 
+| If you don't like the default Twig syntax delimiters or if they collide
 | with other languages (for example, you use handlebars.js in your
 | templates), here you can change them.
 |
@@ -73,7 +73,7 @@ $config['twiggy']['delimiters'] = array
 | NOTE: cache option works slightly differently than in Twig. In Twig you
 | can either set the value to FALSE to disable caching, or set the path
 | to where the cached files should be stored (which means caching would be
-| enabled in that case). This is not entirely convenient if you need to 
+| enabled in that case). This is not entirely convenient if you need to
 | switch between enabled or disabled caching for debugging or other reasons.
 |
 | Therefore, here the value can be either TRUE or FALSE. Cache directory
@@ -108,7 +108,7 @@ $config['twiggy']['twig_cache_dir'] = APPPATH . 'cache/twig/';
 | Themes Base Dir
 |--------------------------------------------------------------------------
 |
-| Directory where themes are located at. This path is relative to 
+| Directory where themes are located at. This path is relative to
 | CodeIgniter's base directory OR module's base directory. For example:
 |
 | $config['themes_base_dir'] = 'themes/';
@@ -118,7 +118,7 @@ $config['twiggy']['twig_cache_dir'] = APPPATH . 'cache/twig/';
 | {APPPATH}/themes/ and {APPPATH}/modules/{some_module}/themes/.
 |
 | NOTE: modules do not necessarily need to be in {APPPATH}/modules/ as
-| Twiggy will figure out the paths by itself. That way you can package 
+| Twiggy will figure out the paths by itself. That way you can package
 | your modules with themes.
 |
 | Also, do not forget the trailing slash!
@@ -186,13 +186,13 @@ $config['twiggy']['default_template'] = 'index';
 | Here you can list all the functions that you want Twiggy to automatically
 | register them for you.
 |
-| NOTE: only registered functions can be used in Twig templates. 
+| NOTE: only registered functions can be used in Twig templates.
 |
 */
 
 $config['twiggy']['register_functions'] = array
 (
-
+ '_form_open', '_validation_errors'
 );
 
 
@@ -201,7 +201,7 @@ $config['twiggy']['register_functions'] = array
 | Auto-reigster filters
 |--------------------------------------------------------------------------
 |
-| Much like with functions, list filters that you want Twiggy to 
+| Much like with functions, list filters that you want Twiggy to
 | automatically register them for you.
 |
 | NOTE: only registered filters can be used in Twig templates. Also, keep
@@ -212,7 +212,7 @@ $config['twiggy']['register_functions'] = array
 
 $config['twiggy']['register_filters'] = array
 (
-
+ ' _form_open', '_validation_errors'
 );
 
 /*
@@ -220,7 +220,7 @@ $config['twiggy']['register_filters'] = array
 | Title separator
 |--------------------------------------------------------------------------
 |
-| Lets you specify the separator used in separating sections of the title 
+| Lets you specify the separator used in separating sections of the title
 | variable.
 |
 */

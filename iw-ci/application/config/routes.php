@@ -48,9 +48,10 @@ $route['pages'] = 'pages';
 /* default (base) routes: */
 $route['about'] = 'pages/about';
 $route['contact'] = 'pages/contact';
-$route['login'] = 'pages/login';
-$route['logout'] = 'pages/logout';
+$route['login'] = 'defaults/login';
+$route['logout'] = 'defaults/logout';
 $route['messages'] = 'pages/messages';
+$route['cas_login'] = 'defaults/cas_login';
 
 
 

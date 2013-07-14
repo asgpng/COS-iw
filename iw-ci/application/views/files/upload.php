@@ -1,6 +1,3 @@
-{% extends "base.html.twig" %}
-{% block title %} Upload New File{% endblock %}
-{% block head %}
 <script type="text/javascript">
 
     function check() {
@@ -14,22 +11,26 @@
 }
 </script>
 
-{% endblock %}
-{% block content %}
 <h2> Upload New File</h2>
 
-<div class="container">
-  <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data">
+<!-- <form action="{{ upload_url }}"  method="POST" onsubmit="return check();" enctype="multipart/form-data"> -->
 
-    <div>
-      Upload File:
-    </div>
-    <input type="file" name="uploadField" id="newFile"/>
-    <input type="hidden" id="fileName"  name="filename" value="" />
-    <input type="hidden" id="fileExt" name="ext" value="" />
-    <div id="submit">
-      <input type="submit" value="Submit">
-    </div>
-  </form>
-</div>
-{% endblock %}
+<!--   <div> -->
+<!--     Upload File: -->
+<!--   </div> -->
+<!--   <input type="file" name="uploadField" id="newFile"/> -->
+<!--   <input type="hidden" id="fileName"  name="filename" value="" /> -->
+<!--   <input type="hidden" id="fileExt" name="ext" value="" /> -->
+<!--   <div id="submit"> -->
+<!--     <input type="submit" value="Submit"> -->
+<!--   </div> -->
+<!-- </form> -->
+<?php echo $error;?>
+
+<?php echo form_open_multipart('files/do_upload');?>
+
+<input type="file" name="userfile" size="20" />
+
+<br /><br />
+
+<input type="submit" value="upload" />

@@ -2,6 +2,13 @@
 
 class Pages extends CI_Controller {
 
+  public function __construct()
+  {
+    parent::__construct();
+    //function inside autoloaded helper, check if user is logged in, if not redirects to login page
+    is_logged_in();
+  }
+
   // Twiggy functions (not working yet)
   function _form_open($form) {
     return form_open($form);
@@ -11,18 +18,6 @@ class Pages extends CI_Controller {
   }
   function _set_value($value) {
     return set_value($value);
-  }
-
-  public function view($page = 'home')
-  {
-    if (! file_exists('application/views/pages/'.$page.'.php'))
-      {
-        show_404();
-      }
-    $data['title'] = ucfirst($page);
-    $this->load->view('templates/header', $data);
-    $this->load->view('pages/'.$page, $data);
-    $this->load->view('templates/footer', $data);
   }
 
   public function index()
@@ -46,39 +41,6 @@ class Pages extends CI_Controller {
     $data['title'] = 'Contact';
     $this->load->view('templates/header', $data);
     $this->load->view('contact', $data);
-    $this->load->view('templates/footer', $data);
-  }
-
-  public function login() {
-    /* $this->twiggy->register_function('_form_open'); */
-    $this->load->helper(array('form', 'url'));
-    $this->load->library('form_validation');
-    $this->form_validation->set_rules('netID', 'netID', 'trim|required|max_length[10]|xss_clean');
-    $this->form_validation->set_rules('password', 'Password', 'trim|required|md5');
-
-    if ($this->form_validation->run())
-      {
-        $data = array();
-        $data['validation_errors'] = validation_errors();
-        $netID = $this->input->post('netID');
-        $userdata = array('netID' => $netID, 'is_logged_in' => true);
-        $this->session->set_userdata($userdata);
-        /* $this->twiggy->title('Home')->display('index'); */
-        /* $this->load->view('test_netID'); */
-        redirect('/', 'refresh');
-      }
-    /* $this->load->view('templates/header-pre'); */
-    /* $this->load->view('login'); */
-    /* $this->load->view('templates/footer'); */
-    $this->twiggy->title('Login')->display('login');
-  }
-
-  public function logout() {
-    /* $this->twiggy->title('Logout')->display('logout'); */
-    $this->session->sess_destroy();
-    $data['title'] = 'Contact';
-    $this->load->view('templates/header-post', $data);
-    $this->load->view('logout', $data);
     $this->load->view('templates/footer', $data);
   }
 
