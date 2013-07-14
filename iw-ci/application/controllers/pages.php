@@ -58,21 +58,24 @@ class Pages extends CI_Controller {
 
     if ($this->form_validation->run())
       {
+        $data = array();
+        $data['validation_errors'] = validation_errors();
         $netID = $this->input->post('netID');
-        $userdata = array('netID' => $netID);
+        $userdata = array('netID' => $netID, 'is_logged_in' => true);
         $this->session->set_userdata($userdata);
         /* $this->twiggy->title('Home')->display('index'); */
         /* $this->load->view('test_netID'); */
         redirect('/', 'refresh');
       }
-    $this->load->view('templates/header-pre');
-    $this->load->view('login');
-    $this->load->view('templates/footer');
-    /* $this->twiggy->title('Login')->display('login'); */
+    /* $this->load->view('templates/header-pre'); */
+    /* $this->load->view('login'); */
+    /* $this->load->view('templates/footer'); */
+    $this->twiggy->title('Login')->display('login');
   }
 
   public function logout() {
     /* $this->twiggy->title('Logout')->display('logout'); */
+    $this->session->sess_destroy();
     $data['title'] = 'Contact';
     $this->load->view('templates/header-post', $data);
     $this->load->view('logout', $data);
