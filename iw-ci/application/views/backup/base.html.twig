@@ -9,10 +9,15 @@
 
     <!-- Le styles -->
     <link rel="stylesheet" type="text/css" href="/iw-ci/bootstrap.css" />
-    <title><?php echo $title ?> - COS IW</title>
+
+    {% block head %}
+    <title>{% block title %}{% endblock %} - COS IW</title>
+    {% endblock %}
+
   </head>
 
   <body>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -25,7 +30,7 @@
           <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-   Logged in as <a href="/iw-ci/index.php/logout" class="navbar-link"><?php echo $this->session->userdata('netID')?></a>
+              Logged in as <a href="/iw-ci/index.php/logout" class="navbar-link">current user</a>
             </p>
             <ul class="nav">
               <li class="active"><a href="/iw-ci/index.php">Home</a></li>
@@ -65,4 +70,17 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
-          <!-- block content -->
+          {% block content %}
+          {% endblock %}
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Princeton University 2013</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+  </body>
+</html>

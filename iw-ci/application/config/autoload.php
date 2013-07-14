@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array();
+$autoload['libraries'] = array('session');
 
 
 /*
@@ -110,6 +110,8 @@ $autoload['language'] = array();
 */
 
 $autoload['model'] = array();
+
+$autoload['sparks'] = array('Twiggy/0.8.5');
 
 
 /* End of file autoload.php */

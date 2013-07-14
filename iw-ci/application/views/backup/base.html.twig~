@@ -9,10 +9,15 @@
 
     <!-- Le styles -->
     <link rel="stylesheet" type="text/css" href="/iw-ci/bootstrap.css" />
-    <title><?php echo $title ?> - COS IW</title>
+
+    {% block head %}
+    <title>{% block title %}{% endblock %} - COS IW</title>
+    {% endblock %}
+
   </head>
 
   <body>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -21,11 +26,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/iw-ci/index.php">Princeton COS IW</a>
+          <a class="brand" href="/">Princeton COS IW</a>
           <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
-   Logged in as <a href="/iw-ci/index.php/logout" class="navbar-link"><?php echo $this->session->userdata('netID')?></a>
+              Logged in as <a href="/iw-ci/index.php/logout" class="navbar-link">current user</a>
             </p>
             <ul class="nav">
               <li class="active"><a href="/iw-ci/index.php">Home</a></li>
@@ -45,8 +50,8 @@
             <ul class="nav nav-list">
               <li class="nav-header">Files</li>
               <!-- <li class="active"><a href="#">Link</a></li> -->
-              <li><a href="/iw-ci/index.php/files/upload">Upload New File</a></li>
-              <li><a href="/iw-ci/index.php/files/view_files">Uploaded Files</a></li>
+              <li><a href="/iw-ci/index.php/files/new_file">Upload New File</a></li>
+              <li><a href="/iw-ci/index.php/files/view_list">Uploaded Files</a></li>
               <li class="nav-header">Forms</li>
 	          <li class="forms"><a href="/iw-ci/index.php/forms/checkpoint">Checkpoint Form</a></li>
 	          <li class="forms"><a href="/iw-ci/index.php/forms/february">February Progress Form</a></li>(for all 2-semester work)
@@ -60,9 +65,23 @@
               <li class="nav-header">Admin</li>
               <li><a href="/iw-ci/index.php/admin/users">View Users</a></li>
               <a href="/iw-ci/index.php/admin/user_upload">User List Upload</a><br>
+              <a href="/iw-ci/index.php/admin/user_process_upload">Process User Upload</a>
               <li><a href="/iw-ci/index.php/messages">Messages</a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
-          <!-- block content -->
+          {% block content %}
+          {% endblock %}
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; Princeton University 2013</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+  </body>
+</html>

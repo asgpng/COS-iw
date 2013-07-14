@@ -1,10 +1,8 @@
-{% extends "base-pre.twig.html" %}
-{% block content %}
 <h1>User Login</h1>
 <p>Please enter or netID and password to log in</p>
-{# {{_validation_errors()}} #}
-{# {{_form_open('pages/login')}} #}
-<form action="/iw-ci/index.php/login" method="post">
+<b><?php echo validation_errors(); ?></b>
+<?php echo form_open('pages/login'); ?>
+<!-- <form action="/iw-ci/index.php/login" method="post"> -->
   <div>
     <label>NetID:</label>
     <input type="text" name="netID" value="<?php echo set_value('netID'); ?>"/>
@@ -17,6 +15,3 @@
     <input type="submit" value="Submit" />
   </div>
 </form>
-
-
-{% endblock %}
