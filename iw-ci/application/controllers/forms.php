@@ -12,6 +12,20 @@ class Forms extends CI_Controller {
   public function signup() {
     /* $this->load->spark('Twiggy/0.8.5'); */
     /* $this->twiggy->title('Signup Form')->display('forms/signup'); */
+    $this->load->model('signup');
+
+    $this->load->helper(array('form', 'url'));
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('student_netID', 'student_netID', 'trim|required|max_length[10]|xss_clean');
+    /* $this->form_validation->set_rules('password', 'Password', 'trim|required|md5'); */
+
+    if ($this->form_validation->run())
+      {
+        $data = array();
+        $data['validation_errors'] = validation_errors();
+        $this->signup->insert_entry();
+        redirect('/', 'refresh');
+      }
     $data['title'] = 'Signup Form';
     $this->load->view('templates/header', $data);
     $this->load->view('forms/signup', $data);

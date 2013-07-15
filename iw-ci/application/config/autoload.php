@@ -109,7 +109,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array();
+$autoload['model'] = array('form');
 
 $autoload['sparks'] = array('Twiggy/0.8.5');
 

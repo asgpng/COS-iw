@@ -49,6 +49,7 @@ $route['pages'] = 'pages';
 $route['about'] = 'pages/about';
 $route['contact'] = 'pages/contact';
 $route['login'] = 'defaults/login';
+$route['login_backup'] = 'defaults/login_backup';
 $route['logout'] = 'defaults/logout';
 $route['messages'] = 'pages/messages';
 $route['cas_login'] = 'defaults/cas_login';
