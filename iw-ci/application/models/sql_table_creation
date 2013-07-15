@@ -13,9 +13,9 @@
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
-  `netID` VARCHAR(12) NOT NULL DEFAULT 'NULL',
+  `netID` VARCHAR(12) NOT NULL,
   `user_type` VARCHAR(16) NOT NULL DEFAULT 'student',
-  `name` VARCHAR(128) NULL DEFAULT NULL,
+  `name` VARCHAR(128) NULL,
   PRIMARY KEY (`netID`)
 ) COMMENT 'Parent user table';
 
@@ -27,9 +27,9 @@ CREATE TABLE `user` (
 DROP TABLE IF EXISTS `students`;
 
 CREATE TABLE `students` (
-  `netID` VARCHAR(12) NOT NULL DEFAULT 'NULL',
-  `advisor_netID` VARCHAR(12) NULL DEFAULT NULL,
-  `forms_submitted` TINYINT NULL DEFAULT NULL,
+  `netID` VARCHAR(12) NOT NULL,
+  `advisor_netID` VARCHAR(12) NULL,
+  `forms_submitted` TINYINT NULL,
   PRIMARY KEY (`netID`)
 ) COMMENT 'student table';
 
@@ -41,11 +41,11 @@ CREATE TABLE `students` (
 DROP TABLE IF EXISTS `faculty`;
 
 CREATE TABLE `faculty` (
-  `netID` VARCHAR(12) NOT NULL DEFAULT 'NULL',
-  `advisee_netIDs` TINYINT NULL DEFAULT NULL,
-  `advisee_requests` TINYINT NULL DEFAULT NULL,
-  `readee_netIDs` TINYINT NULL DEFAULT NULL,
-  `redee_requests` TINYINT NULL DEFAULT NULL,
+  `netID` VARCHAR(12) NOT NULL,
+  `advisee_netIDs` TINYINT NULL,
+  `advisee_requests` TINYINT NULL,
+  `readee_netIDs` TINYINT NULL,
+  `readee_requests` TINYINT NULL,
   PRIMARY KEY (`netID`)
 );
 
@@ -56,16 +56,14 @@ CREATE TABLE `faculty` (
 DROP TABLE IF EXISTS `form`;
 
 CREATE TABLE `form` (
-  `id` INT NOT NULL AUTO_INCREMENT DEFAULT NULL,
-  `form_type` ENUM(20) NOT NULL DEFAULT NULL,
-  `student_netID` VARCHAR(12) NOT NULL DEFAULT 'NULL',
-  `advisor_netID` VARCHAR(12) NULL DEFAULT NULL,
-  `project_title` CHAR(128) NOT NULL DEFAULT 'NULL',
-  `date` DATE NOT NULL DEFAULT 'NULL',
-  PRIMARY KEY (`id`),
-  PRIMARY KEY (`student_netID`),
-  PRIMARY KEY (`advisor_netID`)
-);
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `form_type` VARCHAR(20) NOT NULL,
+  `student_netID` VARCHAR(12) NOT NULL,
+  `advisor_netID` VARCHAR(12) NOT NULL,
+  `project_title` VARCHAR(128) NOT NULL,
+  `date` DATE NOT NULL,
+  PRIMARY KEY (`id`)
+) COMMENT 'form table';
 
 -- ---
 -- Table 'signup'
@@ -74,13 +72,13 @@ CREATE TABLE `form` (
 DROP TABLE IF EXISTS `signup`;
 
 CREATE TABLE `signup` (
-  `id` TINYINT NULL AUTO_INCREMENT DEFAULT NULL,
-  `class_year` SMALLINT(4) NOT NULL DEFAULT NULL,
-  `coursework` VARCHAR(20) NOT NULL DEFAULT 'NULL',
-  `description` VARCHAR NOT NULL DEFAULT 'NULL',
-  `advisor_department` VARCHAR(64) NOT NULL DEFAULT 'NULL',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `class_year` SMALLINT(4) NOT NULL,
+  `coursework` VARCHAR(20) NOT NULL,
+  `description` TEXT(1000) NOT NULL,
+  `advisor_department` VARCHAR(64) NOT NULL,
   PRIMARY KEY (`id`)
-);
+) COMMENT 'signup form table';
 
 -- ---
 -- Table 'checkpoint'
@@ -90,13 +88,13 @@ CREATE TABLE `signup` (
 DROP TABLE IF EXISTS `checkpoint`;
 
 CREATE TABLE `checkpoint` (
-  `id` TINYINT NULL AUTO_INCREMENT DEFAULT NULL,
-  `number_of_meetings` TINYINT NOT NULL DEFAULT NULL,
-  `student_comments` VARCHAR NOT NULL DEFAULT 'NULL',
-  `advisor_read` bit(1) NOT NULL DEFAULT NULL,
-  `advisor_more_meetings` bit(1) NOT NULL DEFAULT NULL,
-  `student_progress_eval` TINYINT(10) NOT NULL DEFAULT NULL,
-  `advisor_comments` VARCHAR NOT NULL DEFAULT 'NULL',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `number_of_meetings` TINYINT(10) NOT NULL,
+  `student_comments` TEXT(1000) NOT NULL,
+  `advisor_read` bit(1) NOT NULL,
+  `advisor_more_meetings` bit(1) NOT NULL,
+  `student_progress_eval` TINYINT(10) NOT NULL,
+  `advisor_comments` TEXT(1000) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -108,13 +106,13 @@ CREATE TABLE `checkpoint` (
 DROP TABLE IF EXISTS `february`;
 
 CREATE TABLE `february` (
-  `id` TINYINT NULL AUTO_INCREMENT DEFAULT NULL,
-  `number_of_meetings` TINYINT(10) NOT NULL DEFAULT NULL,
-  `student_comments` VARCHAR NOT NULL DEFAULT 'NULL',
-  `advisor_read` bit(1) NOT NULL DEFAULT NULL,
-  `advisor_more_meetings` bit(1) NOT NULL DEFAULT NULL,
-  `student_progress_eval` TINYINT(10) NOT NULL DEFAULT NULL,
-  `advisor_comments` VARCHAR NOT NULL DEFAULT 'NULL',
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `number_of_meetings` TINYINT(10) NOT NULL,
+  `student_comments` TEXT(1000) NOT NULL,
+  `advisor_read` bit(1) NOT NULL,
+  `advisor_more_meetings` bit(1) NOT NULL,
+  `student_progress_eval` TINYINT(10) NOT NULL,
+  `advisor_comments` TEXT(1000) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -126,40 +124,39 @@ CREATE TABLE `february` (
 DROP TABLE IF EXISTS `second_reader`;
 
 CREATE TABLE `second_reader` (
-  `id` TINYINT NULL AUTO_INCREMENT DEFAULT NULL,
-  `class_year` SMALLINT(3000) NOT NULL DEFAULT NULL,
-  `description` VARCHAR NOT NULL DEFAULT 'NULL',
-  `sr_netID` VARCHAR(12) NOT NULL DEFAULT 'NULL',
-  `sr_department` VARCHAR(64) NOT NULL DEFAULT 'NULL',
-  PRIMARY KEY (`id`),
-  PRIMARY KEY (`sr_netID`)
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `class_year` INT(100) NOT NULL,
+  `description` TEXT(1000) NOT NULL,
+  `sr_netID` VARCHAR(12) NOT NULL,
+  `sr_department` VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`id`)
 );
 
 -- ---
 -- Foreign Keys
--- ---
-ALTER TABLE `user` ADD FOREIGN KEY (netID) REFERENCES `students` (`netID`);
-ALTER TABLE `user` ADD FOREIGN KEY (netID) REFERENCES `faculty` (`netID`);
-ALTER TABLE `students` ADD FOREIGN KEY (netID) REFERENCES `form` (`student_netID`);
-ALTER TABLE `faculty` ADD FOREIGN KEY (netID) REFERENCES `form` (`advisor_netID`);
-ALTER TABLE `faculty` ADD FOREIGN KEY (netID) REFERENCES `second_reader` (`sr_netID`);
-ALTER TABLE `form` ADD FOREIGN KEY (id) REFERENCES `signup` (`id`);
-ALTER TABLE `form` ADD FOREIGN KEY (id) REFERENCES `checkpoint` (`id`);
-ALTER TABLE `form` ADD FOREIGN KEY (id) REFERENCES `february` (`id`);
-ALTER TABLE `form` ADD FOREIGN KEY (id) REFERENCES `second_reader` (`id`);
+-- -- ---
+ALTER TABLE `students` ADD FOREIGN KEY (netID) REFERENCES `user` (`netID`);
+ALTER TABLE `faculty` ADD FOREIGN KEY (netID) REFERENCES `user` (`netID`);
+ALTER TABLE `form` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `form` ADD FOREIGN KEY (advisor_netID) REFERENCES `faculty` (`netID`);
+ALTER TABLE `second_reader` ADD FOREIGN KEY (sr_netID) REFERENCES `faculty` (`netID`);
+ALTER TABLE `signup` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
+ALTER TABLE `checkpoint` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
+ALTER TABLE `february` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
+ALTER TABLE `second_reader` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
 
 -- ---
 -- Table Properties
 -- ---
 
--- ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `students` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `faculty` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `form` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `signup` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `checkpoint` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `february` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `second_reader` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `students` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `faculty` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `form` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `signup` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `checkpoint` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `february` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ALTER TABLE `second_reader` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ---
 -- Test Data
@@ -171,10 +168,10 @@ ALTER TABLE `form` ADD FOREIGN KEY (id) REFERENCES `second_reader` (`id`);
 -- INSERT INTO `faculty` (`netID`,`advisee_netIDs`,`advisee_requests`,`readee_netIDs`,`redee_requests`) VALUES
 -- ('','','','','');
 -- INSERT INTO `form`
-(`id`,`form_type`,`student_netID`,`advisor_netID`,`project_title`,`date`) VALUES
+-- (`id`,`form_type`,`student_netID`,`advisor_netID`,`project_title`,`date`) VALUES
 -- ('','','','','','');
 -- INSERT INTO `signup`
-(`id`,`class_year`,`coursework`,`description`,`advisor_department`,`new field`) VALUES
+-- (`id`,`class_year`,`coursework`,`description`,`advisor_department`,`new field`) VALUES
 -- ('','','','','','');
 -- INSERT INTO `checkpoint` (`id`,`number_of_meetings`,`student_comments`,`advisor_read`,`advisor_more_meetings`,`student_progress_eval`,`advisor_comments`) VALUES
 -- ('','','','','','','');
