@@ -3,11 +3,11 @@
 <?php echo form_open('forms/project'); ?>
   <div>
 	<label>Student NetID:</label>
-	<input type="text" name="student_netID" value="<?php echo set_value('netID'); ?>" />
+	<input type="text" name="student_netID" value="<?php echo set_value($this->session->userdata('netID')); ?>" />
 	<!-- <input type="hidden" name="student_netID_hidden" value="{{ current_user.netID }}"> -->
     <div>
       <label>Class:</label>
-      <input type="text" name="class_year" id="class_year"/>
+      <input type="text" name="class_year" id="class_year" value="<?php echo set_value('class_year'); ?>"/>
     </div>
     <div>
       <label id="radioHL">Please check one:</label>

@@ -55,8 +55,12 @@
               <li><a href="/iw-ci/index.php/forms/query">Form Query</a></li>
 
               <!-- custom user links: -->
+	    <!--  // <?php if (True) : ?>($this->session->userdata('user_type') == 'faculty') : ?> -->
               <li class="nav-header">Faculty</li>
               <li><a href="/iw-ci/index.php/forms/approve">Approve Students as Advisees</a></li>
+	      <li><a href="/iw-ci/index.php/forms/advisor_feedback">Advisor Final Feedback Form</a></li>
+	      <li><a href="/iw-ci/index.php/forms/advisor_feedback">Second Reader Final Feedback Form</a></li>
+	      <!--		 <?php endif; ?> -->
               <li class="nav-header">Admin</li>
               <li><a href="/iw-ci/index.php/admin/users">View Users</a></li>
               <a href="/iw-ci/index.php/admin/user_upload">User List Upload</a><br>
