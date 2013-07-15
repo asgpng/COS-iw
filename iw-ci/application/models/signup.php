@@ -12,6 +12,12 @@ class Signup extends Form {
   {
     // Call the Form constructor
     parent::__construct();
+    /* $config['hostname'] = 'localhost'; */
+    /* $config['username'] = 'root'; */
+    /* $config['password'] = ''; */
+    /* $config['database'] = 'spe'; */
+    /* $config['dbdriver'] = 'mysql'; */
+    /* $this->load->database($config); */
   }
 
   function get_last_ten_entries()

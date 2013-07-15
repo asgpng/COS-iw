@@ -28,8 +28,7 @@ DROP TABLE IF EXISTS `students`;
 
 CREATE TABLE `students` (
   `netID` VARCHAR(12) NOT NULL,
-  `advisor_netID` VARCHAR(12) NULL,
-  `forms_submitted` TINYINT NULL,
+  'class_year' INT(4) NULL,
   PRIMARY KEY (`netID`)
 ) COMMENT 'student table';
 
@@ -42,59 +41,26 @@ DROP TABLE IF EXISTS `faculty`;
 
 CREATE TABLE `faculty` (
   `netID` VARCHAR(12) NOT NULL,
-  `advisee_netIDs` TINYINT NULL,
-  `advisee_requests` TINYINT NULL,
-  `readee_netIDs` TINYINT NULL,
-  `readee_requests` TINYINT NULL,
+  'department' VARCHAR(128) NULL,
   PRIMARY KEY (`netID`)
 );
 
 -- ---
--- Table 'form'
---
--- ---
-DROP TABLE IF EXISTS `form`;
-
-CREATE TABLE `form` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `form_type` VARCHAR(20) NOT NULL,
-  `student_netID` VARCHAR(12) NOT NULL,
-  `advisor_netID` VARCHAR(12) NOT NULL,
-  `project_title` VARCHAR(128) NOT NULL,
-  `date` DATE NOT NULL,
-  PRIMARY KEY (`id`)
-) COMMENT 'form table';
-
--- ---
--- Table 'signup'
---
--- ---
-DROP TABLE IF EXISTS `signup`;
-
-CREATE TABLE `signup` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `class_year` SMALLINT(4) NOT NULL,
-  `coursework` VARCHAR(20) NOT NULL,
-  `description` TEXT(1000) NOT NULL,
-  `advisor_department` VARCHAR(64) NOT NULL,
-  PRIMARY KEY (`id`)
-) COMMENT 'signup form table';
-
--- ---
--- Table 'checkpoint'
+-- Table 'checkpoint_1'
 --
 -- ---
 
-DROP TABLE IF EXISTS `checkpoint`;
+DROP TABLE IF EXISTS `checkpoint_1`;
 
-CREATE TABLE `checkpoint` (
+CREATE TABLE `checkpoint_1` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `number_of_meetings` TINYINT(10) NOT NULL,
-  `student_comments` TEXT(1000) NOT NULL,
-  `advisor_read` bit(1) NOT NULL,
-  `advisor_more_meetings` bit(1) NOT NULL,
-  `student_progress_eval` TINYINT(10) NOT NULL,
-  `advisor_comments` TEXT(1000) NOT NULL,
+  'student_netID' VARCHAR(12) NOT NULL
+  `number_of_meetings` TINYINT(10),
+  `student_comments` TEXT(1000),
+  `advisor_read` bit(1),
+  `advisor_more_meetings` bit(1),
+  `student_progress_eval` TINYINT(1),
+  `advisor_comments` TEXT(1000),
   PRIMARY KEY (`id`)
 );
 
@@ -107,6 +73,7 @@ DROP TABLE IF EXISTS `february`;
 
 CREATE TABLE `february` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  'student_netID' VARCHAR(12) NOT NULL,
   `number_of_meetings` TINYINT(10) NOT NULL,
   `student_comments` TEXT(1000) NOT NULL,
   `advisor_read` bit(1) NOT NULL,
@@ -117,46 +84,115 @@ CREATE TABLE `february` (
 );
 
 -- ---
--- Table 'second_reader'
+-- Table 'project'
 --
 -- ---
+DROP TABLE IF EXISTS `project`;
 
-DROP TABLE IF EXISTS `second_reader`;
-
-CREATE TABLE `second_reader` (
+CREATE TABLE `project` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `class_year` INT(100) NOT NULL,
-  `description` TEXT(1000) NOT NULL,
-  `sr_netID` VARCHAR(12) NOT NULL,
-  `sr_department` VARCHAR(64) NOT NULL,
+  'student_netID' VARCHAR(12) NOT NULL,
+  'advisor_netID' VARCHAR(12),
+  'second_reader_netID' VARCHAR(12),
+  'semester' VARCHAR(3),
+  'project_title' VARCHAR(128),
+  `description` TEXT(1000),
+  `coursework` VARCHAR(20),
+  'date_began' DATE,
+  'date_met' DATE,
+  'advisor_approved' BIT(1),
+  'second_reader_approved' BIT(1),
+  PRIMARY KEY (`id`)
+) COMMENT 'project table';
+
+-- ---
+-- Table 'checkpoint2'
+--
+-- ---
+DROP TABLE IF EXISTS `checkpoint2`;
+
+CREATE TABLE `checkpoint_2` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  'student_netID' VARCHAR(12) NOT NULL
+  `number_of_meetings` TINYINT(10),
+  `student_comments` TEXT(1000),
+  `advisor_read` bit(1),
+  `advisor_more_meetings` bit(1),
+  `student_progress_eval` TINYINT(1),
+  `advisor_comments` TEXT(1000),
+  PRIMARY KEY (`id`)
+);
+
+
+-- ---
+-- Table 'advisor_feedback'
+--
+-- ---
+DROP TABLE IF EXISTS `advisor_feedback`;
+
+CREATE TABLE `advisor_feedback` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  'student_netID' VARCHAR(12) NOT NULL
+  'faculty_netID' VARCHAR(12) NOT NULL
+  'research' VARCHAR(24),
+  'research_progress' VARCHAR(24)
+  'research_description' VARCHAR(24),
+  'initiative' VARCHAR(24),
+  'plans' VARCHAR(24),
+  'percentile' VARCHAR(24),
+  'suggested_grade' VARCHAR(24),
+  'comments' TEXT(5000),
   PRIMARY KEY (`id`)
 );
 
 -- ---
+-- Table 'second_reader_feedback'
+--
+-- ---
+DROP TABLE IF EXISTS `second_reader_feedback`;
+
+CREATE TABLE `second_reader_feedback` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  'student_netID' VARCHAR(12) NOT NULL
+  'faculty_netID' VARCHAR(12) NOT NULL
+  'research' VARCHAR(24),
+  'research_progress' VARCHAR(24)
+  'research_description' VARCHAR(24),
+  'paper' VARCHAR(24),
+  'comments' TEXT(5000),
+  PRIMARY KEY (`id`)
+);
+
+
+-- ---
 -- Foreign Keys
 -- -- ---
-ALTER TABLE `students` ADD FOREIGN KEY (netID) REFERENCES `user` (`netID`);
 ALTER TABLE `faculty` ADD FOREIGN KEY (netID) REFERENCES `user` (`netID`);
-ALTER TABLE `form` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
-ALTER TABLE `form` ADD FOREIGN KEY (advisor_netID) REFERENCES `faculty` (`netID`);
-ALTER TABLE `second_reader` ADD FOREIGN KEY (sr_netID) REFERENCES `faculty` (`netID`);
-ALTER TABLE `signup` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
-ALTER TABLE `checkpoint` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
-ALTER TABLE `february` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
-ALTER TABLE `second_reader` ADD FOREIGN KEY (id) REFERENCES `form` (`id`);
+ALTER TABLE `students` ADD FOREIGN KEY (netID) REFERENCES `user` (`netID`);
+ALTER TABLE `project` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `checkpoint_1` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `february` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `checkpoint_2` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `advisor_feedback` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `advisor_feedback` ADD FOREIGN KEY (faculty_netID) REFERENCES `Faculty` (`netID`);
+ALTER TABLE `second_reader_feedback` ADD FOREIGN KEY (student_netID) REFERENCES `students` (`netID`);
+ALTER TABLE `second_reader_feedback` ADD FOREIGN KEY (faculty_netID) REFERENCES `Faculty` (`netID`);
+
 
 -- ---
 -- Table Properties
 -- ---
 
-ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `students` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `faculty` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `form` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `signup` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `checkpoint` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `february` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-ALTER TABLE `second_reader` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `faculty` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `students` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `project` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `checkpoint_1` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `february` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `checkpoint_2` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `advisor_feedback` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `second_reader_feedback` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 
 -- ---
 -- Test Data
