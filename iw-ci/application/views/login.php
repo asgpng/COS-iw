@@ -1,7 +1,7 @@
 <h1>User Login</h1>
 <p>Please enter or netID and password to log in</p>
 <b><?php echo validation_errors(); ?></b>
-<?php echo form_open('defaults/login'); ?>
+<?php echo form_open('defaults/test_login'); ?>
 <!-- <form action="/iw-ci/index.php/login" method="post"> -->
   <div>
     <label>NetID:</label>

@@ -1,21 +1,4 @@
-{% extends "base.html.twig" %}
-{% block head %}
-<script type="text/javascript">
-
-function check() {
-
-var check = document.getElementById('student_netIDs').value;
-if (check == 0) {
-window.alert("Please make a selection!");
-return false;
-}
-else
-return true;
-}
-</script>
-{% endblock %}
-{% block advisor %}
-<h2>Select Student</h2>
+<h2>tufjhkSelect Student</h2>
 <div class="container">
   <form action="/forms/select" method="post" onsubmit="return check();">
     <div>
@@ -28,6 +11,7 @@ return true;
      {% for student in current_user.second_reader_netIDs %}
     <option value="{{student}}">{{student}} - Current Second Reader</option>
     {% endfor %}
+
     {% for student in current_user.student_requests %}
     <option value="{{student}}">{{student}} - Advisor Request Pending</option>
     {% endfor %}
@@ -43,4 +27,4 @@ return true;
   </form>
 </div>
 <hr>
-{% endblock %}
+

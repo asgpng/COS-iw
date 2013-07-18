@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- meta -->
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Le styles -->
     <link rel="stylesheet" type="text/css" href="/iw-ci/bootstrap.css" />
     <title><?php echo $title ?> - COS IW</title>
   </head>
@@ -30,7 +29,7 @@
               <li><a href="/iw-ci/index.php/about">About</a></li>
               <li><a href="/iw-ci/index.php/contact">Contact</a></li>
             </ul>
-          </div><!--/.nav-collapse -->
+          </div>
         </div>
       </div>
     </div>
@@ -42,7 +41,6 @@
             <ul class="nav nav-list">
               <li>Welcome to the Princeton COS Independent Work website. Please login to access the rest of the site.</li>
             </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
+          </div>
+        </div>
         <div class="span9">
-          <!-- block content -->

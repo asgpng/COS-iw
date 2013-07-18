@@ -3,8 +3,8 @@
 <?php echo form_open('forms/project'); ?>
   <div>
 	<label>Student NetID:</label>
-	<input type="text" name="student_netID" value="<?php echo set_value('netID'); ?>" />
-	<!-- <input type="hidden" name="student_netID_hidden" value="{{ current_user.netID }}"> -->
+	<input type="text" name="student_netID" value="<?php echo set_value('student_netID'); ?>" disabled>
+	<!-- <input type="hidden" name="student_netID_hidden" value="<?php echo set_value('student_netID')"> -->
     <div>
       <label>Class:</label>
       <input type="text" name="class_year" id="class_year"/>
@@ -75,12 +75,18 @@
 	      <option value="WWS">Woodrow Wilson School</option>
 	    </select>
       </div>
-	  <label id="sigHL">I agree to be responsible for all relevant deadlines.</label>
-	  <input type="checkbox" name="signature" id="signature"/>
+      <div>
+	<label>If you have already met with your advisor, put down the date of your meeting. If not, please schedule a meeting as soon as possible.</label>
+	<input type="text"> (MM/DD/YYYY)
+      </div>
+      <div>
+	<label id="sigHL">I agree to be responsible for all relevant deadlines.</label>
+	<input type="checkbox" name="signature" id="signature"/>
+      </div>
       <div id="submit">
         <input type="submit" value="Submit">
       </div>
     </div>
   </div>
-</form>
+
 <hr>

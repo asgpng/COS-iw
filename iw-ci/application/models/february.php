@@ -2,13 +2,12 @@
 
 class February extends CI_Model {
 
-  var $project_id = '';
-  var $number_of_meetings = '';
-  var $student_comments = '';
-  var $advisor_read     = '';
+  var $number_of_meetings    = '';
+  var $student_comments      = '';
+  var $advisor_read          = '';
   var $advisor_more_meetings = '';
   var $student_progress_eval = '';
-  var $advisor_comments = '';
+  var $advisor_comments      = '';
 
   function __construct()
   {
@@ -22,30 +21,39 @@ class February extends CI_Model {
     return $query->result();
   }
 
-  function insert_entry()
+  function get_project_id($student_netID, $semester)
   {
-    $this->project_id = $_POST['project_id'];
-    $this->number_of_meetings = $_POST['number_of_meetings'];
-    $this->student_comments = $_POST['student_comments'];
-    $this->advisor_read      = $_POST['advisor_read'];
+    $query = $this->db->query("SELECT * FROM project WHERE student_netID = '$student_netID' AND semester = '$semester';");
+    if ($query->num_rows() == 0)
+      {
+        return -1;
+      }
+    else
+      {
+        $row = $query->row();
+        return $row->id;
+      }
+  }
+
+  function insert_entry($project_id)
+  {
+    $this->number_of_meetings    = $_POST['number_of_meetings'];
+    $this->student_comments      = $_POST['student_comments'];
+    $this->advisor_read          = $_POST['advisor_read'];
     $this->advisor_more_meetings = $_POST['advisor_more_meetings'];
     $this->student_progress_eval = $_POST['student_progress_eval'];
-    $this->advisor_comments   = $_POST['advisor_comments'];
-
+    $this->advisor_comments      = $_POST['advisor_comments'];
+    $this->project_id            = $project_id;
     $this->db->insert('february', $this);
   }
 
-  function update_entry()
+  function update_entry($project_id)
   {
-    $this->project_id = $_POST['project_id'];
-    $this->number_of_meetings = $_POST['number_of_meetings'];
-    $this->student_comments = $_POST['student_comments'];
-    $this->advisor_read      = $_POST['advisor_read'];
+    $this->advisor_read          = $_POST['advisor_read'];
     $this->advisor_more_meetings = $_POST['advisor_more_meetings'];
-    $this->student_progress_eval = $_POST['student_progress_eval'];
-    $this->advisor_comments   = $_POST['advisor_comments'];
-
-    $this->db->update('february', $this, array('id' => $_POST['id']));
+    $this->advisor_comments      = $_POST['advisor_comments'];
+    $this->project_id            = $project_id;
+    $this->db->update('february', $this, array('project_id' => $project_id));
   }
 
 }

@@ -6190,3 +6190,7 @@ body {
     }
 
 }
+.error {
+  color:#fa7f00;
+  font-weight:bold;
+}

@@ -1,5 +1,5 @@
-        </div><!--/span-->
-      </div><!--/row-->
+        </div>
+      </div>
 
       <hr>
 
@@ -7,6 +7,6 @@
         <p>&copy; Princeton University 2013</p>
       </footer>
 
-    </div><!--/.fluid-container-->
+    </div>
   </body>
 </html>

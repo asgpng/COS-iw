@@ -64,7 +64,7 @@ $autoload['libraries'] = array('session', 'database');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('access_control');
+$autoload['helper'] = array('access_control', 'url', 'userdata', 'uri');
 
 
 /*
@@ -110,9 +110,6 @@ $autoload['language'] = array();
 */
 
 $autoload['model'] = array('form');
-
-$autoload['sparks'] = array('Twiggy/0.8.5');
-
 
 /* End of file autoload.php */
 /* Location: ./application/config/autoload.php */

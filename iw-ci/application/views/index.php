@@ -1,6 +1,3 @@
-<h2>COS Independent Work Home</h2>
-<p>This is a new site, so not everything is working yet. Apologies for broken links and missing pages.
-</p>
 <h1 align="center" style="text-align: center">Princeton CS
 Department</h1>
 <h1 align="center" style="text-align: center">

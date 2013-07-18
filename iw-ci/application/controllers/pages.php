@@ -20,16 +20,13 @@ class Pages extends CI_Controller {
     return set_value($value);
   }
 
-  public function index()
-  {
-    /* $this->twiggy->title('Home')->display('index'); */
+  public function index() {
     $data['title'] = 'Home';
     $this->load->view('templates/header', $data);
     $this->load->view('index', $data);
     $this->load->view('templates/footer', $data);
   }
   public function about() {
-    /* $this->twiggy->title('About')->display('about'); */
     $data['title'] = 'About';
     $this->load->view('templates/header', $data);
     $this->load->view('about', $data);
@@ -37,7 +34,6 @@ class Pages extends CI_Controller {
   }
 
   public function contact() {
-    /* $this->twiggy->title('Contact')->display('contact'); */
     $data['title'] = 'Contact';
     $this->load->view('templates/header', $data);
     $this->load->view('contact', $data);
@@ -45,7 +41,6 @@ class Pages extends CI_Controller {
   }
 
   public function messages() {
-    /* $this->twiggy->title('Messages')->display('messages'); */
     $data['title'] = 'Messages';
     $this->load->view('templates/header', $data);
     $this->load->view('messages', $data);

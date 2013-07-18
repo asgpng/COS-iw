@@ -41,6 +41,7 @@
 $route['default_controller'] = 'pages';
 $route['404_override'] = '';
 $route['forms'] = 'forms';
+//$route['forms/select?(any)'] = 'forms/select';
 $route['files'] = 'files';
 $route['news/(:any)'] = 'news/view/$1';
 $route['news'] = 'news';
@@ -52,7 +53,10 @@ $route['login'] = 'defaults/login';
 $route['login_backup'] = 'defaults/login_backup';
 $route['logout'] = 'defaults/logout';
 $route['messages'] = 'pages/messages';
-$route['cas_login'] = 'defaults/cas_login';
+$route['test_login'] = 'defaults/test_login';
+$route['test_logout'] = 'defaults/test_logout';
+$route['semester'] = 'defaults/semester';
+$route['student'] = 'student';
 
 
 

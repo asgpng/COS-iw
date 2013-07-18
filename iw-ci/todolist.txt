@@ -1,0 +1,25 @@
+NECESSARY FIXES:
+-date
+-advisor updating logic & updating in general
+-repopulate from database
+ - decide on whether to make view forms editable
+-make more input text for project
+-php mysql quotes in names
+-make a php file that reads a key so it is dynamic (if time)
+-ldap - ldapsearch -x -h ldap.cs.princeton.edu -b "dc=cs,dc=princeton,dc=edu" uid=asg4 (but no class year or user role info)
+
+
+-faculty approval
+
+
+-email notification with links
+  - requires email address, can set config file in config/email.php
+
+
+-add colleen's features
+- add documentation
+- upload user list
+
+-echo implode("\t", array_keys($row)) . "\r\n";   OR echo implode("\t", array_values($row)) . "\r\n";
+- see who didn't do a form
+- http://ondras.zarovi.cz/sql/demo/
