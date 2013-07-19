@@ -182,3 +182,11 @@ Notes:
     - defaults to advisor, but lets you switch if possible
   - username from LDAP
   - validation -> submit goes back if wrong (to preserve data)
+  - file upload/download dropbox
+- [2013-07-15 Mon]
+  - signup update (pre-filled)
+    - if filled out already (active project), can edit, otherwise, create
+  - project vs. form?
+  - form id & id. (sub tables)
+  - eliminate redundant information
+  - af

@@ -25,14 +25,21 @@
       <td><?php echo $row->coursework; ?></td>
       <td><?php echo $row->date_began; ?></td>
       <td><?php echo $row->date_met; ?></td>
-      <td><?php echo $row->advisor_approved; ?></td>
-      <td><?php echo $row->second_reader_approved; ?></td>
+      <?php if ($row->advisor_approved == "1"):  ?>
+      <td>Yes</td>
+      <?php else: ?>
+      <td>No</td>
+      <?php endif; ?>
+      <?php if ($row->second_reader_approved == "1"):  ?>
+      <td>Yes</td>
+      <?php else: ?>
+      <td>No</td>
+      <?php endif; ?>
+
     </tr>
    <?php endforeach; ?>
   </table>
 
 <hr>
-
-  <a href="/iw-ci/index.php/admin/download?name=export_p.csv&data=project" >Export</a>
-
+  <?php echo anchor('admin/download?name=export_p.csv&data=project', 'Export'); ?>
 </div>

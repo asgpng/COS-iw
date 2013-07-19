@@ -7,7 +7,7 @@
   </div>
   <div>
     <label>Class:</label>
-    <input type="text" name="class_year" value="" />
+    <input type="text" name="class_year" value="<?php echo $project->class_year;?>" />
   </div>
   <div>
     <label>Coursework:</label> 

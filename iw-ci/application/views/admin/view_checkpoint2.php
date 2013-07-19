@@ -28,7 +28,5 @@
   </table>
 
 <hr>
-
-  <a href="/iw-ci/index.php/admin/download?name=export_c2.csv&data=checkpoint2" >Export</a>
-
+  <?php echo anchor('admin/download?name=export_c2.csv&data=checkpoint2', 'Export'); ?>
 </div>

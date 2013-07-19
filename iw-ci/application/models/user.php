@@ -19,6 +19,14 @@ class User extends CI_Model {
     return $row;
   }
 
+  function user_exists($netID) {
+    $query = $this->db->query("SELECT * FROM user WHERE netID = '$netID';");
+    if ($query->num_rows() == 0) {
+      return false;
+    }
+    return true;
+  }
+
   function delete_user($netID)
   {
     $this->db->query("DELETE FROM user WHERE netID = '$netID';");
@@ -50,8 +58,11 @@ class User extends CI_Model {
   }
 
   function insert_user($netID, $user_type) {
-    $this->netID     = $netID;
-    $this->user_type = $user_type;
+    if (! $this->user_exists($netID)) {
+      $this->netID     = $netID;
+      $this->user_type = $user_type;
+      $this->db->insert('user', $this);
+    }
   }
 
   function insert_entry()

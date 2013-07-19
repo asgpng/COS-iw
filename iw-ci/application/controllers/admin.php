@@ -31,6 +31,46 @@ class Admin extends CI_Controller {
     $this->load->view('templates/footer', $data);
   }
 
+  /* A number of functions for viewing CSV files in the browser.
+   */
+  public function view_csv($file) {
+    $row = 1;
+    $upload = "/n/fs/spe-iw/public_html/iw-ci/uploads/";
+    if (($handle = fopen($upload . $file, "r")) !== FALSE) {
+      while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+        $num = count($data);
+        echo "<p> $num fields in line $row: <br /></p>\n";
+        $row++;
+        for ($c=0; $c < $num; $c++) {
+          echo $data[$c] . "<br />\n";
+        }
+      }
+      fclose($handle);
+    }
+  }
+
+  public function readExcel($file)
+  {
+    $this->load->library('csvreader');
+    $upload = "/n/fs/spe-iw/public_html/iw-ci/uploads/";
+    $result = $this->csvreader->parse_file($upload . $file);
+
+    $data['csvData'] =  $result;
+    $this->load->view('view_csv', $data);
+  }
+
+  /* add users from users.csv file in uploads folder. Does not duplicate users. */
+  public function add_users() {
+    $this->load->library('csvreader');
+    $user_list = "/n/fs/spe-iw/public_html/iw-ci/uploads/users.csv";
+    $result = $this->csvreader->parse_file($user_list);
+    foreach($result as $field) {
+      $this->user->insert_user($field['netID'], $field['user_type']);
+    }
+    redirect('/admin/users');
+  }
+
+
   public function download() {
     $this->load->helper('download');
     $name = $this->input->get('name');

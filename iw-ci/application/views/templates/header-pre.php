@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <link rel="stylesheet" type="text/css" href="/iw-ci/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url('/bootstrap.css');?>" />
     <title><?php echo $title ?> - COS IW</title>
   </head>
 
@@ -20,14 +19,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/iw-ci/index.php">Princeton COS IW</a>
+          <?php echo anchor('/', 'Prinecton COS IW', 'class="brand"'); ?>
           <!-- <img "/silex-test/silex/web/images/princeton.gif" width="40" height="40"> -->
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/iw-ci/index.php">Home</a></li>
+              <li><?php echo anchor('/', 'Home'); ?></li>
               <li><a href="http://iw.cs.princeton.edu/12-13/">COS IW Website</a></li>
-              <li><a href="/iw-ci/index.php/about">About</a></li>
-              <li><a href="/iw-ci/index.php/contact">Contact</a></li>
+              <li><?php echo anchor('about', 'About'); ?></li>
+              <li><?php echo anchor('contact', 'Contact'); ?></li>
             </ul>
           </div>
         </div>

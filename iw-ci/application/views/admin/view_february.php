@@ -24,11 +24,9 @@
       <td><?php echo $row->student_progress_eval; ?></td>
       <td><?php echo $row->advisor_comments; ?></td>
     </tr>
-   <?php endforeach; ?>
+    <?php endforeach; ?>
   </table>
 
-<hr>
-
-  <a href="/iw-ci/index.php/admin/download?name=export_f.csv&data=february" >Export</a>
-
+  <hr>
+  <?php echo anchor('admin/download?name=export_f.csv&data=february', 'Export'); ?>
 </div>

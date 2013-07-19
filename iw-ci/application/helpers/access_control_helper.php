@@ -1,11 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Basic function to be called in controller constructors to ensure that a
+ * user is logged in. If so, it does nothing. If not, it redirects them to
+ * login, encoding their requested page in the url, so that when they are
+ * logged in, they are redirected to their original requested page.
+ */
 if(!function_exists('is_logged_in')) {
   function is_logged_in() {
     $CI =& get_instance();
+    $CI->load->helper('uri');
     $is_logged_in = $CI->session->userdata('is_logged_in');
     if(!isset($is_logged_in) || $is_logged_in != true) {
-      echo 'You must login to access this page. <a href="/iw-ci/index.php/login">Login</a>';
+      /* change 'test_login' to 'login' for production */
+      $login =  build_uri(array('next' => uri_string()), '/login');
+      echo 'You must login to access this page. <a href="' . $login . '">Login</a>';
       die();
     }
   }

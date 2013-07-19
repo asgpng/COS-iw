@@ -35,10 +35,12 @@
     <div>
       <label>Advisor Name:</label>
       <input type="text" name="advisor_name" value="<?php echo set_value('advisor_name');?>"/>
+
     </div>
 	<div>
       <label>Advisor NetID:</label>
 	  <input type="text" name="advisor_netID" value="<?php echo set_value('advisor_netID');?>"/>
+          <input type="hidden" name="advisor_approved" value="0" />
 	</div>
     <Div>
       <label>Advisor Department:</label>

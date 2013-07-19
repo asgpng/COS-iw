@@ -25,7 +25,6 @@
   </table>
 
 <hr>
-
-  <a href="/iw-ci/index.php/admin/download?name=export_srf.csv&data=second_reader_feedback" >Export</a>
+  <?php echo anchor('admin/download?name=export_srf.csv&data=second_reader_feedback', 'Export'); ?>
 
 </div>

@@ -38,6 +38,7 @@ class Forms extends CI_Controller {
 
   public function view_checkpoint1() {
     $this->load->model('checkpoint1');
+    $this->load->model('project');
    
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
@@ -47,21 +48,28 @@ class Forms extends CI_Controller {
       $student_netID = $_GET['student_netID'];
     }
     $semester = $this->session->userdata('semester');
-    $project_id = $this->project->get_project_id($student_netID, $semester);
+    $project_id = $this->checkpoint1->get_project_id($student_netID, $semester);
     if ($project_id == -1) {
       echo 'No form for this student and semester';
     }
     else {
-      $data['project'] = $this->project->get_project($student_netID, $semester);
-      $data['title'] = 'View Checkpoint I Form';
-      $this->load->view('templates/header', $data);
-      $this->load->view('forms/view_checkpoint1', $data);
-      $this->load->view('templates/footer', $data);
+      $query = $this->db->query("SELECT * FROM checkpoint1 WHERE project_id = '$project_id';");
+      if ($query->num_rows() != 0) {
+	$form = $query->row();
+	$data['form'] = $form;
+	$data['title'] = 'View Checkpoint I Form';
+	$this->load->view('templates/header', $data);
+	$this->load->view('forms/view_checkpoint1', $data);
+	$this->load->view('templates/footer', $data);
+      }
+      else
+	echo "No form for this student and semester";
     }
   }
 
-  public function view_checkpoint2() {
-    $this->load->model('checkpoint1');
+   public function view_checkpoint2() {
+    $this->load->model('checkpoint2');
+    $this->load->model('project');
    
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
@@ -71,21 +79,30 @@ class Forms extends CI_Controller {
       $student_netID = $_GET['student_netID'];
     }
     $semester = $this->session->userdata('semester');
-    $project_id = $this->project->get_project_id($student_netID, $semester);
+    $project_id = $this->checkpoint2->get_project_id($student_netID, $semester);
     if ($project_id == -1) {
-      echo 'No form for this student and semester';
+      echo 'No project for this student and semester';
     }
+
     else {
-      $data['project'] = $this->project->get_project($student_netID, $semester);
-      $data['title'] = 'View Checkpoint II Form';
-      $this->load->view('templates/header', $data);
-      $this->load->view('forms/view_checkpoint2', $data);
-      $this->load->view('templates/footer', $data);
+      $query = $this->db->query("SELECT * FROM checkpoint2 WHERE project_id = '$project_id';");
+      if ($query->num_rows() != 0) {
+	$form = $query->row();
+	$data['form'] = $form;
+	$data['title'] = 'View Checkpoint II Form';
+	$this->load->view('templates/header', $data);
+	$this->load->view('forms/view_checkpoint2', $data);
+	$this->load->view('templates/footer', $data);
+      }
+
+      else
+	echo "No form for this student and semester";
     }
   }
 
-  public function view_february() {
+   public function view_february() {
     $this->load->model('february');
+    $this->load->model('project');
    
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
@@ -95,20 +112,27 @@ class Forms extends CI_Controller {
       $student_netID = $_GET['student_netID'];
     }
     $semester = $this->session->userdata('semester');
-    $project_id = $this->project->get_project_id($student_netID, $semester);
+    $project_id = $this->february->get_project_id($student_netID, $semester);
     if ($project_id == -1) {
-      echo 'No form for this student and semester';
+      echo 'No project for this student and semester';
     }
+
     else {
-      $data['project'] = $this->project->get_project($student_netID, $semester);
-      $data['title'] = 'View February Form';
-      $this->load->view('templates/header', $data);
-      $this->load->view('forms/view_february', $data);
-      $this->load->view('templates/footer', $data);
+      $query = $this->db->query("SELECT * FROM february WHERE project_id = '$project_id';");
+      if ($query->num_rows() != 0) {
+	$form = $query->row();
+	$data['form'] = $form;
+	$data['title'] = 'View February Form';
+	$this->load->view('templates/header', $data);
+	$this->load->view('forms/view_february', $data);
+	$this->load->view('templates/footer', $data);
+      }
+
+      else
+	echo "No form for this student and semester";
     }
   }
-
-
+ 
   public function project() {
 
     if ($this->session->userdata('user_type') == 'faculty') {
@@ -153,6 +177,17 @@ class Forms extends CI_Controller {
 
   public function formsuccess() {
     $data['title'] = 'Form Success';
+    $this->load->view('templates/header', $data);
+    $this->load->view('forms/formsuccess', $data);
+    $this->load->view('templates/footer', $data);
+  }
+
+  public function add_second_reader() {
+    $data['title'] = 'Add Second Reader';
+
+    $this->load->model('project');
+    $this->form_validation->set_rules('second_reader_netID', 'Second Reader NetID', 'trim|required|max_length[10]|xss_clean');
+
     $this->load->view('templates/header', $data);
     $this->load->view('forms/formsuccess', $data);
     $this->load->view('templates/footer', $data);
@@ -249,8 +284,6 @@ class Forms extends CI_Controller {
       {
         $data = array();
         $data['validation_errors'] = validation_errors();
-        /* $data['student_submitted'] = false; */
-        /* $data['advisor_submitted'] = false; */
         $student_netID = $_POST['student_netID'];
         $semester = $this->session->userdata('semester');
         $project_id = $this->checkpoint1->get_project_id($student_netID, $semester);
@@ -436,7 +469,7 @@ class Forms extends CI_Controller {
           }
         else
           {
-            $this->project->update_entry($project_id);
+            $this->project->update_entry_advisor($project_id);
             redirect('/forms/formsuccess', 'refresh');
           }
       }

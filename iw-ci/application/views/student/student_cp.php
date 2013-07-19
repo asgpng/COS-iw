@@ -1,21 +1,21 @@
 <h1>Student Control Panel</h1>
 <br>
 <h4>Your Project:</h4>
-<li><a href="/iw-ci/index.php/forms/view_project">View</a></li>
-<li><a href="/iw-ci/index.php/forms/project">Edit</a><li>
+<li><?php echo anchor('forms/view_project', 'View'); ?></li>
+<li><?php echo anchor('forms/project', 'Edit'); ?></li>
 
-<hr>
+  <hr>
 
-<h4>Forms Submitted:</h4>
+  <h4>Forms Submitted:</h4>
 
-<?php if ($checkpoint1->num_rows() != 0): ?>
-<li><a href="/iw-ci/index.php/student/view_checkpoint1">Checkpoint 1</a></li>
+  <?php if ($checkpoint1->num_rows() != 0): ?>
+<li><?php echo anchor('student/view_checkpoint1', 'Checkpoint 1'); ?></li>
 <?php endif; ?>
 <?php if ($checkpoint2->num_rows() != 0): ?>
-<li><a href="/iw-ci/index.php/student/view_checkpoint2">Checkpoint 2</a></li>
+<li><?php echo anchor('student/view_checkpoint2', 'Checkpoint 2'); ?></li>
 <?php endif; ?>
 <?php if ($february->num_rows() != 0): ?>
-<li><a href="/iw-ci/index.php/student/view_february">February</a></li>
+<li><?php echo anchor('student/view_february', 'February'); ?></li>
 <?php endif; ?>
 
 <hr>

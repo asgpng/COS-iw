@@ -32,7 +32,6 @@
   </table>
 
 <hr>
-
-  <a href="/iw-ci/index.php/admin/download?name=export_af.csv&data=advisor_feedback" >Export</a>
+  <?php echo anchor('admin/download?name=export_af.csv&data=advisor_feedback', 'Export'); ?>
 
 </div>

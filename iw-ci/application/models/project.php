@@ -63,20 +63,42 @@ class Project extends CI_Model {
     return $row;
   }
 
-  function update_entry()
+  function update_individual_entry($project_id, $entry)
   {
-    $this->student_netID          = $_POST['student_netID'];
-    $this->advisor_netID          = $_POST['advisor_netID'];
-    $this->second_reader_netID    = $_POST['second_reader_netID'];
-    $this->semester               = $_POST['semester'];
-    $this->project_title          = $_POST['project_title'];
-    $this->description            = $_POST['description'];
-    $this->coursework             = $_POST['coursework'];
-    $this->date_met               = $_POST['date_met'];
-    $this->advisor_approved       = $_POST['advisor_approved'];
-    $this->second_reader_approved = $_POST['second_reader_approved'];
-    $id = $this->get_project_id($this->student_netID, $this->semester);
-    $this->db->update('project', $this, array('id' => $id));
+    if ($this->input->post('$entry'))
+    {
+      $update = $this->db->query("UPDATE project SET $entry='_POST['$entry'] WHERE id='$project_id';");
+     }	
+  }
+
+
+  function update_entry($project_id)
+  {
+    update_individual_entry($project_id, 'student_netID');
+    update_individual_entry($project_id, 'advisor_netID');
+    update_individual_entry($project_id, 'second_reader_netID');
+    update_individual_entry($project_id, 'semester');
+    update_individual_entry($project_id, 'project_title');
+    update_individual_entry($project_id, 'description');
+    update_individual_entry($project_id, 'coursework');
+    update_individual_entry($project_id, 'date_met');
+
+    /* $this->student_netID          = $_POST['student_netID']; */
+    /* $this->advisor_netID          = $_POST['advisor_netID']; */
+    /* $this->second_reader_netID    = $_POST['second_reader_netID']; */
+    /* $this->semester               = $_POST['semester']; */
+    /* $this->project_title          = $_POST['project_title']; */
+    /* $this->description            = $_POST['description']; */
+    /* $this->coursework             = $_POST['coursework']; */
+    /* $this->date_met               = $_POST['date_met']; */
+    /* $this->second_reader_approved = $_POST['second_reader_approved']; */
+    /* $this->db->update('project', $this, array('id' => $project_id)); */
+  }
+
+  function update_entry_advisor($project_id)
+  {
+    if ($_POST['agreement'] == 'yes')
+      $update = $this->db->query("UPDATE project SET advisor_approved='1' WHERE id='$project_id';");
   }
 
 }

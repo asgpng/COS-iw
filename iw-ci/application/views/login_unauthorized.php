@@ -1,5 +1,3 @@
-<!-- In this case we don't extend base.html because there is no user to pass -->
-<!-- Though not ideal, the best solution for now is to treat this page separately. -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
   <head>
