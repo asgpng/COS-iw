@@ -9,7 +9,7 @@ CodeIgniter
 
 Requirements
 ------------
-Apache
+Apache,
 MySQL
 
 Installing/Running
@@ -61,6 +61,5 @@ Install Python development environment by following instructions at (https://dev
 Running
 -------
 ```
-(run from parent directory)
-> dev_appserver.py /iw-gae
+> dev_appserver.py iw-gae
 ```
