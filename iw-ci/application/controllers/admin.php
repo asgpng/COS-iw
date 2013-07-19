@@ -12,6 +12,7 @@ class Admin extends CI_Controller {
     is_administrator();
   }
 
+  /* a view function for adding users to the database */
   public function users() {
     $this->load->helper('uri');
     $data['title'] = 'Users';
@@ -25,14 +26,12 @@ class Admin extends CI_Controller {
         $this->user->insert_entry();
         redirect('/admin/users', 'refresh');
       }
-
     $this->load->view('templates/header', $data);
     $this->load->view('user/users', $data);
     $this->load->view('templates/footer', $data);
   }
 
-  /* A number of functions for viewing CSV files in the browser.
-   */
+  /* A number of functions for viewing CSV files in the browser. */
   public function view_csv($file) {
     $row = 1;
     $upload = "/n/fs/spe-iw/public_html/iw-ci/uploads/";
@@ -70,7 +69,7 @@ class Admin extends CI_Controller {
     redirect('/admin/users');
   }
 
-
+  /* used to export database tables to csv files */
   public function download() {
     $this->load->helper('download');
     $name = $this->input->get('name');
@@ -134,14 +133,11 @@ class Admin extends CI_Controller {
     $this->load->view('templates/footer', $data);
   }
 
-
   public function view_advisor_feedback() {
     $data = array();
     $data['title'] = 'View Advisor Feedback';
 
     $query = $this->db->query("SELECT project.student_netID, project.advisor_netID, project.semester, advisor_feedback.* FROM project INNER JOIN advisor_feedback ON project.id=advisor_feedback.project_id;");
-
-
     $data['query'] = $query;
 
     $this->load->view('templates/header', $data);
@@ -161,12 +157,6 @@ class Admin extends CI_Controller {
     $this->load->view('templates/header', $data);
     $this->load->view('admin/view_sr_feedback', $data);
     $this->load->view('templates/footer', $data);
-  }
-
-  public function query_user() {
-
-    $user = $this->user->get_user('asg4');
-    echo $user->user_type;
   }
 
   public function user_delete() {

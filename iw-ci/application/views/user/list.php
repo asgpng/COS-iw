@@ -1,6 +1,3 @@
-{% extends "base.html.twig" %}
-{% block title %}View Uploaded Files{% endblock %}
-{% block content %}
 <h2>View User List</h2>
 {% if added_users %}
 <p>The following users have been added to the user database:</p>
@@ -26,4 +23,3 @@
 {% endif %}
 <br>
 <a href="/admin/users">View Users</a>
-{% endblock %}

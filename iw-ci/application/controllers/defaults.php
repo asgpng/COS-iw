@@ -12,9 +12,6 @@ class Defaults extends CI_Controller {
   }
 
   /*
-  |--------------------------------------------------------------------------
-  | Login
-  |--------------------------------------------------------------------------
   | Login via CAS.
   |
   | Current implementation requires CAS.php to be in current directory
@@ -88,17 +85,13 @@ class Defaults extends CI_Controller {
     $this->load->view('templates/footer', $data);
   }
 
+  /* debugging function to print out session variables */
   public function view_session() {
     print_userdata();
   }
 
 
-  /*
-  |--------------------------------------------------------------------------
-  | Semester
-  |--------------------------------------------------------------------------
-  | Select semester, then set it as a session variable
-  */
+  /* Select semester, then set it as a session variable */
   public function semester() {
     $this->form_validation->set_rules('semester', 'Semester', 'trim|required|max_length[7]|xss_clean');
 
@@ -116,6 +109,7 @@ class Defaults extends CI_Controller {
     $this->load->view('templates/footer', $data);
   }
 
+  /* logout wthout CAS */
   public function test_logout() {
     $this->session->sess_destroy();
     $data['title'] = 'Test Logout';
@@ -124,6 +118,7 @@ class Defaults extends CI_Controller {
     $this->load->view('templates/footer', $data);
   }
 
+  /* logout with CAS */
   public function logout() {
     $this->session->sess_destroy();
     require('CAS.php');

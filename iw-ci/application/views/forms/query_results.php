@@ -1,6 +1,3 @@
-{% extends "base.html.twig" %}
-{% block title %}Checkpoint Form{% endblock %}
-{% block content %}
 <h2>Query Form View</h2>
 
 <h3>Summary</h3>
@@ -40,4 +37,3 @@
 <br>
 
 <hr>
-{% endblock %}

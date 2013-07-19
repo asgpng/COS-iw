@@ -5,7 +5,6 @@ class Student extends CI_Controller {
   public function __construct()
   {
     parent::__construct();
-    //function inside autoloaded helper, check if user is logged in, if not redirects to login page
     is_logged_in();
   }
 
@@ -32,7 +31,7 @@ class Student extends CI_Controller {
  	$february = $this->db->query("SELECT * FROM february WHERE february.project_id='$project_id';");
 	$data['february'] = $february;
 
-	
+
 	$this->load->view('templates/header', $data);
 	$this->load->view('student/student_cp', $data);
 	$this->load->view('templates/footer', $data);

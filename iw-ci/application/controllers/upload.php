@@ -13,6 +13,7 @@ class Upload extends CI_Controller {
     $this->load->view('upload_form', array('error' => ' ' ));
   }
 
+  /* another test to upload */
   function do_upload()
   {
     $config['upload_path'] = './uploads/';
@@ -36,5 +37,5 @@ class Upload extends CI_Controller {
         $this->load->view('files/upload_success', $data);
       }
   }
-  }
+}
 ?>

@@ -1,7 +1,3 @@
-{% extends "base.html.twig" %}
-{% block title %}Messages{% endblock %}
-{% block content %}
-
 <div class="container">
   {% for message in messages %}
   <p>
@@ -19,4 +15,3 @@
     </div>
   </form>
 </div>
-{% endblock %}

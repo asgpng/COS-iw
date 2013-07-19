@@ -1,12 +1,8 @@
-{% extends "base.html.twig" %}
-{% block title %}User Query{% endblock %}
-{% block content %}
-
 <h1>User Entry for {{user.netID}}</h1>
 
 
 <div class="container">
-  
+
   <p>User type: {{user.user_type}}</p>
   <p>Forms submitted:</p>
   {% for form in forms %}
@@ -14,4 +10,3 @@
   {% endfor %}
 </div>
 <hr>
-{% endblock %}

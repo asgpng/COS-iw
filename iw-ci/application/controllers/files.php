@@ -10,6 +10,9 @@ class Files extends CI_Controller {
     $this->load->helper(array('form', 'url'));
   }
 
+  /* flat PHP version of upload. In spite of having csv in allowedExts,
+   * csv uploading currently doesn't seem to work
+   */
   public function upload_test() {
     $allowedExts = array("gif", "jpeg", "jpg", "png", "csv");
     $temp = explode(".", $_FILES["file"]["name"]);
@@ -91,7 +94,6 @@ class Files extends CI_Controller {
   }
 
   public function view_files() {
-    /* $this->twiggy->title('View Files')->display('files/view/list'); */
     $data['title'] = 'View Files';
     $this->load->view('templates/header', $data);
     $this->load->view('files/view/list', $data);

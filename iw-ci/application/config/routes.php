@@ -41,12 +41,9 @@
 $route['default_controller'] = 'pages';
 $route['404_override'] = '';
 $route['forms'] = 'forms';
-//$route['forms/select?(any)'] = 'forms/select';
 $route['files'] = 'files';
-$route['news/(:any)'] = 'news/view/$1';
-$route['news'] = 'news';
 $route['pages'] = 'pages';
-/* default (base) routes: */
+$route['student'] = 'student';
 $route['about'] = 'pages/about';
 $route['contact'] = 'pages/contact';
 $route['login'] = 'defaults/login';
@@ -56,9 +53,6 @@ $route['messages'] = 'pages/messages';
 $route['test_login'] = 'defaults/test_login';
 $route['test_logout'] = 'defaults/test_logout';
 $route['semester'] = 'defaults/semester';
-$route['student'] = 'student';
-
-
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

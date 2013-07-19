@@ -5,16 +5,16 @@ class Forms extends CI_Controller {
   public function __construct()
   {
     parent::__construct();
-    //function inside autoloaded helper, check if user is logged in, if not redirects to login page
     is_logged_in();
     $this->load->helper(array('form_helper', 'url'));
     $this->load->library('form_validation');
     $this->load->model('project');
   }
 
+  /* view functions */
   public function view_project() {
     $this->load->model('project');
-   
+
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
     }
@@ -39,7 +39,7 @@ class Forms extends CI_Controller {
   public function view_checkpoint1() {
     $this->load->model('checkpoint1');
     $this->load->model('project');
-   
+
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
     }
@@ -70,7 +70,7 @@ class Forms extends CI_Controller {
    public function view_checkpoint2() {
     $this->load->model('checkpoint2');
     $this->load->model('project');
-   
+
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
     }
@@ -103,7 +103,7 @@ class Forms extends CI_Controller {
    public function view_february() {
     $this->load->model('february');
     $this->load->model('project');
-   
+
     if ($this->session->userdata('user_type') == 'student') {
       $student_netID = $this->session->userdata('netID');
     }
@@ -132,7 +132,8 @@ class Forms extends CI_Controller {
 	echo "No form for this student and semester";
     }
   }
- 
+
+  /* Project submission form */
   public function project() {
 
     if ($this->session->userdata('user_type') == 'faculty') {
@@ -363,7 +364,6 @@ class Forms extends CI_Controller {
 
 
   public function advisor_feedback() {
-
     if ($this->session->userdata('user_type') == 'faculty') {
       if ($_GET['student_netID'] == 'None') {
 	redirect('/forms/select?form=advisor_feedback');
@@ -406,7 +406,6 @@ class Forms extends CI_Controller {
   }
 
   public function second_reader_feedback() {
-
     if ($this->session->userdata('user_type') == 'faculty') {
       if ($_GET['student_netID'] == 'None') {
 	redirect('/forms/select?form=second_reader_feedback');
@@ -506,7 +505,7 @@ class Forms extends CI_Controller {
       {
 	$student = $_POST['student_netID'];
 	$params = array('student_netID' => $student);
-	
+
 	if ($this->session->userdata('form_type') != 'advisor_feedback' AND $this->session->userdata('form_type') != 'seconf_reader_feedback') {
 	  $temp = '/forms/view_';
 	}
@@ -516,13 +515,12 @@ class Forms extends CI_Controller {
 	}
 
 	$page = $temp . $this->session->userdata('form_type');
-	
+
 	$first_append = $page . '?student_netID=';
 	$final_append = $first_append . $student;
 	redirect($final_append);
-			
+
 	}
   }
 
   }
-

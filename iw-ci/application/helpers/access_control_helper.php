@@ -20,8 +20,8 @@ if(!function_exists('is_logged_in')) {
   }
 }
 
-/* to prevent access of certain views by students */
-/* Can easily change to redirect to 404 instead */
+/* to prevent access of certain views by students
+ * Can easily change to redirect to 404 instead */
 if(!function_exists('not_student')) {
   function not_student() {
     $CI =& get_instance();
@@ -32,8 +32,8 @@ if(!function_exists('not_student')) {
   }
 }
 
-/* to ensure this is viewable only by faculty */
-/* Can easily change to redirect to 404 instead */
+/* to ensure this is viewable only by faculty
+ * Can easily change to redirect to 404 instead */
 if(!function_exists('is_faculty')) {
   function is_faculty() {
     $CI =& get_instance();
@@ -44,8 +44,8 @@ if(!function_exists('is_faculty')) {
   }
 }
 
-/* to ensure this is viewable only by admin */
-/* Can easily change to redirect to 404 instead */
+/* to ensure this is viewable only by admin
+ * Can easily change to redirect to 404 instead */
 if(!function_exists('is_administrator')) {
   function is_administrator() {
     $CI =& get_instance();

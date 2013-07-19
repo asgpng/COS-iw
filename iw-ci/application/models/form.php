@@ -13,12 +13,6 @@ class Form extends CI_Model {
     parent::__construct();
   }
 
-  function get_last_ten_entries()
-  {
-    $query = $this->db->get('entries', 10);
-    return $query->result();
-  }
-
   function insert_entry()
   {
     $this->title   = $_POST['title']; // please read the below note
