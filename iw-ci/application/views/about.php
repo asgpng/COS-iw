@@ -21,3 +21,4 @@ Before being deployed in production, our app needs a few modifications. In parti
 <p>
 In retrospect, it would have been nice to have an additional week to iron out the details or to have switched to PHP a week earlier, but all in all, we are pleased with our results and thankful for the opportunity to learn so much during SPE. In addition, we are excited that it looks possible for our site to go into production this coming fall, with some modifications and extensions by the COS department. In the end, the outcome of our SPE experience was overwhelmingly positive in all regards: we created an application that will make a previously complicated process efficient and trivial, and in the process, we developed a plethora of web development skills that will be sure to come in useful to us in the future.
 </p>
+<p>The Github repository for this project can be found here: <a href="https://github.com/asgpng/COS-iw"></p>

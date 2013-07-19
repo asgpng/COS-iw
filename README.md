@@ -39,7 +39,8 @@ CodeIgniter Database
 Test:
 -----
 ```
-http://localhost/COS-iw/iw-ci/index.php/test_login
+(in a browser)
+> http://localhost/COS-iw/iw-ci/index.php/test_login
 ```
 
 If you have problems, check your server error log. If nothing shows up, it's most likely a database connection issue. Autoloading of the database can be disabled in
@@ -61,5 +62,5 @@ Running
 -------
 ```
 (run from parent directory)
-dev_appserver.py /iw-gae
+> dev_appserver.py /iw-gae
 ```

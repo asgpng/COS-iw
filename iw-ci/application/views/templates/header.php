@@ -55,6 +55,7 @@
               <li><?php echo anchor('forms/checkpoint2?student_netID=None', 'Checkpoint Form 2'); ?></li>
               <li><?php echo anchor('forms/february?student_netID=None', 'February Progress Form'); ?></li>(for all 2-semester work)
               <?php if ($this->session->userdata('user_type') == 'student'): ?>
+	      <li><?php echo anchor('forms/request_second_reader', 'Request a Second Reader'); ?></li>
               <li><?php echo anchor('student/student_cp', 'Student Control Panel'); ?></li>
 		      <?php endif; ?>
 	          <?php if ($this->session->userdata('user_type') == 'faculty'): ?>
@@ -72,7 +73,7 @@
               <li><?php echo anchor('admin/view_advisor_feedback', 'View Advisor Feedback'); ?></li>
               <li><?php echo anchor('admin/view_sr_feedback',      'View Second Reader Feedback'); ?></li>
               <li><?php echo anchor('admin/user_upload',           'User List Uploads'); ?></li>
-              <li><?php echo anchor('admin/users',                 'View Student Projects'); ?></li>
+              <li><?php echo anchor('admin/users',                 'View Users'); ?></li>
               <!-- <li><a href="/iw-ci/index.php/messages">Messages</a></li> -->
 	          <?php endif ?>
             </ul>
