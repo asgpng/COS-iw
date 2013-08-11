@@ -15,7 +15,7 @@
 |
 */
 
-$config['base_url']	= 'http://spe-iw.cs.princeton.edu/iw-ci/';
+$config['base_url']	= '/COS-iw/iw-ci/';
 
 /*
 |--------------------------------------------------------------------------

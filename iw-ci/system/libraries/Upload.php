@@ -197,6 +197,7 @@ class CI_Upload {
 		$this->file_temp = $_FILES[$field]['tmp_name'];
 		$this->file_size = $_FILES[$field]['size'];
 		$this->_file_mime_type($_FILES[$field]);
+        /* $this->_file_mime_type($_FILES[$field]); var_dump($this->file_type); die(); */
 		$this->file_type = preg_replace("/^(.+?);.*$/", "\\1", $this->file_type);
 		$this->file_type = strtolower(trim(stripslashes($this->file_type), '"'));
 		$this->file_name = $this->_prep_filename($_FILES[$field]['name']);
